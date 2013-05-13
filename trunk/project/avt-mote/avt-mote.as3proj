@@ -7,7 +7,7 @@
     <movie path="bin\avtmote.swf" />
     <movie fps="30" />
     <movie width="900" />
-    <movie height="768" />
+    <movie height="760" />
     <movie version="10" />
     <movie background="#FFFFFF" />
   </output>
@@ -26,6 +26,7 @@
     <option optimize="True" />
     <option showActionScriptWarnings="True" />
     <option showBindingWarnings="True" />
+    <option showInvalidCSS="True" />
     <option showDeprecationWarnings="True" />
     <option showUnusedTypeSelectorWarnings="True" />
     <option strict="True" />

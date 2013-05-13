@@ -14,7 +14,7 @@ package editor.config   {
 		public static var gird_color : uint = EdtDEF.GIRD_COLOR  ;
 		public static var bg_color : uint = EdtDEF.BG_COLOR  ;
 		public static var LINE_SHAPE_DYM_COLOR : uint = 0xFFDDDD;
-//		public static var LINE_SHAPE_COLOR  : uint = 0xFF0000;
+		public static var LINE_SHAPE_COLOR  : uint = 0xFF0000;
 		
 		public static function get gird_color_t () : ColorTransform{ return getGird_Color_Transform(gird_color);}
 		public static function get bg_color_t () : ColorTransform{ return getGird_Color_Transform(bg_color);}
