@@ -6,11 +6,8 @@ package editor.config
 	 */
 	public class CALLBACK
 	{
+		public static const AS3_ON_STAGE_MOUSEWHEEL : int = 1; 
 		
-		public function CALLBACK() 
-		{
-			
-		}
 		
 	}
 
