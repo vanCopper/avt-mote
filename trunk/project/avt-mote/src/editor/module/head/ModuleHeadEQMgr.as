@@ -26,7 +26,10 @@ package editor.module.head
 		private var m_indicate : Sprite;
 		
 		public var curEdtQuadrant : EdtQuadrant;
-		public var isEditing : Boolean;
+		public var isMovine : Boolean;
+		
+		public var m_selecingShape : Shape;
+		public var m_selecingHitPoint : Point;
 		
 		public function ModuleHeadEQMgr() 
 		{
@@ -85,6 +88,12 @@ package editor.module.head
 			m_selectorIndicate.visible = true;
 			
 			addChild(m_indicate);
+			
+			m_selecingShape = new Shape();
+			addChild(m_selecingShape);
+			
+			
+			
 			//addChild(m_moveIndicate);
 		}
 		
@@ -125,16 +134,26 @@ package editor.module.head
 		{
 			var me : KeyboardEvent = args as KeyboardEvent;
 			
-			
+			if (me.keyCode == 187) //+
+			{
+				m_selectorIndicate.clickAccuracy++;
+			} 
+			else if (me.keyCode == 189) // -
+			{
+				var clickAccuracy : int = m_selectorIndicate.clickAccuracy;
+				if (clickAccuracy > 1)
+					clickAccuracy--;
+				m_selectorIndicate.clickAccuracy = 	clickAccuracy;
+			}
 			
 			return CallbackCenter.EVENT_OK;
 		}
 		
 		private function checkAlt(me : MouseEvent): void
 		{
-			if (!me.altKey && isEditing)
+			if (!me.altKey && isMovine)
 			{
-				isEditing = false;
+				isMovine = false;
 				m_moveIndicate.visible = false;
 				m_selectorIndicate.visible = true;
 			}
@@ -145,7 +164,7 @@ package editor.module.head
 			var me : MouseEvent = args as MouseEvent;
 			checkAlt(me);
 			
-			if (isEditing && me.altKey )
+			if (isMovine && me.altKey )
 			{
 				if (curEdtQuadrant)
 				{
@@ -174,18 +193,46 @@ package editor.module.head
 						
 						curEdtQuadrant.QuadrantRelateDrag(offX , offY);
 						
-						isEditing = true;
+						isMovine = true;
 					}
 				}
 			} else {
-				checkIndicateVisible(me);
+				pt = checkIndicateVisible(me);
+				
+				if (m_indicate.visible)
+				{
+					
+					if (m_selecingHitPoint && pt)
+					{
+						if (m_selectorIndicate.alpha == 1)
+						{
+							
+							if (Math.abs (m_selecingHitPoint.x - pt.x ) >= 3 ||
+								Math.abs (m_selecingHitPoint.y - pt.y ) >= 3 ) 
+							m_selectorIndicate.alpha = 0;	
+						}		
+								
+						if (m_selectorIndicate.alpha == 0)
+						{
+							
+							m_selecingShape.graphics.clear();
+							m_selecingShape.graphics.beginFill(0x9999FF , 0.45);
+							m_selecingShape.graphics.lineStyle(1 , 0x6666FF);
+							m_selecingShape.graphics.drawRect( m_selecingHitPoint.x, m_selecingHitPoint.y, -m_selecingHitPoint.x + pt.x , -m_selecingHitPoint.y + pt.y  );
+							m_selecingShape.graphics.endFill();
+						}
+						
+					}
+				}
+				
+				
 			}
 			
 			
 						
 			return CallbackCenter.EVENT_OK;
 		}
-		private function checkIndicateVisible(me : MouseEvent) : void
+		private function checkIndicateVisible(me : MouseEvent) : Point
 		{
 			var pt : Point = this.globalToLocal(new Point(me.stageX , me.stageY));
 			if (pt.x >= 0
@@ -202,6 +249,8 @@ package editor.module.head
 			{
 				m_indicate.visible = false;
 			}
+			
+			return pt;
 		}
 		
 		private function onMouseDown(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
@@ -217,6 +266,7 @@ package editor.module.head
 				
 				var pt : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
 			
+				
 				if (pt.x >= 0
 					&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullSreen ? 2 : 1))
 					&& pt.y >= 0
@@ -229,12 +279,20 @@ package editor.module.head
 					
 					m_indicate.x = pt.x;
 					m_indicate.y = pt.y;
-					isEditing = true;
+					isMovine = true;
 					
 				}
 				
 			} else {
-				checkIndicateVisible(me);
+				pt = checkIndicateVisible(me);
+				
+				if (m_indicate.visible)
+				{
+					m_selecingHitPoint = pt;
+				}
+				else {
+					m_selecingHitPoint = null;
+				}
 			}
 			return CallbackCenter.EVENT_OK;
 		}
@@ -244,15 +302,26 @@ package editor.module.head
 		{
 			
 			var me : MouseEvent = args as MouseEvent;
+			m_selectorIndicate.alpha = 1;
 			
-			
-			if (isEditing)
+			if (isMovine)
 			{
-				isEditing = false;
+				isMovine = false;
 					
 				m_selectorIndicate.visible = true;
 				m_moveIndicate.visible = false;
-			} 
+				
+				
+			} else {
+				//pt = checkIndicateVisible(me);
+				
+				if (m_selecingHitPoint)
+				{
+					m_selecingShape.graphics.clear();
+					m_selecingHitPoint = null;
+				}
+				
+			}
 			
 			
 			return CallbackCenter.EVENT_OK;
@@ -301,7 +370,8 @@ package editor.module.head
 				m_indicate = null;
 
 			}
-			
+			m_selecingShape = null;
+			m_selecingHitPoint = null;
 			
 			deactivate();
 			
