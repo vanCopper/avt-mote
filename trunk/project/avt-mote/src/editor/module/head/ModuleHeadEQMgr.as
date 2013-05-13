@@ -4,8 +4,10 @@ package editor.module.head
 	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
 	import editor.ui.EdtQuadrant;
+	import editor.ui.EdtSelector;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
@@ -20,15 +22,23 @@ package editor.module.head
 	{
 		private var m_regCallBack : Boolean;
 		private var m_moveIndicate : Shape;
+		private var m_selectorIndicate : EdtSelector;
+		private var m_indicate : Sprite;
 		
 		public var curEdtQuadrant : EdtQuadrant;
 		public var isEditing : Boolean;
 		
 		public function ModuleHeadEQMgr() 
 		{
+			m_indicate = new Sprite();
+			
 			m_moveIndicate = new Shape();
 			m_moveIndicate.graphics.beginFill(0x0);
 			
+			m_selectorIndicate = new EdtSelector();
+			
+			m_indicate.addChild(m_moveIndicate);
+			m_indicate.addChild(m_selectorIndicate);
 			//m_moveIndicate.graphics.lineStyle(1);
 			
 			const leng : int = 10;
@@ -69,8 +79,12 @@ package editor.module.head
 			//m_moveIndicate.y = 4;
 			m_moveIndicate.filters = [new GlowFilter(0xFFFF00 , 0.75)]
 			//m_moveIndicate.visible = false;
+			//m_indicate.x = m_indicate.y = 100;
 			
+			m_moveIndicate.visible = false;
+			m_selectorIndicate.visible = true;
 			
+			addChild(m_indicate);
 			//addChild(m_moveIndicate);
 		}
 		
@@ -84,6 +98,7 @@ package editor.module.head
 				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , onMouseUp);
 				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
 				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL , onMouseWheel);
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_KEY_DOWN , onKeyDown);
 			}
 			
 		}
@@ -98,9 +113,31 @@ package editor.module.head
 				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , onMouseUp);
 				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
 				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL , onMouseWheel);
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_KEY_DOWN , onKeyDown);
 
 			}
 			
+		}
+		
+		
+
+		private function onKeyDown(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		{
+			var me : KeyboardEvent = args as KeyboardEvent;
+			
+			
+			
+			return CallbackCenter.EVENT_OK;
+		}
+		
+		private function checkAlt(me : MouseEvent): void
+		{
+			if (!me.altKey && isEditing)
+			{
+				isEditing = false;
+				m_moveIndicate.visible = false;
+				m_selectorIndicate.visible = true;
+			}
 		}
 		
 		private function onMouseMove(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
@@ -108,49 +145,62 @@ package editor.module.head
 			var me : MouseEvent = args as MouseEvent;
 			checkAlt(me);
 			
-			if (isEditing && me.altKey && curEdtQuadrant)
+			if (isEditing && me.altKey )
 			{
-				
-				
-				var pt : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
-			
-				if (pt.x >= 0
-					&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullSreen ? 2 : 1))
-					&& pt.y >= 0
-					&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullSreen ? 2 : 1))
-					)
+				if (curEdtQuadrant)
 				{
-					
-					var offX : Number = -m_moveIndicate.x + pt.x;
-					var offY : Number = -m_moveIndicate.y + pt.y;
-					m_moveIndicate.x = pt.x;
-					m_moveIndicate.y = pt.y;
-					
-					if (curEdtQuadrant.fullSreen)
+					var pt : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
+			
+					if (pt.x >= 0
+						&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullSreen ? 2 : 1))
+						&& pt.y >= 0
+						&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullSreen ? 2 : 1))
+						)
 					{
-						offX /= 2;
-						offY /= 2;
+						m_selectorIndicate.visible = false;
+						m_moveIndicate.visible = true;
+						
+						
+						var offX : Number = -m_indicate.x + pt.x;
+						var offY : Number = -m_indicate.y + pt.y;
+						m_indicate.x = pt.x;
+						m_indicate.y = pt.y;
+						
+						if (curEdtQuadrant.fullSreen)
+						{
+							offX /= 2;
+							offY /= 2;
+						}
+						
+						curEdtQuadrant.QuadrantRelateDrag(offX , offY);
+						
+						isEditing = true;
 					}
-					
-					curEdtQuadrant.QuadrantRelateDrag(offX , offY);
-					
-					isEditing = true;
 				}
-				
-				
+			} else {
+				checkIndicateVisible(me);
 			}
 			
 			
 						
 			return CallbackCenter.EVENT_OK;
 		}
-		private function checkAlt(me : MouseEvent): void
+		private function checkIndicateVisible(me : MouseEvent) : void
 		{
-			if (!me.altKey && isEditing)
+			var pt : Point = this.globalToLocal(new Point(me.stageX , me.stageY));
+			if (pt.x >= 0
+					&& pt.x < (EdtDEF.QUADRANT_WIDTH * 2)
+					&& pt.y >= 0
+					&& pt.y < (EdtDEF.QUADRANT_HEIGHT * 2)
+					)
 			{
-				isEditing = false;
-				if (m_moveIndicate && m_moveIndicate.parent)
-					m_moveIndicate.parent.removeChild(m_moveIndicate);
+				m_indicate.x = pt.x;
+				m_indicate.y = pt.y;
+				m_indicate.visible = true;
+			}
+			else
+			{
+				m_indicate.visible = false;
 			}
 		}
 		
@@ -159,6 +209,8 @@ package editor.module.head
 			var me : MouseEvent = args as MouseEvent;
 			
 			checkAlt(me);
+			
+			
 			
 			if (me.altKey && curEdtQuadrant)
 			{
@@ -171,23 +223,23 @@ package editor.module.head
 					&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullSreen ? 2 : 1))
 					)
 				{
+					m_indicate.visible = true;
+					m_selectorIndicate.visible = false;
+					m_moveIndicate.visible = true;
 					
-					
-					curEdtQuadrant.addChild(m_moveIndicate);
-					
-					m_moveIndicate.x = pt.x;
-					m_moveIndicate.y = pt.y;
+					m_indicate.x = pt.x;
+					m_indicate.y = pt.y;
 					isEditing = true;
 					
 				}
 				
-				
+			} else {
+				checkIndicateVisible(me);
 			}
-			
-			
-						
 			return CallbackCenter.EVENT_OK;
 		}
+		
+		
 		private function onMouseUp(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
 		{
 			
@@ -197,8 +249,9 @@ package editor.module.head
 			if (isEditing)
 			{
 				isEditing = false;
-				if (m_moveIndicate && m_moveIndicate.parent)
-					m_moveIndicate.parent.removeChild(m_moveIndicate);
+					
+				m_selectorIndicate.visible = true;
+				m_moveIndicate.visible = false;
 			} 
 			
 			
@@ -236,13 +289,20 @@ package editor.module.head
 		public function dispose() : void
 		{
 			
-			if (m_moveIndicate)
+			if (m_indicate)
 			{
-				if (m_moveIndicate.parent)
-					m_moveIndicate.parent.removeChild(m_moveIndicate);
+				if (m_indicate.parent)
+					m_indicate.parent.removeChild(m_indicate);
 				m_moveIndicate = null;
+				m_selectorIndicate = null;
+				
+				GraphicsUtil.removeAllChildren(m_indicate);
+				
+				m_indicate = null;
 
 			}
+			
+			
 			deactivate();
 			
 			GraphicsUtil.removeAllChildren(this);

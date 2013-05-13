@@ -45,7 +45,7 @@ package editor.module.head
 			m_quadrant0 = new EdtQuadrant(0);
 			
 			m_eqm = new ModuleHeadEQMgr();
-			m_eqm.addChild(m_quadrant0);
+			m_eqm.addChildAt(m_quadrant0 , 0);
 			
 			m_content.addChild(m_eqm).y = m_tb.y + m_tb.height; 
 			
@@ -89,7 +89,7 @@ package editor.module.head
 			}
 			
 			m_roterVector[0].y =  - ((m_bmp.bitmapData.height)  >> 1);
-			m_roterVector[1].y =  + ((m_bmp.bitmapData.height)  * 0.1);
+			m_roterVector[1].y =  + ((m_bmp.bitmapData.height)  * 0.2);
 			m_roterVector[2].y =  + ((m_bmp.bitmapData.height)  >> 1);
 			
 			m_quadrant0.setVertex(m_roterVector);

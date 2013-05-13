@@ -1,4 +1,4 @@
-package editor.ui 
+package editor.struct
 {
 	/**
 	 * ...
