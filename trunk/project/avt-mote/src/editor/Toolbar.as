@@ -59,6 +59,8 @@ package editor
 			btnSave.dispose() ; btnSave = null;
 			btnExport.dispose() ; btnExport = null;
 			btnCopy.dispose() ; btnCopy = null;
+			
+			super.dispose();
 		}
 		
 		
