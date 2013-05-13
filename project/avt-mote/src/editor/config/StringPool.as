@@ -17,23 +17,16 @@ package editor.config
 		public static var COPY : String = "copy";
 		public static var EXPORT : String = "export";
 		public static var DEL : String = "del";
+		public static var IMPORT : String = "import";
 		
 		public static var CANCEL:String = "cancel";
 		public static var RETRY:String = "retry";
 		
-		/**
-		 * 类 %1 实例名 %2 被使用
-		 */
-		public static var CLASS_INSRANCE_IS_USED:String = 
-			"Class '%1' 's instance '%2' is be used!!"
-		;
-		
-		/**
-		 * 类 %1 实例名 %2 正在使用
-		 */
-		public static var CLASS_INSRANCE_IS_USING_THIS_CLASS:String = 
-			"Class '%1' 's instance '%2' is using this instance!!"
-		;
+		public static var MODULE : String = "module"
+		public static var MODULE_HEAD:String = "head";
+		public static var MODULE_HEAD_IMPORT_IMAGE:String = "import image";
+		public static var MODULE_HEAD_ADD_ROTOR:String = "add rotor";
+		public static var MODULE_HEAD_ADD_CIRCLE:String = "add circle";
 	}
 
 }
