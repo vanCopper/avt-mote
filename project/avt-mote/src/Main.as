@@ -7,6 +7,7 @@ package
 	import editor.Toolbar;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	
 	/**
@@ -48,7 +49,8 @@ package
 			obj[MouseEvent.MOUSE_DOWN] = CALLBACK.AS3_ON_STAGE_MOUSE_DOWN;
 			obj[MouseEvent.MOUSE_UP] = CALLBACK.AS3_ON_STAGE_MOUSE_UP;
 			obj[MouseEvent.MOUSE_MOVE] = CALLBACK.AS3_ON_STAGE_MOUSE_MOVE;
-			 
+			obj[KeyboardEvent.KEY_DOWN] = CALLBACK.AS3_ON_STAGE_KEY_DOWN;
+			obj[KeyboardEvent.KEY_UP] = CALLBACK.AS3_ON_STAGE_KEY_UP;
 
 			 CallbackCenter.init(stage , obj);
 			
