@@ -1,5 +1,6 @@
 package 
 {
+	import editor.Toolbar;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -20,6 +21,9 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
+			var tb : Toolbar = new Toolbar();
+			addChild(tb);
+			
 		}
 		
 	}

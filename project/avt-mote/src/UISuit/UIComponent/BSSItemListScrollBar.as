@@ -23,10 +23,19 @@ package   UISuit.UIComponent   {
 				m_scrollBar.changeFunction = onScrollBarChange;
 				m_scrollBar.visible = (false);
 			}
+			
+			addEventListener(FocusEvent.FOCUS_IN, setWheelFocus ); 
+			addEventListener(FocusEvent.FOCUS_OUT, resetWheelFocus );
 		}
+		
+		private  function setWheelFocus  (e : FocusEvent ) : void {BSSScrollBar.BSSScrollBar_setWheelFocusBSSScrollBar(m_scrollBar) ; }
+        private  function resetWheelFocus (e : FocusEvent ) : void {BSSScrollBar.BSSScrollBar_resetWheelFocusBSSScrollBar(m_scrollBar);}
 		
 		override public function dispose()	: void 
 		{
+			removeEventListener(FocusEvent.FOCUS_IN, setWheelFocus ); 
+			removeEventListener(FocusEvent.FOCUS_OUT, resetWheelFocus );
+			
 			super.dispose();
 			
 			CONFIG::DEBUG {
@@ -47,6 +56,35 @@ package   UISuit.UIComponent   {
 			var _this : BSSItemListScrollBar  = (BSSItemListScrollBar)(bsssb.parent);
 			_this.m_itemContainer.y = -(bsssb.getContentData());
 		}
+		public var heightMode : Boolean = true;
+		
+		override public function freshItem()
+		: void
+		{
+			super.freshItem();
+			
+			if (m_scrollBar)
+			{	
+				var yBack : int =  m_itemContainer.y;
+				if (heightMode)
+				{
+					var dsp : DisplayObject = m_itemContainer.getChildAt(m_itemContainer.numChildren - 1);
+					m_scrollBar.setContentHeight(0 , dsp.y + dsp.height + 1);
+
+					m_itemContainer.y = (m_scrollBar.height >= dsp.y + dsp.height + 1) ? 0 :  yBack;
+				}
+				else
+					m_scrollBar.setContentHeight(0 , m_itemContainer.height);
+				
+				
+				if (m_scrollBar.getIsActive())
+				{	
+					m_scrollBar.visible = (true);
+				}
+				
+				
+			}
+		}
 		
 		override public function addItem(item : DisplayObject )
 		: void
@@ -57,7 +95,14 @@ package   UISuit.UIComponent   {
 				//var m : DisplayObject = m_itemContainer.mask;
 				//m_itemContainer.mask = null;
 				//trace(m_itemContainer.height);
-				m_scrollBar.setContentHeight(0 , m_itemContainer.height + m_offsetY + edgeSize);
+				//
+				if (heightMode)
+				{
+					var dsp : DisplayObject = m_itemContainer.getChildAt(m_itemContainer.numChildren - 1);
+					m_scrollBar.setContentHeight(0 , dsp.y + dsp.height + 1);
+				}
+				else
+					m_scrollBar.setContentHeight(0 , m_itemContainer.height);
 				//m_itemContainer.mask = m;
 				
 				if (m_scrollBar.getIsActive())

@@ -131,7 +131,12 @@ package   UISuit.UIComponent   {
 				else
 					GraphicsUtil.removeAllChildren(m_itemContainer);
 			}
-				
+		}		
+		
+		public function freshItem()
+		: void
+		{
+			
 		}
 
 		public  function  addItem(item : DisplayObject )
