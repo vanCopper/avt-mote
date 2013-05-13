@@ -37,6 +37,23 @@ package editor.module.head
 			
 		}
 		
+		public function deactivateAll(exceptArr : Array):void
+		{
+			btnImport.deactivate();
+			btnAR.deactivate();
+			btnAC.deactivate();
+			
+			btnImport.alpha = 
+			btnAR.alpha =
+			btnAC.alpha = 0.5;
+			
+			for each (var btn : BSSButton in exceptArr)
+			{
+				btn.activate();
+				btn.alpha = 1;
+			}
+		}
+		
 		public override function dispose()
 		: void 
 		{

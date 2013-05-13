@@ -2,6 +2,7 @@ package editor.ui {
 
 
 	
+	import flash.display.DisplayObject;
 	import flash.display.Shape;	
 	import flash.display.Sprite;	
 
@@ -40,7 +41,7 @@ package editor.ui {
 		
 		public static const _quadrantInfoArray : Array = ["top","persp","front","side"];
 		
-		public var EdtDotArray : Array = new Array ();
+		public var _edtVertexArray : Vector.<EdtVertexInfo> = new Vector.<EdtVertexInfo>();
 		
 		public var _lineShape : Shape = new Shape();
 		public var _lineShapeDym : Shape = new Shape();
@@ -49,13 +50,43 @@ package editor.ui {
 		private var scaleQ : Number = 1;
 		private var scaleQ10 : int = 10;
 		
-		private var xQ : int ;
-		private var yQ : int ;
+		private var xQ : Number = 0;
+		private var yQ : Number = 0;
+		
+		private var _CoordinateAxisY_x : Number;
+		private var _CoordinateAxisX_y : Number;
+		
+		private var _indicate : DisplayObject;
+		
+		
+		public function set indicate ( _dsp : DisplayObject) : void {
+			
+			if (_dsp)
+			{
+				_indicate = _dsp;
+				_indicate.x = _CoordinateAxisY.x;
+				_indicate.y = _CoordinateAxisX.y;
+				
+				var _girdBG : Shape= new Shape();
+				_girdBG.graphics.beginFill(0xFFFFFF);
+				_girdBG.graphics.drawRect(0,0,EdtDEF.QUADRANT_WIDTH,EdtDEF.QUADRANT_HEIGHT);
+				_girdBG.graphics.endFill();
+				addChild(_girdBG);
+				
+				_indicate.mask = _girdBG;
+			}
+			else 
+			{
+				if (_indicate)	
+					_indicate.mask = null;
+				_indicate = null;
+			}
+		}
 		
 		public static const PERSP : int = 1;
 		
-		private var isThisFull : Boolean = false;
-
+		private var _isThisFull : Boolean = false;
+		
 		public function dispose():void
 		{
 			_gird = null;
@@ -69,12 +100,16 @@ package editor.ui {
 			_scaleQ = null;
 			_quadrantInfo = null;
 			
-			EdtDotArray = null;
+			_edtVertexArray = null;
 			
 			_lineShape = null;
 			_lineShapeDym = null;
 			_dotShape = null;
 		
+			if (_indicate)	
+				_indicate.mask = null;
+			_indicate = null;
+			 
 			import  UISuit.UIUtils.*;
 			GraphicsUtil.removeAllChildren(this);
 		
@@ -132,14 +167,14 @@ package editor.ui {
 				l= EdtDEF.QUADRANT_WIDTH /2;
 				_CoordinateAxisY.graphics.moveTo (0,0);
 				_CoordinateAxisY.graphics.lineTo (0,EdtDEF.QUADRANT_HEIGHT );
-				_CoordinateAxisY.x = l;
+				//_CoordinateAxisY.x = l;
 				
 				
 				l= EdtDEF.QUADRANT_HEIGHT /2;
 				_CoordinateAxisX.graphics.lineStyle (0,0xFFFFFF); 
 				_CoordinateAxisX.graphics.moveTo (0,0);
 				_CoordinateAxisX.graphics.lineTo (EdtDEF.QUADRANT_WIDTH ,0);
-				_CoordinateAxisX.y = l;
+				//_CoordinateAxisX.y = l;
 				
 				_hotSpots.graphics.lineStyle (1.6,0x0); 
 				_hotSpots.graphics.drawRect(0.5, 0.5, EdtDEF.QUADRANT_WIDTH  -1, EdtDEF.QUADRANT_HEIGHT  - 1);
@@ -164,16 +199,16 @@ package editor.ui {
 				_scaleQ.y = EdtDEF.INFOY ;
 				_scaleQ.selectable = false;
 				
-				_dotShape.x = EdtDEF.QUADRANT_WIDTH /2;
-				_dotShape.y = EdtDEF.QUADRANT_HEIGHT /2;
+				//_dotShape.x = EdtDEF.QUADRANT_WIDTH /2;
+				//_dotShape.y = EdtDEF.QUADRANT_HEIGHT /2;
 				
-				_lineShape.x = EdtDEF.QUADRANT_WIDTH /2;
-				_lineShape.y = EdtDEF.QUADRANT_HEIGHT /2;
+				//_lineShape.x = EdtDEF.QUADRANT_WIDTH /2;
+				//_lineShape.y = EdtDEF.QUADRANT_HEIGHT /2;
 				_lineShape.alpha = 0.6;
 				_lineShape.cacheAsBitmap = true;
 				
-				_lineShapeDym.x = EdtDEF.QUADRANT_WIDTH /2;
-				_lineShapeDym.y = EdtDEF.QUADRANT_HEIGHT /2;
+				//_lineShapeDym.x = EdtDEF.QUADRANT_WIDTH /2;
+				//_lineShapeDym.y = EdtDEF.QUADRANT_HEIGHT /2;
 				_lineShapeDym.alpha = 0.3;
 				
 			}
@@ -200,7 +235,82 @@ package editor.ui {
 			addChild (_lineShapeDym);
 			addChild (_dotShape);
 			
+			_xQ = 0;
+			_yQ = 0;
 			
+		}
+		
+		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
+		{
+			for each( var ev : EdtVertexInfo in _edtVertexArray)
+			{
+				if (ev && ev.dot && ev.dot.parent)
+					ev.dot.parent.removeChild(ev.dot);
+			}
+			_edtVertexArray.length = 0;
+			
+			for each (var v : EdtVertex3D in _vertexArray)
+			{
+				ev = new EdtVertexInfo(v);
+				_edtVertexArray.push(ev);
+				
+				_dotShape.addChild(ev.dot);
+			}
+			
+			renderLine();
+		}
+		
+		public function map3DTo2D() : void
+		{
+			var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
+			for each( var ev : EdtVertexInfo in _edtVertexArray)
+			{
+				if (_quadrant == 0)
+				{
+					ev.dot.x = ev.vertex.x * __scale;
+					ev.dot.y = ev.vertex.y * __scale;
+				}
+			}
+		}
+		public function map2DTo3D() : void
+		{
+			var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
+			for each( var ev : EdtVertexInfo in _edtVertexArray)
+			{
+				if (_quadrant == 0)
+				{
+					ev.vertex.x = ev.dot.x / __scale;
+					ev.vertex.y = ev.dot.y / __scale;
+				}
+			}
+		}
+		
+		public function renderLine():void
+		{
+			 var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
+			 map3DTo2D();
+			 _lineShape.graphics.clear();
+			 _lineShape.graphics.lineStyle(1 , EdtSET.LINE_SHAPE_COLOR);
+			 
+			 for each( var evi : EdtVertexInfo in _edtVertexArray)
+			 {
+				var _p : int = evi.vertex.priority;
+				var _conect : Vector.<EdtVertex3D> = evi.vertex.conect;
+				
+				for each (var ev : EdtVertex3D in _conect)
+				{
+					if (_p < ev.priority )
+					{
+						_lineShape.graphics.moveTo(evi.dot.x , evi.dot.y);
+						if (_quadrant == 0)
+							_lineShape.graphics.lineTo(ev.x * __scale, ev.y * __scale);
+						
+					}
+				}
+				
+			 }
+			
+			 _lineShape.graphics.lineStyle(NaN);
 		}
 		
 		public function update () : void {
@@ -209,17 +319,17 @@ package editor.ui {
 		
 		public function updataPosInfo() : void {
 			if (_quadrant <= 1 ) {
-				_posX.text = "X: "+ _xQ;
-				_posY.text = "Z: " + (-_yQ);
+				_posX.text = "X: "+ int(_xQ);
+				_posY.text = "Z: " + int(-_yQ);
 			}
 			else if (_quadrant == 2 ) {
-				_posX.text = "X: "+_xQ;
-				_posY.text = "Y: "+_yQ;	
+				_posX.text = "X: "+ int(_xQ);
+				_posY.text = "Y: "+ int(_yQ);	
 			}
 			else //if (_quadrant == 3 )
 			{
-				_posX.text = "Z: "+_xQ;
-				_posY.text = "Y: "+_yQ;	
+				_posX.text = "Z: "+ int(_xQ);
+				_posY.text = "Y: "+ int(_yQ);	
 			}
 		}
 		
@@ -270,7 +380,7 @@ package editor.ui {
 			return (_state == 2);
 		}
 		
-		public function QuadrantRelateDrag ( xOff : int , yOff : int) : void {
+		public function QuadrantRelateDrag ( xOff : Number , yOff : Number) : void {
 			_yQ += yOff;
 			_xQ += xOff;
 		//	_gird.x = (_gird.x + xOff) % DEF_TILE_WIDTH;
@@ -280,11 +390,11 @@ package editor.ui {
 		
 		
 		
-		public function get _xQ () : int {
+		public function get _xQ () : Number {
 		//	return (_CoordinateAxisY.x - EdtDEF_QUADRANT_WIDTH/2 );
 			return (xQ );
 		}
-		public function get _yQ () : int {
+		public function get _yQ () : Number {
 		//	return (_CoordinateAxisX.y - EdtDEF_QUADRANT_HEIGHT/2 );
 			return ( yQ );
 		}
@@ -302,7 +412,14 @@ package editor.ui {
 			
 			_scaleQ.text = "scale: "+ (scaleQ);
 
-			_lineShape.graphics.clear();
+			if (_indicate)
+			{	
+				_indicate.scaleX = _indicate.scaleY = _indicate.mask.scaleX * scaleQ;
+			}
+			
+			renderLine();
+			
+			
 			
 			//TODO
 			//for (var i : int = 0 ; i < EdtDotArray.length ; i++) {
@@ -311,15 +428,21 @@ package editor.ui {
 			//}
 		}	
 		
-		public function set _xQ (x : int) : void {
+		public function set _xQ (x : Number) : void {
 		//	trace (EditorMain.myWorld3D.x)
 			xQ = x;
-			_gird.x = (x - EdtDEF.TILE_WIDTH ) % EdtDEF.TILE_WIDTH ;
-			_CoordinateAxisY.x = x + EdtDEF.QUADRANT_WIDTH /2;
-		
-			_dotShape.x = x + EdtDEF.QUADRANT_WIDTH /2;
-			_lineShape.x = x + EdtDEF.QUADRANT_WIDTH /2;
-			_lineShapeDym.x = x + EdtDEF.QUADRANT_WIDTH /2;
+			_gird.x = int(x * (_isThisFull ? 2 : 1)) % (_isThisFull ? EdtDEF.TILE_WIDTH*2 : EdtDEF.TILE_WIDTH) ;
+			
+			
+			_CoordinateAxisY_x = x + EdtDEF.QUADRANT_WIDTH /2;
+			_CoordinateAxisY.x = int(_CoordinateAxisY_x * (_isThisFull ? 2 : 1));
+			if (_indicate)
+			{
+				_indicate.x = _CoordinateAxisY.x;
+			}
+			_dotShape.x = 
+			_lineShape.x = 
+			_lineShapeDym.x = _CoordinateAxisY.x;
 			
 			updataPosInfo();
 			
@@ -341,14 +464,19 @@ package editor.ui {
 			}*/
 		}
 		
-		public function set _yQ (y : int) : void {
+		public function set _yQ (y : Number) : void {
 			yQ = y;
-			_gird.y = (y - EdtDEF.TILE_WIDTH ) % EdtDEF.TILE_WIDTH ;
-			_CoordinateAxisX.y = y + EdtDEF.QUADRANT_HEIGHT /2;
-				
-			_dotShape.y = y + EdtDEF.QUADRANT_HEIGHT /2;
-			_lineShape.y = y + EdtDEF.QUADRANT_HEIGHT /2;
-			_lineShapeDym.y = y + EdtDEF.QUADRANT_HEIGHT /2;
+			_gird.y = int(y * (_isThisFull ? 2 : 1)) % (_isThisFull ? EdtDEF.TILE_WIDTH*2 : EdtDEF.TILE_WIDTH) ;
+			
+			_CoordinateAxisX_y = y + EdtDEF.QUADRANT_HEIGHT /2;
+			_CoordinateAxisX.y = int(_CoordinateAxisX_y * (_isThisFull ? 2 : 1));
+			if (_indicate)
+			{
+				_indicate.y = _CoordinateAxisX.y;
+			}
+			_dotShape.y = 
+			_lineShape.y = 
+			_lineShapeDym.y = _CoordinateAxisX.y;
 			updataPosInfo();
 			
 			
@@ -372,9 +500,14 @@ package editor.ui {
 		}
 		
 		
-		public function setFullSreen(isFull : Boolean): void {
+		
+		public function get fullSreen() : Boolean
+		{
+			return _isThisFull;
+		}
+		public function set fullSreen(isFull : Boolean): void {
 			
-			isThisFull = isFull;
+			_isThisFull = isFull;
 			
 			
 			//_hotSpots.visible = !isFull;
@@ -393,26 +526,24 @@ package editor.ui {
 			_gird.scaleX = 
 			_gird.scaleY = isFull ? 2 : 1;
 			
+			if (_indicate)
+			{	
+				_indicate.mask.scaleX = _indicate.mask.scaleY = isFull ? 2 : 1;
+				_indicate.scaleX = _indicate.scaleY = _indicate.mask.scaleX * scaleQ;
+			}
+			_xQ = _xQ;
+			_yQ = _yQ;
 			
-			_xQ -= ((((_quadrant&1)!=0)?1:-1)* EdtDEF.QUADRANT_WIDTH /2) * (isFull ? 1:-1);
-			_yQ -= ((((_quadrant&2)!=0)?1:-1)* EdtDEF.QUADRANT_HEIGHT /2) * (isFull ? 1:-1);
+			//_xQ -= ((((_quadrant&1)!=0)?1:-1)* EdtDEF.QUADRANT_WIDTH /2) * (isFull ? 1:-1);
+			//_yQ -= ((((_quadrant&2)!=0)?1:-1)* EdtDEF.QUADRANT_HEIGHT /2) * (isFull ? 1:-1);
 			
 			//trace(_xQ);
 			
-			_CoordinateAxisX.x -= (((_quadrant&1)!=0)? EdtDEF.QUADRANT_WIDTH    : 0 )* (isFull ? 1:-1);
-			_CoordinateAxisY.y -= (((_quadrant&2)!=0)? EdtDEF.QUADRANT_HEIGHT  : 0 )* (isFull ? 1:-1);
+			//_CoordinateAxisX.x -= (((_quadrant&1)!=0)? EdtDEF.QUADRANT_WIDTH : 0 )* (isFull ? 1:-1);
+			//_CoordinateAxisY.y -= (((_quadrant&2)!=0)? EdtDEF.QUADRANT_HEIGHT : 0 )* (isFull ? 1:-1);
 		
 					
 			
-			if (_quadrant != EdtQuadrant.PERSP)
-				_sQ += (isFull ? 10 : -10);
-			
-			var scale : int = (isFull ? 2 : 1);
-			
-			for (var i : int = 0; i < EdtDotArray.length ; i++) {
-				EdtDotArray[i].scaleX = scale;
-				EdtDotArray[i].scaleY = scale;
-			}
 			
 			//if (_quadrant == EdtQuadrant.PERSP) {
 			//	EditorMain.myWorld3D.Edtdraw();
