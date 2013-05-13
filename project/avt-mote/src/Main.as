@@ -1,10 +1,13 @@
 package 
 {
+	import CallbackUtil.CallbackCenter;
+	import editor.config.CALLBACK;
 	import editor.module.head.ModuleHead;
 	import editor.ModuleBar;
 	import editor.Toolbar;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	/**
 	 * ...
@@ -39,6 +42,11 @@ package
 			
 			
 			addChild(_mContainer).y = mb.y + mb.height + 5;
+			
+			var obj : Object = { };
+			 obj[MouseEvent.MOUSE_WHEEL] = CALLBACK.AS3_ON_STAGE_MOUSEWHEEL;
+			 
+			 CallbackCenter.init(stage , obj);
 			
 		}
 		
