@@ -11,6 +11,10 @@ package editor.ui
 		public var conect : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
 		public var isSelected : Boolean;
 		
+		public var line0 : EdtVertex3D;
+		public var line1 : EdtVertex3D;
+		
+		
 		public function EdtVertex3D(_x : Number = 0,_y : Number = 0,_z : Number = 0) 
 		{
 			super(_x, _y, _z);

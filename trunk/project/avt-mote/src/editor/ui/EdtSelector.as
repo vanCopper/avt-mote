@@ -15,6 +15,7 @@ package editor.ui
 			graphics.lineStyle(1 , 0x6666FF);
 			graphics.drawRect( -v, -v, v * 2 , v * 2 );
 			graphics.endFill();
+			
 		}
 		
 		public function get clickAccuracy() : int

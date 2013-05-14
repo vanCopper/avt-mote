@@ -260,6 +260,11 @@ package editor.ui {
 			renderLine();
 		}
 		
+		public function converMappedPointToDot(_pt : Point , dot : EdtDot) : void
+		{
+			dot.x  = _pt.x - _dotShape.x - this.x;
+			dot.y  = _pt.y - _dotShape.y - this.y;
+		}
 		
 		public function getMappedPoint(_v :Vector.<EdtVertexInfo>) : void
 		{
@@ -270,7 +275,8 @@ package editor.ui {
 				_pt.y = ev.dot.y + _dotShape.y + this.y;
 				ev.point = _pt;
 				
-				_v.push(ev);
+				if (_v)
+					_v.push(ev);
 				
 			}
 			
@@ -301,10 +307,12 @@ package editor.ui {
 			}
 		}
 		
-		public function renderLine():void
+		
+		public function renderLine(map : Boolean = true ):void
 		{
 			 var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
-			 map3DTo2D();
+			 if (map)
+				map3DTo2D();
 			 _lineShape.graphics.clear();
 			 _lineShape.graphics.lineStyle(1 , EdtSET.LINE_SHAPE_COLOR);
 			 
@@ -318,9 +326,9 @@ package editor.ui {
 					if (_p < ev.priority )
 					{
 						_lineShape.graphics.moveTo(evi.dot.x , evi.dot.y);
-						if (_quadrant == 0)
-							_lineShape.graphics.lineTo(ev.x * __scale, ev.y * __scale);
 						
+						var evic : EdtVertexInfo = EdtVertexInfo.getEdtVertexInfo(ev , _edtVertexArray);
+						_lineShape.graphics.lineTo(evic.dot.x , evic.dot.y);
 					}
 				}
 				
