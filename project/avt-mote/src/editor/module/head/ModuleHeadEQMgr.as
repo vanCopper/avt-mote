@@ -3,7 +3,10 @@ package editor.module.head
 	import CallbackUtil.CallbackCenter;
 	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
+	import editor.config.EdtSET;
 	import editor.ui.EdtDot;
+	import editor.ui.EdtMoveIndicate;
+	import editor.ui.EdtOperator;
 	import editor.ui.EdtQuadrant;
 	import editor.ui.EdtSelector;
 	import editor.ui.EdtVertexInfo;
@@ -23,8 +26,10 @@ package editor.module.head
 	public class ModuleHeadEQMgr extends Sprite 
 	{
 		private var m_regCallBack : Boolean;
-		private var m_moveIndicate : Shape;
+		private var m_moveIndicate : EdtMoveIndicate;
 		private var m_selectorIndicate : EdtSelector;
+		private var m_operatorIndicate : EdtOperator;
+		
 		private var m_indicate : Sprite;
 		
 		public var curEdtQuadrant : EdtQuadrant;
@@ -33,58 +38,31 @@ package editor.module.head
 		public var m_selecingShape : Shape;
 		public var m_selecingHitPoint : Point;
 		
+		private var m_editMode : int;
+		private static const EDIT_MODE_MOVE : int = 1;
+		private static const EDIT_MODE_SCALE : int = 2;
+		
+		private var m_selectedEVI : Vector.<EdtVertexInfo> = new Vector.<EdtVertexInfo>();
+		private var m_operatorCenter : Point = new Point ();
+		private var m_operatorOffset : Point = new Point ();
+		private var m_operatorDir : int;
+		private var m_operatorMoving : Boolean;
+		
 		public function ModuleHeadEQMgr() 
 		{
 			m_indicate = new Sprite();
 			
-			m_moveIndicate = new Shape();
-			m_moveIndicate.graphics.beginFill(0x0);
-			
+			m_moveIndicate = new EdtMoveIndicate();
 			m_selectorIndicate = new EdtSelector();
+			m_operatorIndicate = new EdtOperator();
 			
 			m_indicate.addChild(m_moveIndicate);
 			m_indicate.addChild(m_selectorIndicate);
 			//m_moveIndicate.graphics.lineStyle(1);
 			
-			const leng : int = 10;
-			const leng2 : int = 4;
-			const w : int = 3;
-			const w2 : int = 1;
-			
-			m_moveIndicate.graphics.moveTo(0 , -leng);
-			m_moveIndicate.graphics.lineTo(w , -leng2);
-			m_moveIndicate.graphics.lineTo(w2 , -leng2);
-			m_moveIndicate.graphics.lineTo(w2 , -w2);
-			m_moveIndicate.graphics.lineTo(leng2 , -w2);
-			m_moveIndicate.graphics.lineTo(leng2 , -w);
-			m_moveIndicate.graphics.lineTo(leng , 0);
-			m_moveIndicate.graphics.lineTo(leng2 , w);
-			m_moveIndicate.graphics.lineTo(leng2 , w2);
-			m_moveIndicate.graphics.lineTo(w2 , w2);
-			m_moveIndicate.graphics.lineTo(w2 , leng2);
-			m_moveIndicate.graphics.lineTo(w , leng2);
-			m_moveIndicate.graphics.lineTo(0 , leng);
-			m_moveIndicate.graphics.lineTo(-w , leng2);
-			m_moveIndicate.graphics.lineTo(-w2 , leng2);
-			m_moveIndicate.graphics.lineTo( -w2 , w2);
-			m_moveIndicate.graphics.lineTo( -leng2 , w2);
-			m_moveIndicate.graphics.lineTo( -leng2 , w);
-			m_moveIndicate.graphics.lineTo( -leng , 0);
-			m_moveIndicate.graphics.lineTo( -leng2 , -w);
-			m_moveIndicate.graphics.lineTo( -leng2 , -w2);
-			m_moveIndicate.graphics.lineTo( -w2 , -w2);
-			m_moveIndicate.graphics.lineTo(-w2 , -leng2);
-			m_moveIndicate.graphics.lineTo( -w , -leng2);
-			m_moveIndicate.graphics.lineTo(0 , -leng);
-		
-			m_moveIndicate.graphics.endFill();
 			
 			
-			//m_moveIndicate.x = 760;
-			//m_moveIndicate.y = 4;
-			m_moveIndicate.filters = [new GlowFilter(0xFFFF00 , 0.75)]
-			//m_moveIndicate.visible = false;
-			//m_indicate.x = m_indicate.y = 100;
+			
 			
 			m_moveIndicate.visible = false;
 			m_selectorIndicate.visible = true;
@@ -95,8 +73,32 @@ package editor.module.head
 			addChild(m_selecingShape);
 			
 			
+			m_operatorIndicate.x = 100;
+			m_operatorIndicate.y = 100;
+			addChild(m_operatorIndicate);
+			m_operatorIndicate.visible = false;
+			m_operatorIndicate.startMoveFunc = onStartMove;
 			
-			//addChild(m_moveIndicate);
+			
+			m_indicate.visible = false;
+			
+			
+		}
+		
+		private function onStartMove(me : MouseEvent , m : int):void 
+		{
+			m_operatorOffset.x = -me.stageX + m_operatorIndicate.x;
+			m_operatorOffset.y = -me.stageY + m_operatorIndicate.y;
+			
+			
+			m_operatorDir = m;
+			m_operatorMoving = true;
+			m_selectorIndicate.visible = false;
+			
+			m_operatorCenter.x = m_operatorIndicate.x;
+			m_operatorCenter.y = m_operatorIndicate.y;
+			
+			curEdtQuadrant.getMappedPoint(null);
 		}
 		
 		
@@ -138,14 +140,40 @@ package editor.module.head
 			
 			if (me.keyCode == 187) //+
 			{
-				m_selectorIndicate.clickAccuracy++;
+				EdtSET.click_accuracy++; 
+				m_selectorIndicate.clickAccuracy = EdtSET.click_accuracy;
+				
 			} 
 			else if (me.keyCode == 189) // -
 			{
-				var clickAccuracy : int = m_selectorIndicate.clickAccuracy;
-				if (clickAccuracy > 1)
-					clickAccuracy--;
-				m_selectorIndicate.clickAccuracy = 	clickAccuracy;
+				if (EdtSET.click_accuracy > 1)
+					EdtSET.click_accuracy--;
+				m_selectorIndicate.clickAccuracy = 	EdtSET.click_accuracy;
+			}
+			else if (me.keyCode == 27) // esc
+			{
+				if (m_editMode)
+					m_editMode = 0;
+			}
+			else if (me.keyCode == 81) // esc
+			{
+				if (m_editMode == EDIT_MODE_MOVE)
+				{
+					m_editMode = 0;
+					m_selectorIndicate.visible = true;
+					if (m_operatorMoving)
+						m_operatorMoving = false;
+					m_operatorIndicate.visible = false;	
+				}
+				else
+				{
+					m_editMode = EDIT_MODE_MOVE;
+					if (m_selectedEVI.length)
+					{
+						setOperatorIndicatePos();
+					}
+					
+				}
 			}
 			
 			return CallbackCenter.EVENT_OK;
@@ -166,7 +194,21 @@ package editor.module.head
 			var me : MouseEvent = args as MouseEvent;
 			checkAlt(me);
 			
-			if (isMovineQuadrant && me.altKey )
+			if (m_operatorMoving)
+			{
+				var optPos : Point = new Point();
+				optPos.x = m_operatorOffset.x + me.stageX;
+				optPos.y = m_operatorOffset.y + me.stageY;
+				
+				if (m_operatorDir != -1)
+					m_operatorIndicate.x = optPos.x;
+				if (m_operatorDir != 1)
+					m_operatorIndicate.y = optPos.y;
+					
+				setVertexPosMove();
+					
+			}
+			else if (isMovineQuadrant && me.altKey )
 			{
 				if (curEdtQuadrant)
 				{
@@ -296,6 +338,27 @@ package editor.module.head
 			return pt;
 		}
 		
+		private function setVertexPosMove() : void
+		{
+			var offX : Number = m_operatorIndicate.x - m_operatorCenter.x ;
+			var offY : Number = m_operatorIndicate.y - m_operatorCenter.y ;
+			var __pt : Point = new Point();
+			
+			
+			for each (var __ptv : EdtVertexInfo in m_selectedEVI)
+			{
+				__pt.x = __ptv.point.x + offX;
+				__pt.y = __ptv.point.y + offY;
+			
+				//trace(__ptv.dot.x , __ptv.dot.y , __ptv.dot.transform.colorTransform);
+				curEdtQuadrant.converMappedPointToDot(__pt , __ptv.dot);
+				//trace(__ptv.dot.x , __ptv.dot.y);
+			}
+			
+			
+			curEdtQuadrant.renderLine(false);
+		}
+		
 		private function onMouseDown(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
 		{
 			var me : MouseEvent = args as MouseEvent;
@@ -304,9 +367,11 @@ package editor.module.head
 			
 			if (!curEdtQuadrant)
 				return CallbackCenter.EVENT_OK;
-			
-			
-			if (me.altKey )
+			if (m_operatorMoving)
+			{
+				
+			}
+			else if (me.altKey )
 			{
 				
 				var pt : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
@@ -356,6 +421,10 @@ package editor.module.head
 					m_selecingHitPoint = null;
 				}
 			}
+			
+			if (!m_operatorMoving)
+				m_operatorIndicate.visible = false;
+			
 			return CallbackCenter.EVENT_OK;
 		}
 		
@@ -365,8 +434,54 @@ package editor.module.head
 			
 			var me : MouseEvent = args as MouseEvent;
 			
-			
-			if (isMovineQuadrant)
+			if (m_operatorMoving)
+			{
+				setVertexPosMove();
+				
+				
+				
+				curEdtQuadrant.map2DTo3D();
+				
+				_ptVArr = new Vector.<EdtVertexInfo>();
+				curEdtQuadrant.getMappedPoint(_ptVArr);
+				var needReselect : Boolean;
+				
+				for each (__ptv in _ptVArr)
+				{
+					if (__ptv.vertex.line0 && __ptv.vertex.line1)
+					{
+						var len0 : Number 
+							= 
+							(__ptv.vertex.line0.x - __ptv.vertex.x) * (__ptv.vertex.line0.x - __ptv.vertex.x)
+							+ (__ptv.vertex.line0.y - __ptv.vertex.y) * (__ptv.vertex.line0.y - __ptv.vertex.y)
+							+ (__ptv.vertex.line0.z - __ptv.vertex.z) * (__ptv.vertex.line0.z - __ptv.vertex.z);
+						len0 = Math.sqrt(len0);
+						
+						var len1 : Number 
+							= 
+							(__ptv.vertex.line1.x - __ptv.vertex.x) * (__ptv.vertex.line1.x - __ptv.vertex.x)
+							+ (__ptv.vertex.line1.y - __ptv.vertex.y) * (__ptv.vertex.line1.y - __ptv.vertex.y)
+							+ (__ptv.vertex.line1.z - __ptv.vertex.z) * (__ptv.vertex.line1.z - __ptv.vertex.z);
+						len1 = Math.sqrt(len1);
+						
+						var _lineRate : Number = (len0 / (len0 + len1));
+						__ptv.vertex.x = __ptv.vertex.line0.x + (__ptv.vertex.line1.x  - __ptv.vertex.line0.x ) * _lineRate;
+						__ptv.vertex.y = __ptv.vertex.line0.y + (__ptv.vertex.line1.y  - __ptv.vertex.line0.y ) * _lineRate;
+						
+						needReselect = true;
+					}
+				}
+				
+				curEdtQuadrant.renderLine();
+				
+				if (needReselect)
+				{
+					curEdtQuadrant.getMappedPoint(null);
+					setOperatorIndicatePos();
+				}
+				m_operatorMoving = false;
+				
+			} else if (isMovineQuadrant)
 			{
 				isMovineQuadrant = false;
 					
@@ -434,6 +549,27 @@ package editor.module.head
 					}
 					m_selecingShape.graphics.clear();
 					m_selecingHitPoint = null;
+					
+					
+					m_selectedEVI.length = 0;
+					for each (__ptv in _ptVArr)
+					{
+						if (__ptv.dot.selected)
+						{
+							m_selectedEVI.push(__ptv);
+							//trace(__ptv.dot.x , __ptv.dot.y);
+						}
+					}
+					
+					if (m_selectedEVI.length)
+					{
+						if (m_editMode == EDIT_MODE_MOVE)
+						{
+							setOperatorIndicatePos();
+						}
+						
+						
+					}
 				}
 				
 			}
@@ -441,6 +577,32 @@ package editor.module.head
 			
 			return CallbackCenter.EVENT_OK;
 		}
+		
+		private function setOperatorIndicatePos():void
+		{
+			m_operatorIndicate.visible = true;
+			var __x : Number = 0;
+			var __y : Number = 0;
+			
+			for each (var __ptv : EdtVertexInfo in m_selectedEVI)
+			{
+				__x += __ptv.point.x;
+				__y += __ptv.point.y;
+				
+			}
+			trace(__x , __y);
+			
+			__x /= m_selectedEVI.length;
+			__y /= m_selectedEVI.length;
+			
+			m_operatorIndicate.x = __x;
+			m_operatorIndicate.y = __y;
+			
+			
+			
+			
+		}
+		
 		private function onMouseWheel(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
 		{
 			var me : MouseEvent = args as MouseEvent;
@@ -479,14 +641,26 @@ package editor.module.head
 					m_indicate.parent.removeChild(m_indicate);
 				m_moveIndicate = null;
 				m_selectorIndicate = null;
+
 				
 				GraphicsUtil.removeAllChildren(m_indicate);
 				
 				m_indicate = null;
 
 			}
+			
+			if (m_operatorIndicate)
+			{
+				m_operatorIndicate.dispose();
+				m_operatorIndicate = null;
+			}
+			
+			curEdtQuadrant = null;
 			m_selecingShape = null;
 			m_selecingHitPoint = null;
+			m_selectedEVI = null;
+			m_operatorCenter = null;
+			m_operatorOffset = null;
 			
 			deactivate();
 			

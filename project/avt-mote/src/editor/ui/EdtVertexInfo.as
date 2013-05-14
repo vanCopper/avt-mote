@@ -22,6 +22,17 @@ package editor.ui
 			}
 		}
 		
+		public static function getEdtVertexInfo(_ev3d : EdtVertex3D , _vertexArray : Vector.<EdtVertexInfo>):EdtVertexInfo
+		{
+			for each( var evi : EdtVertexInfo in _vertexArray)
+			{
+				if (evi.vertex == _ev3d)
+					return evi;
+			}
+			
+			return null;
+		}
+		
 	}
 
 }

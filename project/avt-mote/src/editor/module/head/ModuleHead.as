@@ -86,6 +86,9 @@ package editor.module.head
 				m_roterVector[1].conect.push(m_roterVector[2] );
 				m_roterVector[2].conect.push(m_roterVector[1] );
 				
+				m_roterVector[1].line0 = m_roterVector[0];
+				m_roterVector[1].line1 = m_roterVector[2];
+				
 			}
 			
 			m_roterVector[0].y =  - ((m_bmp.bitmapData.height)  >> 1);
