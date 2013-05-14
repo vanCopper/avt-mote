@@ -28,7 +28,7 @@ package editor.module.head
 		private var m_indicate : Sprite;
 		
 		public var curEdtQuadrant : EdtQuadrant;
-		public var isMovine : Boolean;
+		public var isMovineQuadrant : Boolean;
 		
 		public var m_selecingShape : Shape;
 		public var m_selecingHitPoint : Point;
@@ -153,9 +153,9 @@ package editor.module.head
 		
 		private function checkAlt(me : MouseEvent): void
 		{
-			if (!me.altKey && isMovine)
+			if (!me.altKey && isMovineQuadrant)
 			{
-				isMovine = false;
+				isMovineQuadrant = false;
 				m_moveIndicate.visible = false;
 				m_selectorIndicate.visible = true;
 			}
@@ -166,7 +166,7 @@ package editor.module.head
 			var me : MouseEvent = args as MouseEvent;
 			checkAlt(me);
 			
-			if (isMovine && me.altKey )
+			if (isMovineQuadrant && me.altKey )
 			{
 				if (curEdtQuadrant)
 				{
@@ -195,7 +195,7 @@ package editor.module.head
 						
 						curEdtQuadrant.QuadrantRelateDrag(offX , offY);
 						
-						isMovine = true;
+						isMovineQuadrant = true;
 					}
 				}
 			} else {
@@ -302,9 +302,11 @@ package editor.module.head
 			
 			checkAlt(me);
 			
+			if (!curEdtQuadrant)
+				return CallbackCenter.EVENT_OK;
 			
 			
-			if (me.altKey && curEdtQuadrant)
+			if (me.altKey )
 			{
 				
 				var pt : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
@@ -322,7 +324,7 @@ package editor.module.head
 					
 					m_indicate.x = pt.x;
 					m_indicate.y = pt.y;
-					isMovine = true;
+					isMovineQuadrant = true;
 					
 				}
 				
@@ -364,9 +366,9 @@ package editor.module.head
 			var me : MouseEvent = args as MouseEvent;
 			
 			
-			if (isMovine)
+			if (isMovineQuadrant)
 			{
-				isMovine = false;
+				isMovineQuadrant = false;
 					
 				m_selectorIndicate.visible = true;
 				m_moveIndicate.visible = false;
