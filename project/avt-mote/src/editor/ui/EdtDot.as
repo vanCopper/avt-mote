@@ -12,8 +12,10 @@ package editor.ui {
 	 * @QQ 87453144
 	 */
 	public class EdtDot extends Shape {
-		private var _selected : int = -1;
+		private var _selected : Boolean = false;
 		private var _id : int ;
+		private var _mode : int ;
+		
 		//var xS : Number ;
 		//var yS : Number ;
 		
@@ -46,16 +48,33 @@ package editor.ui {
 		public function get selected () : Boolean {
 			return (_selected == 1);
 		}
+		
+		public static const DOT_NORMAL_MODE : int = 0;
+		public static const DOT_SELECTED_MODE : int = 1;
+	
+		public static const DOT_SELECTING_MODE : int = 2;
+		public static const DOT_UNSELECTING_MODE : int = 3;
+		
+		public function get mode() : int { return _mode; }
 		public function set mode (s : int) : void {
-			_selected = s;
-		//	trace (_selected);
-			if (_selected == 1)
-				this.transform.colorTransform = EdtSET.DOT_SELECT;
-			else if (_selected == 0)
-				this.transform.colorTransform = EdtSET.DOT_RELEASE;
-			else
-				this.transform.colorTransform = EdtSET.DOT_UNSELECT;
 			
+			_mode = s;
+		//	trace (_selected);
+			if (s == DOT_SELECTED_MODE)
+			{	
+				this.transform.colorTransform = EdtSET.DOT_SELECTED;
+				_selected = true;
+			}
+			else if (s == DOT_SELECTING_MODE)
+				this.transform.colorTransform = EdtSET.DOT_SELECTING;
+			else  if (s == DOT_UNSELECTING_MODE)
+				this.transform.colorTransform = EdtSET.DOT_UNSELECTING;
+			else if (s == DOT_NORMAL_MODE)
+			{	
+				_selected = false;
+				
+				this.transform.colorTransform = EdtSET.DOT_NORMAL;
+			}
 		}
 		public function set hide (isHide : Boolean) : void {
 			this.visible = !isHide;

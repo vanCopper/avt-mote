@@ -260,6 +260,22 @@ package editor.ui {
 			renderLine();
 		}
 		
+		
+		public function getMappedPoint(_v :Vector.<EdtVertexInfo>) : void
+		{
+			for each( var ev : EdtVertexInfo in _edtVertexArray)
+			{
+				var _pt : Point = new Point();
+				_pt.x = ev.dot.x + _dotShape.x + this.x;
+				_pt.y = ev.dot.y + _dotShape.y + this.y;
+				ev.point = _pt;
+				
+				_v.push(ev);
+				
+			}
+			
+		}
+		
 		public function map3DTo2D() : void
 		{
 			var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
