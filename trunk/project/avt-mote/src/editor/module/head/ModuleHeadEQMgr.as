@@ -3,8 +3,10 @@ package editor.module.head
 	import CallbackUtil.CallbackCenter;
 	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
+	import editor.ui.EdtDot;
 	import editor.ui.EdtQuadrant;
 	import editor.ui.EdtSelector;
+	import editor.ui.EdtVertexInfo;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.KeyboardEvent;
@@ -220,6 +222,47 @@ package editor.module.head
 							m_selecingShape.graphics.lineStyle(1 , 0x6666FF);
 							m_selecingShape.graphics.drawRect( m_selecingHitPoint.x, m_selecingHitPoint.y, -m_selecingHitPoint.x + pt.x , -m_selecingHitPoint.y + pt.y  );
 							m_selecingShape.graphics.endFill();
+							
+							
+							var _ptVArr : Vector.<EdtVertexInfo> = new Vector.<EdtVertexInfo>();
+							curEdtQuadrant.getMappedPoint(_ptVArr);
+							var rect : Rectangle = m_selecingShape.getRect(this);
+							
+							
+							for each (var __ptv : EdtVertexInfo in _ptVArr)
+							{
+								
+								if (me.shiftKey)
+								{
+									if (rect.containsPoint(__ptv.point))
+									{
+										if (__ptv.dot.selected)
+										{	
+											__ptv.dot.mode = EdtDot.DOT_UNSELECTING_MODE;
+										}
+										else
+										{	__ptv.dot.mode = EdtDot.DOT_SELECTING_MODE;}
+									}
+									else {
+										if (__ptv.dot.selected)
+											__ptv.dot.mode = EdtDot.DOT_SELECTED_MODE;
+										else
+											__ptv.dot.mode = EdtDot.DOT_NORMAL_MODE;
+									}
+								}
+								else
+								{
+									if (rect.containsPoint(__ptv.point))
+									{
+										__ptv.dot.mode = EdtDot.DOT_SELECTING_MODE;
+									}
+									else 
+									{
+										__ptv.dot.mode = EdtDot.DOT_UNSELECTING_MODE;
+									}
+								}
+							}
+							
 						}
 						
 					}
@@ -289,6 +332,23 @@ package editor.module.head
 				if (m_indicate.visible)
 				{
 					m_selecingHitPoint = pt;
+					
+					if (!me.shiftKey)
+					{
+						var _ptVArr : Vector.<EdtVertexInfo> = new Vector.<EdtVertexInfo>();
+						curEdtQuadrant.getMappedPoint(_ptVArr);
+						var rect : Rectangle = m_selecingShape.getRect(this);
+							
+							
+						for each (var __ptv : EdtVertexInfo in _ptVArr)
+						{
+							__ptv.dot.mode = EdtDot.DOT_NORMAL_MODE;
+						}
+						
+					}
+					
+					
+					
 				}
 				else {
 					m_selecingHitPoint = null;
@@ -302,7 +362,7 @@ package editor.module.head
 		{
 			
 			var me : MouseEvent = args as MouseEvent;
-			m_selectorIndicate.alpha = 1;
+			
 			
 			if (isMovine)
 			{
@@ -317,12 +377,65 @@ package editor.module.head
 				
 				if (m_selecingHitPoint)
 				{
+					var _ptVArr : Vector.<EdtVertexInfo> = new Vector.<EdtVertexInfo>();
+					curEdtQuadrant.getMappedPoint(_ptVArr);
+					var rect : Rectangle ;
+					
+					if (m_selectorIndicate.alpha == 1)
+					{
+						
+						var pt : Point = this.globalToLocal(new Point(me.stageX , me.stageY));
+						rect = m_selectorIndicate.getRect(this);
+						
+						
+						for each (var __ptv : EdtVertexInfo in _ptVArr)
+						{
+							
+							
+							if (me.shiftKey)
+							{
+								if (rect.containsPoint(__ptv.point))
+								{
+									if (__ptv.dot.mode == EdtDot.DOT_SELECTED_MODE)
+										__ptv.dot.mode = EdtDot.DOT_NORMAL_MODE;
+									else
+										__ptv.dot.mode = EdtDot.DOT_SELECTED_MODE;
+								}
+							}
+							else {
+								
+								if (rect.containsPoint(__ptv.point))
+								{
+									__ptv.dot.mode = EdtDot.DOT_SELECTED_MODE;
+								}
+								else 
+								{
+									__ptv.dot.mode = EdtDot.DOT_NORMAL_MODE;
+								}
+							}
+						}
+						
+						
+					} else {
+						
+						
+						rect = m_selecingShape.getRect(this);
+						
+						for each (__ptv in _ptVArr)
+						{
+							if (__ptv.dot.mode == EdtDot.DOT_SELECTING_MODE)
+								__ptv.dot.mode = EdtDot.DOT_SELECTED_MODE;
+							else if (__ptv.dot.mode == EdtDot.DOT_UNSELECTING_MODE)
+								__ptv.dot.mode = EdtDot.DOT_NORMAL_MODE;
+								
+						}
+					}
 					m_selecingShape.graphics.clear();
 					m_selecingHitPoint = null;
 				}
 				
 			}
-			
+			m_selectorIndicate.alpha = 1;
 			
 			return CallbackCenter.EVENT_OK;
 		}

@@ -22,10 +22,13 @@ package editor.config   {
 		public static const HOT_MOVEON : ColorTransform = new ColorTransform ( 0, 0, 0, 0,255,255,0,100);
 		public static const HOT_WORKON : ColorTransform = new ColorTransform ( 0, 0, 0, 0,255,0, 0, 120);
 		
-		public static const DOT_SELECT : ColorTransform = new ColorTransform ( 0, 0, 0, 0,255,255, 0, 255);
-		public static const DOT_RELEASE : ColorTransform = new ColorTransform ( 0, 0, 0, 0,255,200, 0, 255);
-		public static const DOT_UNSELECT : ColorTransform = new ColorTransform ( 0, 0, 0, 0,255,0, 0, 100);
-
+		public static const DOT_SELECTED : ColorTransform = new ColorTransform ( 0, 0, 0, 0, 0 ,0, 255, 255);
+		public static const DOT_NORMAL : ColorTransform = new ColorTransform ( 0, 0, 0, 0, 255, 0, 0, 255);
+		
+		public static const DOT_SELECTING : ColorTransform = new ColorTransform (  0, 0, 0, 0, 0 ,0, 255, 180);
+		public static const DOT_UNSELECTING : ColorTransform = new ColorTransform ( 0, 0, 0, 0, 255, 0, 0, 180);
+		
+		
 		public static const  BTN_DEFAULT : GlowFilter = new GlowFilter (0xFFFFCC ,1.0, 8.0,8.0, 1.0);
 		public static const  BTN_HOVER : GlowFilter = new GlowFilter (0x4444FF,1.0, 5.0,5.0, 0.6);
 		public static const  BTN_SELECTED : GlowFilter = new GlowFilter (0xFF5555,1.0, 5.0,5.0, 0.6);

@@ -1,5 +1,6 @@
 package editor.ui 
 {
+	import flash.geom.Point;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -8,6 +9,7 @@ package editor.ui
 	{
 		public var vertex : EdtVertex3D;
 		public var dot : EdtDot;
+		public var point : Point;
 		
 		public function EdtVertexInfo(_vertex : EdtVertex3D = null , _dot : EdtDot = null) 
 		{
