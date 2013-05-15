@@ -333,11 +333,11 @@ package editor.ui {
 				else if (_quadrant == 0)
 				{
 					ev.dot.x = ev.vertex.x * __scale;
-					ev.dot.y = ev.vertex.z * __scale;
+					ev.dot.y = -ev.vertex.z * __scale;
 				}
 				else if (_quadrant == 3)
 				{
-					ev.dot.x = -ev.vertex.z * __scale;
+					ev.dot.x = ev.vertex.z * __scale;
 					ev.dot.y = ev.vertex.y * __scale;
 				}
 				else
@@ -359,11 +359,11 @@ package editor.ui {
 				else if (_quadrant == 0)
 				{
 					ev.vertex.x = ev.dot.x / __scale;
-					ev.vertex.z = ev.dot.y / __scale;
+					ev.vertex.z = -ev.dot.y / __scale;
 				}
 				else if (_quadrant == 3)
 				{
-					ev.vertex.z = -ev.dot.x / __scale;
+					ev.vertex.z = ev.dot.x / __scale;
 					ev.vertex.y = ev.dot.y / __scale;
 				}
 			}

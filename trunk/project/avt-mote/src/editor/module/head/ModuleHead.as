@@ -180,6 +180,9 @@ package editor.module.head
 			
 			drawRotor();
 			
+			const totalPerLine : int = (s == 0) ? 3 : ((s + 1) * 2);
+			const totalLine : int = m_roterVectorAll.length / 3;
+				
 			if (s)
 			{
 				
@@ -193,8 +196,7 @@ package editor.module.head
 				
 				var p : int = 1;
 				
-				const totalPerLine : int = (s + 1) * 2;
-				const totalLine : int = m_roterVectorAll.length / 3;
+				
 				
 				for (var j : int = 0 ; j < m_roterVectorAll.length; j += 3 )
 				{
@@ -260,6 +262,89 @@ package editor.module.head
 				m_roterVectorAll = _roterVectorAll;
 				
 			}
+			
+			const _angleView : int = 60;
+			
+			for (l = 0 ; l < totalLine ;l++ )
+			
+			//var stageShpae:Shape = new Shape();
+			//m_content.stage.addChild(stageShpae);
+			
+			//stageShpae.x = stageShpae.y = 300;
+			//stageShpae.graphics.lineStyle(1);
+			
+			//l = 0;
+			{
+				var startPos : int = l * totalPerLine;
+				var _lengLine : Number = 0;
+				for ( ti = 1 ; ti < totalPerLine ; ti++ )
+				{
+					var __xOff : Number = m_roterVectorAll[startPos + ti].x - m_roterVectorAll[startPos + ti - 1].x;
+					var __yOff : Number = m_roterVectorAll[startPos + ti].y - m_roterVectorAll[startPos + ti - 1].y;
+					
+					_lengLine += Math.sqrt(__xOff * __xOff + __yOff * __yOff);
+					
+				}
+				//var _rRate : Number = Math.sin(Math.PI * _angleView / 180);
+				//var _r : Number = _lengLine / _rRate / 2;
+				//var _lengLine1_2 : Number = _lengLine / 2;
+				
+				
+				
+				
+				//var zhouchang : Number = 2 * Math.PI * _r;
+				
+				var zhouchang : Number = _lengLine / 60 * 180;
+				var _r : Number = zhouchang / 2  / Math.PI ;
+				
+				var _lengLineCurAdd : Number = 0;
+				
+				var _zhongzhou : Number = _r * Math.cos(Math.PI * _angleView / 180);
+				m_roterVectorAll[startPos + 0].z = _zhongzhou;
+				
+				for ( ti = 1 ; ti < totalPerLine ; ti++ )
+				{
+					__xOff = m_roterVectorAll[startPos + ti].x - m_roterVectorAll[startPos + ti - 1].x;
+					__yOff = m_roterVectorAll[startPos + ti].y - m_roterVectorAll[startPos + ti - 1].y;
+					
+					var _lengLineCur : Number = Math.sqrt(__xOff * __xOff + __yOff * __yOff);
+					_lengLineCurAdd += _lengLineCur;
+					trace("_lengLineCurAdd" , _lengLineCurAdd);
+					var _rotOff : Number = _lengLineCurAdd / zhouchang * 360;
+					var _rotOb : Number =  _rotOff + (90 - _angleView);
+					trace("_rotOb" , _rotOb);
+					
+					_rotOb = Math.abs(90  - _rotOb);
+					
+					//trace("_lengLineCur" , _lengLineCur);
+					//trace("_lengLineCurAdd" , _lengLineCurAdd);
+					
+					//stageShpae.graphics.moveTo(_lengLine1_2, 0);
+					//stageShpae.graphics.lineTo(_lengLineCurAdd, _zhongzhou);
+					
+					
+					//var _lineHeng : Number = (_lengLineCurAdd <= _lengLine1_2) ? (_lengLine1_2 - _lengLineCurAdd) : (_lengLineCurAdd - _lengLine1_2);
+					
+					//if ((_lengLineCurAdd > _lengLine1_2))
+					//	break;
+					
+					//trace("_lineHeng" , _lineHeng);
+					
+					//var _angleR : Number = Math.atan2(_lineHeng , _zhongzhou  );
+					
+					var _angleR : Number = _rotOb * Math.PI / 180;
+					
+					//trace("_angleR" , _angleR , _angleR / Math.PI * 180 , Math.cos(_angleR) );
+					
+					m_roterVectorAll[startPos + ti].z = Math.cos(_angleR) * _r;
+					
+					
+					//stageShpae.graphics.moveTo(_lengLine1_2, 0);
+					//stageShpae.graphics.lineTo(_lengLineCurAdd, _zhongzhou);
+				}
+				
+			}
+			
 			
 			m_eqm.changeFunction = null;
 			if (m_meridianAddUI)
