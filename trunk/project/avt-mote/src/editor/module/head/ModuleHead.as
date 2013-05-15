@@ -75,7 +75,7 @@ package editor.module.head
 			m_quadrant2.addChildAt(m_bmpCnt , 5);
 			m_quadrant2.indicate = m_bmpCnt;
 			
-			m_quadrant2.fullSreen = (true);
+			m_quadrant2.fullScreen = (true);
 			m_quadrant2.state = 2;
 			
 			m_eqm.curEdtQuadrant = m_quadrant2;
@@ -87,7 +87,7 @@ package editor.module.head
 			m_tb.btnAC.releaseFunction = onAddCircle;
 			m_tb.btnAM.releaseFunction = onAddMeridian;
 			
-			m_circleAddUI = new EdtAddUI(2 , 12);
+			m_circleAddUI = new EdtAddUI(1 , 12);
 			m_circleAddUI.changeFunction = onCircleChanged;
 			m_circleAddUI.okFunction = onCircleOK;
 			
@@ -368,7 +368,7 @@ package editor.module.head
 			
 			m_eqm.setQuadrant(m_quadrant0 , m_quadrant1 , m_quadrant2 , m_quadrant3);
 			
-			m_quadrant2.fullSreen = false;
+			m_quadrant2.fullScreen = false;
 			
 			m_eqm.setVertex(m_roterVectorAll);
 			

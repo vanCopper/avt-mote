@@ -18,6 +18,20 @@ package editor.struct
 			z = _z;
 		}
 		
+		public function normalize():void
+		{
+			var _len : Number = Math.sqrt(x * x + y * y + z * z);
+			
+			if (_len)
+			{
+				x /= _len;
+				y /= _len;
+				z /= _len;
+			}
+			
+			
+		}
+		
 	}
 
 }

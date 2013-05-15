@@ -2,6 +2,8 @@ package editor.ui {
 
 
 	
+	import editor.struct.Matrix4x4;
+	import editor.struct.Vertex3D;
 	import flash.display.DisplayObject;
 	import flash.display.Shape;	
 	import flash.display.Sprite;	
@@ -302,6 +304,10 @@ package editor.ui {
 			
 		}
 		
+		public static var PERSP_Y_R : Number = 0;
+		public static var PERSP_X_R : Number = 0;
+		
+		
 		public function map3DTo2D() : void
 		{
 			var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
@@ -327,8 +333,18 @@ package editor.ui {
 				}
 				else if (_quadrant == PERSP)
 				{
-					ev.dot.x = (xV.x * ev.vertex.x + zV.x * ev.vertex.z)  * __scale;
-					ev.dot.y = (ev.vertex.y + xV.y * ev.vertex.x + zV.y * ev.vertex.z) * __scale;
+					var m : Matrix4x4 = new Matrix4x4();
+					var v : Vertex3D = new Vertex3D();
+					v.y = -PERSP_X_R;
+					v.x = PERSP_Y_R;
+					
+					Matrix4x4.rotateArbitraryAxis(m , v  , Math.sqrt(PERSP_X_R * PERSP_X_R + PERSP_Y_R * PERSP_Y_R)/180*Math.PI);
+					
+					ev.dot.x = (m.Xx * ev.vertex.x + m.Xy * ev.vertex.y + m.Xz * ev.vertex.z)  * __scale;
+					ev.dot.y = (m.Yx * ev.vertex.x + m.Yy * ev.vertex.y + m.Yz * ev.vertex.z)  * __scale;
+					
+					//ev.dot.x = (xV.x * ev.vertex.x + zV.x * ev.vertex.z)  * __scale;
+					//ev.dot.y = (ev.vertex.y + xV.y * ev.vertex.x + zV.y * ev.vertex.z) * __scale;
 				}
 				else if (_quadrant == 0)
 				{
@@ -404,15 +420,19 @@ package editor.ui {
 		}
 		
 		public function updataPosInfo() : void {
-			if (_quadrant <= 1 ) {
+			if (_quadrant == 0 ) {
 				_posX.text = "X: "+ int(_xQ);
 				_posY.text = "Z: " + int(-_yQ);
+			}
+			else if (_quadrant == 1 ) {
+				_posX.text = "XR: "+ (PERSP_X_R);
+				_posY.text = "YR: " + (PERSP_Y_R);
 			}
 			else if (_quadrant == 2 ) {
 				_posX.text = "X: "+ int(_xQ);
 				_posY.text = "Y: "+ int(_yQ);	
 			}
-			else //if (_quadrant == 3 )
+			else if (_quadrant == 3 )
 			{
 				_posX.text = "Z: "+ int(_xQ);
 				_posY.text = "Y: "+ int(_yQ);	
@@ -467,11 +487,24 @@ package editor.ui {
 		}
 		
 		public function QuadrantRelateDrag ( xOff : Number , yOff : Number) : void {
-			_yQ += yOff;
-			_xQ += xOff;
+			
+			if (_quadrant != PERSP)
+			{
+				_yQ += yOff;
+				_xQ += xOff;
+			}
+			else
+			{
+				PERSP_Y_R += yOff;
+				PERSP_X_R += xOff;
+				renderLine();
+			}
+			
 		//	_gird.x = (_gird.x + xOff) % DEF_TILE_WIDTH;
 		//	_gird.y = (_gird.y + yOff) % DEF_TILE_WIDTH;
 			updataPosInfo();
+			
+			
 		}
 		
 		
@@ -587,11 +620,11 @@ package editor.ui {
 		
 		
 		
-		public function get fullSreen() : Boolean
+		public function get fullScreen() : Boolean
 		{
 			return _isThisFull;
 		}
-		public function set fullSreen(isFull : Boolean): void {
+		public function set fullScreen(isFull : Boolean): void {
 			
 			_isThisFull = isFull;
 			
@@ -641,9 +674,9 @@ package editor.ui {
 					
 			
 			
-			//if (_quadrant == EdtQuadrant.PERSP) {
-			//	EditorMain.myWorld3D.Edtdraw();
-			//}
+			if (_quadrant == EdtQuadrant.PERSP) {
+				renderLine();
+			}
 			
 		}
 		

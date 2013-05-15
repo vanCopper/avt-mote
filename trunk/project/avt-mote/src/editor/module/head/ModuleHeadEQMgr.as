@@ -233,9 +233,9 @@ package editor.module.head
 					)
 						return CallbackCenter.EVENT_OK;
 					
-					if (curEdtQuadrant.fullSreen)
+					if (curEdtQuadrant.fullScreen)
 					{	
-						curEdtQuadrant.fullSreen = false;
+						curEdtQuadrant.fullScreen = false;
 						
 						for each (_eq in m_edtQuadrantVector)
 						{
@@ -248,7 +248,7 @@ package editor.module.head
 					
 					var _curPos : int = int(mouseX / EdtDEF.QUADRANT_WIDTH) + int(mouseY / EdtDEF.QUADRANT_HEIGHT) * 2;
 					setFocusQuadrant(m_edtQuadrantVector[_curPos] , true);
-					curEdtQuadrant.fullSreen = true;
+					curEdtQuadrant.fullScreen = true;
 					
 					for each (var _eq : EdtQuadrant in m_edtQuadrantVector)
 					{
@@ -327,7 +327,7 @@ package editor.module.head
 		private function setFocus(me : MouseEvent,directSet : Boolean) : void
 		{
 			
-			if (!curEdtQuadrant.fullSreen && m_autoSwitch)
+			if (!curEdtQuadrant.fullScreen && m_autoSwitch)
 			{
 				if (me.stageX < 0 || me.stageX >= EdtDEF.QUADRANT_WIDTH*2 
 				|| me.stageY < 0 || me.stageY >= EdtDEF.QUADRANT_HEIGHT*2 
@@ -372,9 +372,9 @@ package editor.module.head
 					var pt : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
 			
 					if (pt.x >= 0
-						&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullSreen ? 2 : 1))
+						&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullScreen ? 2 : 1))
 						&& pt.y >= 0
-						&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullSreen ? 2 : 1))
+						&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullScreen ? 2 : 1))
 						)
 					{
 						m_selectorIndicate.visible = false;
@@ -386,7 +386,7 @@ package editor.module.head
 						m_indicate.x = pt.x + curEdtQuadrant.x;
 						m_indicate.y = pt.y + curEdtQuadrant.y;
 						
-						if (curEdtQuadrant.fullSreen)
+						if (curEdtQuadrant.fullScreen)
 						{
 							offX /= 2;
 							offY /= 2;
@@ -556,9 +556,9 @@ package editor.module.head
 			
 				
 				if (pt.x >= 0
-					&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullSreen ? 2 : 1))
+					&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullScreen ? 2 : 1))
 					&& pt.y >= 0
-					&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullSreen ? 2 : 1))
+					&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullScreen ? 2 : 1))
 					)
 				{
 					m_indicate.visible = true;
@@ -851,9 +851,9 @@ package editor.module.head
 				var pt : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
 			
 				if (pt.x >= 0
-					&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullSreen ? 2 : 1))
+					&& pt.x < (EdtDEF.QUADRANT_WIDTH * (curEdtQuadrant.fullScreen ? 2 : 1))
 					&& pt.y >= 0
-					&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullSreen ? 2 : 1))
+					&& pt.y < (EdtDEF.QUADRANT_HEIGHT * (curEdtQuadrant.fullScreen ? 2 : 1))
 					)
 				{
 					
