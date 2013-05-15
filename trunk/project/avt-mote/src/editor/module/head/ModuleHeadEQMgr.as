@@ -48,6 +48,24 @@ package editor.module.head
 		private var m_operatorDir : int;
 		private var m_operatorMoving : Boolean;
 		
+		public var changeFunction : Function;
+		
+		public var m_edtQuadrantVector : Vector<EdtQuadrant> = new Vector<EdtQuadrant>(4 , true);
+		
+		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
+		{
+			for each( var _e : EdtQuadrant in m_edtQuadrantVector )
+				 _e.setVertex(_e);
+		}
+		
+		public function setQuadrant(_e0 : EdtQuadrant , _e1 : EdtQuadrant , _e2 : EdtQuadrant , _e3 : EdtQuadrant ) : void
+		{
+			m_edtQuadrantVector[0] = _e0;
+			m_edtQuadrantVector[1] = _e1;
+			m_edtQuadrantVector[2] = _e2;
+			m_edtQuadrantVector[3] = _e3;
+		}
+		
 		public function ModuleHeadEQMgr() 
 		{
 			m_indicate = new Sprite();
@@ -445,6 +463,9 @@ package editor.module.head
 				
 				curEdtQuadrant.map2DTo3D();
 				
+				if (changeFunction != null)
+					changeFunction();
+				
 				_ptVArr = new Vector.<EdtVertexInfo>();
 				curEdtQuadrant.getMappedPoint(_ptVArr);
 				var needReselect : Boolean;
@@ -672,7 +693,7 @@ package editor.module.head
 			
 			GraphicsUtil.removeAllChildren(this);
 			
-			
+			changeFunction = null;
 		}
 		
 	}

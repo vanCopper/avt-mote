@@ -34,7 +34,11 @@ package editor.module.head
 		
 		private var m_eqm : ModuleHeadEQMgr;
 		
+		private var m_quadrant2 : EdtQuadrant;
+		private var m_quadrant1 : EdtQuadrant;
 		private var m_quadrant0 : EdtQuadrant;
+		private var m_quadrant3 : EdtQuadrant;
+		
 		private var m_bmp : Bitmap;
 		private var m_bmpShape : Shape;
 		
@@ -55,10 +59,10 @@ package editor.module.head
 			m_tb = new ModuleHeadToolbar();
 			m_content.addChild(m_tb).y = 25;
 			
-			m_quadrant0 = new EdtQuadrant(0);
+			m_quadrant2 = new EdtQuadrant(2);
 			
 			m_eqm = new ModuleHeadEQMgr();
-			m_eqm.addChildAt(m_quadrant0 , 0);
+			m_eqm.addChildAt(m_quadrant2 , 0);
 			
 			m_content.addChild(m_eqm).y = m_tb.y + m_tb.height; 
 			
@@ -68,13 +72,13 @@ package editor.module.head
 			m_bmpCnt.addChild(m_bmp);
 			m_bmpCnt.addChild(m_bmpShape);
 			
-			m_quadrant0.addChildAt(m_bmpCnt , 5);
-			m_quadrant0.indicate = m_bmpCnt;
+			m_quadrant2.addChildAt(m_bmpCnt , 5);
+			m_quadrant2.indicate = m_bmpCnt;
 			
-			m_quadrant0.fullSreen = (true);
-			m_quadrant0.state = 2;
+			m_quadrant2.fullSreen = (true);
+			m_quadrant2.state = 2;
 			
-			m_eqm.curEdtQuadrant = m_quadrant0;
+			m_eqm.curEdtQuadrant = m_quadrant2;
 			
 			m_tb.deactivateAll([m_tb.btnImport]);
 			
@@ -162,8 +166,131 @@ package editor.module.head
 				
 			}
 		}
+		private function connect2PT(ev0 : EdtVertex3D , ev1 : EdtVertex3D  ) : void
+		{
+			ev0.conect.push(ev1);
+			ev1.conect.push(ev0);
+			
+		}
+		
 		private function onMeridianOK(s : int):void
 		{
+			var _roterVectorAll : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+			
+			
+			drawRotor();
+			
+			if (s)
+			{
+				
+				var sp : Number = s + 0.5;
+				var pt1 : Point = new Point();
+				
+				
+				var _roterVectorL : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+				var _roterVectorR : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+				var ev : EdtVertex3D;
+				
+				var p : int = 1;
+				
+				const totalPerLine : int = (s + 1) * 2;
+				const totalLine : int = m_roterVectorAll.length / 3;
+				
+				for (var j : int = 0 ; j < m_roterVectorAll.length; j += 3 )
+				{
+					_roterVectorL.length = 0;
+					_roterVectorR.length = 0;
+						
+					_roterVectorAll.push(m_roterVectorAll[j].cloneV());
+					for (var i : int = 0 ; i < s ; i++ )
+					{
+						var rate : Number = (1 + i) / sp;
+						pt1.x = m_roterVectorAll[j].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j].x) * rate;
+						pt1.y = m_roterVectorAll[j].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j].y) * rate;
+						ev = new EdtVertex3D();
+						ev.x = pt1.x;
+						ev.y = pt1.y;
+						
+						_roterVectorL.push(ev);
+						
+						pt1.x = m_roterVectorAll[j+2].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j+2].x) * rate;
+						pt1.y = m_roterVectorAll[j+2].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j+2].y) * rate;
+						
+						ev = new EdtVertex3D();
+						ev.x = pt1.x;
+						ev.y = pt1.y;
+						
+						_roterVectorR.push(ev);
+						
+						
+						
+						//trace( rate);
+						
+					}
+					
+					var ti : int = _roterVectorAll.length;
+					
+					for each (ev in _roterVectorL)
+						_roterVectorAll.push(ev);
+					
+					
+					_roterVectorR.reverse();	
+					for each (ev in _roterVectorR)
+						_roterVectorAll.push(ev);
+					_roterVectorAll.push(m_roterVectorAll[j + 2].cloneV());	
+					
+					
+					
+					for ( ; ti < _roterVectorAll.length ; ti++ )
+					{
+						_roterVectorAll[ti - 1].priority = ti - 1;
+						_roterVectorAll[ti].priority = ti;
+						
+						connect2PT(_roterVectorAll[ti] , _roterVectorAll[ti - 1] );
+
+					}
+				}
+				
+				for ( ti = 0 ; ti < totalPerLine ; ti++ )
+				for (var l : int = 1 ; l < totalLine ;l++ )
+				{
+					connect2PT(_roterVectorAll[(l - 1) * totalPerLine + ti ] , _roterVectorAll[(l) * totalPerLine + ti ]);
+				}
+				
+				m_roterVectorAll = _roterVectorAll;
+				
+			}
+			
+			m_eqm.changeFunction = null;
+			if (m_meridianAddUI)
+			{
+				if (m_meridianAddUI.parent)
+					m_meridianAddUI.parent.removeChild(m_meridianAddUI);
+			}
+			
+			
+			
+			m_tb.deactivateAll([]);
+			
+			
+			if (!m_quadrant1)
+				m_quadrant1 = new EdtQuadrant(1);
+			if (!m_quadrant0)
+				m_quadrant0 = new EdtQuadrant(0);	
+			if (!m_quadrant3)
+				m_quadrant3 = new EdtQuadrant(3);	
+				
+			//m_eqm.addChildAt(m_quadrant1 , 1);
+			m_eqm.addChildAt(m_quadrant0 , 2);
+			//m_eqm.addChildAt(m_quadrant3 , 3);
+			
+			m_eqm.setQuadrant(m_quadrant0 , m_quadrant1 , m_quadrant2 , m_quadrant3);
+			
+			m_quadrant2.fullSreen = false;
+			m_quadrant2.setVertex(m_roterVectorAll);
+			m_quadrant0.setVertex(m_roterVectorAll);
+			
+			
 			
 		}
 		
@@ -264,7 +391,7 @@ package editor.module.head
 				
 			}
 			drawRotor();
-			m_quadrant0.setVertex(_roterVectorAll);
+			m_quadrant2.setVertex(_roterVectorAll);
 			m_roterVectorAll = _roterVectorAll;
 			
 			m_circleAddUI.visible = false;
@@ -348,7 +475,9 @@ package editor.module.head
 				m_meridianAddUI.y = btn.y + 50;
 				m_content.addChild(m_meridianAddUI);
 			
-				
+				m_eqm.changeFunction = function () : void {
+					onMeridianChanged(m_meridianAddUI.value);
+				}
 			}
 			
 		}
@@ -361,7 +490,7 @@ package editor.module.head
 				m_circleAddUI.y = btn.y + 50;
 				m_content.addChild(m_circleAddUI);
 			
-				m_quadrant0.setVertex(null);
+				m_quadrant2.setVertex(null);
 				
 				onCircleChanged(m_circleAddUI.value);
 			}
@@ -399,7 +528,7 @@ package editor.module.head
 			m_roterVector[1].y =  + ((m_bmp.bitmapData.height)  * 0.2);
 			m_roterVector[2].y =  + ((m_bmp.bitmapData.height)  >> 1);
 			
-			m_quadrant0.setVertex(m_roterVector);
+			m_quadrant2.setVertex(m_roterVector);
 			
 			m_tb.deactivateAll([m_tb.btnAC]);
 			
@@ -474,6 +603,11 @@ package editor.module.head
 			m_roterVector = null;
 			m_roterVectorAll = null;
 			
+			if (m_quadrant2) { m_quadrant2.dispose(); m_quadrant2 = null; }
+			if (m_quadrant1) { m_quadrant1.dispose(); m_quadrant1 = null; }
+			if (m_quadrant0) { m_quadrant0.dispose(); m_quadrant0 = null; }
+			if (m_quadrant3) { m_quadrant3.dispose(); m_quadrant3 = null; }
+
 			super.dispose();
 		}
 	}

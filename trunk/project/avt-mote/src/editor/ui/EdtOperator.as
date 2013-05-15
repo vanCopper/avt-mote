@@ -50,8 +50,8 @@ package editor.ui
 		}
 		
 		private static const X_CF : ColorTransform = new ColorTransform ( 0, 0, 0, 1, 255 ,0, 0, 0);
-		private static const Z_CF : ColorTransform = new ColorTransform ( 0, 0, 0, 1, 0, 255, 0, 0);
-		private static const Y_CF : ColorTransform = new ColorTransform ( 0, 0, 0, 1, 0, 0, 255, 0);
+		private static const Y_CF : ColorTransform = new ColorTransform ( 0, 0, 0, 1, 0, 255, 0, 0);
+		private static const Z_CF : ColorTransform = new ColorTransform ( 0, 0, 0, 1, 0, 0, 255, 0);
 		
 		public function setMode(_str : String) : void
 		{

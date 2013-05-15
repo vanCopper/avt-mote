@@ -116,8 +116,8 @@ package editor.ui {
 		}
 		public function EdtQuadrant( position : int ) {
 			
-			//this.x = EdtDEF.QUADRANT_X  + (position % 2) * EdtDEF.QUADRANT_WIDTH ;
-			//this.y = EdtDEF.QUADRANT_Y  + (int)(position / 2) * EdtDEF.QUADRANT_HEIGHT ;
+			this.x = (_quadrant % 2) * EdtDEF.QUADRANT_WIDTH ;
+			this.y = (int)(_quadrant / 2) * EdtDEF.QUADRANT_HEIGHT ;
 			
 			
 			_quadrant = position;
@@ -288,10 +288,23 @@ package editor.ui {
 			var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
 			for each( var ev : EdtVertexInfo in _edtVertexArray)
 			{
-				if (_quadrant == 0)
+				if (_quadrant == 2)
 				{
 					ev.dot.x = ev.vertex.x * __scale;
 					ev.dot.y = ev.vertex.y * __scale;
+				}
+				else if (_quadrant == 1)
+				{
+					ASSERT(false , "");
+				}
+				else if (_quadrant == 0)
+				{
+					ev.dot.x = ev.vertex.x * __scale;
+					ev.dot.y = ev.vertex.z * __scale;
+				}
+				else if (_quadrant == 3)
+				{
+					ASSERT(false , "");
 				}
 			}
 		}
@@ -300,10 +313,14 @@ package editor.ui {
 			var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
 			for each( var ev : EdtVertexInfo in _edtVertexArray)
 			{
-				if (_quadrant == 0)
+				if (_quadrant == 2)
 				{
 					ev.vertex.x = ev.dot.x / __scale;
 					ev.vertex.y = ev.dot.y / __scale;
+				}
+				else
+				{
+					ASSERT(false , "");
 				}
 			}
 		}
@@ -533,6 +550,16 @@ package editor.ui {
 		public function set fullSreen(isFull : Boolean): void {
 			
 			_isThisFull = isFull;
+			
+			if (isFull)
+			{
+				this.x = 
+				this.y = 0;
+			} 
+			else {
+				this.x = (_quadrant % 2) * EdtDEF.QUADRANT_WIDTH ;
+				this.y = (int)(_quadrant / 2) * EdtDEF.QUADRANT_HEIGHT ;
+			}
 			
 			
 			//_hotSpots.visible = !isFull;

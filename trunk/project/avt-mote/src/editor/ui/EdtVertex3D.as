@@ -19,7 +19,10 @@ package editor.ui
 		{
 			super(_x, _y, _z);
 		}
-		
+		public function cloneV():EdtVertex3D
+		{
+			return new EdtVertex3D(x, y, z);
+		}
 	}
 
 }
