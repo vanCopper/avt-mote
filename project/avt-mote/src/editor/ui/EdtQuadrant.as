@@ -249,6 +249,7 @@ package editor.ui {
 			}
 			_edtVertexArray.length = 0;
 			
+			if (_vertexArray)
 			for each (var v : EdtVertex3D in _vertexArray)
 			{
 				ev = new EdtVertexInfo(v);

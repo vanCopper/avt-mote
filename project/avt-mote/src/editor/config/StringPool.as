@@ -6,7 +6,7 @@ package editor.config
 	 */
 	public class StringPool
 	{
-		
+		public static var OK : String = "ok";
 		public static var ADD : String = "add";
 		public static var EDIT : String = "edit";
 		public static var FOLD : String = "fold";
