@@ -604,9 +604,10 @@ package   UISuit.UIComponent   {
 
              public function deactivate() 
              : void {
+					
                     removeAllListener ();
                     buttonMode = mouseEnabled /*= mouseChildren*/ = false;  
-                    
+                    setState(BSSButton.SBST_IDLE); 
              }
 		
 		public function get isBlock (  )

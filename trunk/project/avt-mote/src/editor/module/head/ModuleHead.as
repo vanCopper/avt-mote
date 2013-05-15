@@ -13,6 +13,7 @@ package editor.module.head
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Graphics;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -39,8 +40,12 @@ package editor.module.head
 		
 		private var m_bmpCnt : DisplayObjectContainer;
 		private var m_roterVector : Vector.<EdtVertex3D> ;
+		private var m_roterVectorAll : Vector.<EdtVertex3D> ;
 		
 		private var m_circleAddUI : EdtAddUI;
+		private var m_meridianAddUI : EdtAddUI;
+		
+		
 		private var m_headRoot : Vertex3D = new Vertex3D;
 		
 		public function ModuleHead(_content : DisplayObjectContainer) 
@@ -76,10 +81,16 @@ package editor.module.head
 			m_tb.btnImport.releaseFunction = onOpen;
 			m_tb.btnAR.releaseFunction = onAddRoter;
 			m_tb.btnAC.releaseFunction = onAddCircle;
+			m_tb.btnAM.releaseFunction = onAddMeridian;
 			
-			m_circleAddUI = new EdtAddUI(3 , 12);
+			m_circleAddUI = new EdtAddUI(2 , 12);
 			m_circleAddUI.changeFunction = onCircleChanged;
 			m_circleAddUI.okFunction = onCircleOK;
+			
+			m_meridianAddUI = new EdtAddUI(0 , 5);
+			m_meridianAddUI.changeFunction = onMeridianChanged;
+			m_meridianAddUI.okFunction = onMeridianOK;
+			
 		}
 		
 		
@@ -102,15 +113,65 @@ package editor.module.head
 			return v;
 		}
 		
+		private function onMeridianChanged(s : int):void
+		{
+			drawRotor();
+			
+			if (s)
+			{
+				var g : Graphics = m_bmpShape.graphics;
+				
+				var sp : Number = s + 0.5;
+				var pt0 : Point = new Point();
+				var pt1 : Point = new Point();
+				
+				g.lineStyle(1, 0xFF0000 , 0.6);
+				
+				
+				for (var i : int = 0 ; i < s ; i++ )
+				{
+					var rate : Number = (1 + i) / sp;
+					for (var j : int = 3 ; j < m_roterVectorAll.length; j += 3 )
+					{
+						
+						pt0.x = m_roterVectorAll[j-3].x + (m_roterVectorAll[j-2].x - m_roterVectorAll[j-3].x) * rate;
+						pt0.y = m_roterVectorAll[j-3].y + (m_roterVectorAll[j-2].y - m_roterVectorAll[j-3].y) * rate;
+						
+						pt1.x = m_roterVectorAll[j].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j].x) * rate;
+						pt1.y = m_roterVectorAll[j].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j].y) * rate;
+						
+						g.moveTo(pt0.x , pt0.y);
+						g.lineTo(pt1.x , pt1.y);
+					}
+					
+					for ( j  = 3 ; j < m_roterVectorAll.length; j += 3 )
+					{
+						
+						pt0.x = m_roterVectorAll[j-1].x + (m_roterVectorAll[j-2].x - m_roterVectorAll[j-1].x) * rate;
+						pt0.y = m_roterVectorAll[j-1].y + (m_roterVectorAll[j-2].y - m_roterVectorAll[j-1].y) * rate;
+						
+						pt1.x = m_roterVectorAll[j+2].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j+2].x) * rate;
+						pt1.y = m_roterVectorAll[j+2].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j+2].y) * rate;
+						
+						g.moveTo(pt0.x , pt0.y);
+						g.lineTo(pt1.x , pt1.y);
+					}
+					//trace( rate);
+					
+				}
+				
+			}
+		}
+		private function onMeridianOK(s : int):void
+		{
+			
+		}
 		
-		private function onCircleOK(m : int):void
+		private function onCircleOK(m_2 : int):void
 		{
 			var v : Point = getRoter90Pt();
+			var m : int = m_2 * 2;
 			
-			m--;
-			
-			var offX : Number = m_roterVector[2].x - m_roterVector[0].x;
-			var offY : Number = m_roterVector[2].y - m_roterVector[0].y;
 			
 			
 			var _roterVector : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>(3, true);
@@ -131,11 +192,41 @@ package editor.module.head
 			
 			for (var i : int = 0 ; i <=  m; i++ )
 			{
-				var rate : Number = i / m;
-				var centerX : Number = m_roterVector[0].x + offX * rate;
-				var centerY : Number =  m_roterVector[0].y + offY * rate;
+				var rate : Number;
 				
-				var scale : Number = ( ((m / 2) - Math.abs(i - m / 2)) / (m / 2)) * 0.3 + 0.7;
+				var centerX : Number;
+				var centerY : Number;
+				var offX : Number;
+				var offY : Number;
+				var scale : Number;
+				if (i < m_2)
+				{
+					rate = ( m_2 - i) / m_2;
+					offX = m_roterVector[2].x - m_roterVector[1].x;
+					offY = m_roterVector[2].y - m_roterVector[1].y;
+					
+					centerX = m_roterVector[1].x + offX * rate;
+					centerY =  m_roterVector[1].y + offY * rate;
+					
+					scale = 1 - rate * 0.5;
+					
+					//trace(rate  , m_roterVector[1].x , offX , offY , centerX , centerY);
+					
+				} else {
+					rate = (  i - m_2  ) / m_2;
+					rate = 1 - rate;
+					
+					offX = m_roterVector[1].x - m_roterVector[0].x;
+					offY = m_roterVector[1].y - m_roterVector[0].y;
+					
+					centerX = m_roterVector[0].x + offX * rate;
+					centerY = m_roterVector[0].y + offY * rate;
+					
+					scale = rate * 0.3 + 0.7;
+
+				}
+				
+				
 					
 				_roterVector[0] = new EdtVertex3D();
 				_roterVector[0].priority = 0 + i * 3;
@@ -143,7 +234,6 @@ package editor.module.head
 				_roterVector[1].priority = 2 + i * 3;
 				_roterVector[2] = new EdtVertex3D();
 				_roterVector[2].priority = 3 + i * 3;
-				
 				
 				_roterVector[1].x = centerX;
 				_roterVector[1].y = centerY;
@@ -175,37 +265,67 @@ package editor.module.head
 			}
 			drawRotor();
 			m_quadrant0.setVertex(_roterVectorAll);
+			m_roterVectorAll = _roterVectorAll;
+			
 			m_circleAddUI.visible = false;
+			
+			m_tb.deactivateAll([m_tb.btnAM]);
 			
 		}
 		
 		
 		
-		private function onCircleChanged(m : int):void
+		private function onCircleChanged(m_2 : int):void
 		{
 			
 			
-			
 			var v : Point = getRoter90Pt();
-			
-			m--;
-			var offX : Number = m_roterVector[2].x - m_roterVector[0].x;
-			var offY : Number = m_roterVector[2].y - m_roterVector[0].y;
+			var m : int = m_2 * 2;
 			
 			drawRotor();
 			m_bmpShape.graphics.lineStyle(1, 0xFF0000, 1);
 			
+			
 			for (var i : int = 0 ; i <=  m; i++ )
 			{
-				var rate : Number = i / m;
-				var centerX : Number = m_roterVector[0].x + offX * rate;
-				var centerY : Number =  m_roterVector[0].y + offY * rate;
+				var rate : Number;
 				
-				var scale : Number = ( ((m / 2) - Math.abs(i - m / 2)) / (m / 2)) * 0.3 + 0.7;
+				var centerX : Number;
+				var centerY : Number;
+				var offX : Number;
+				var offY : Number;
+				var scale : Number;
+				if (i < m_2)
+				{
+					rate = ( m_2 - i) / m_2;
+					offX = m_roterVector[2].x - m_roterVector[1].x;
+					offY = m_roterVector[2].y - m_roterVector[1].y;
+					
+					centerX = m_roterVector[1].x + offX * rate;
+					centerY =  m_roterVector[1].y + offY * rate;
+					
+					scale = 1 - rate * 0.5;
+					
+					//trace(rate  , m_roterVector[1].x , offX , offY , centerX , centerY);
+					
+				} else {
+					rate = (  i - m_2  ) / m_2;
+					rate = 1 - rate;
+
+					offX = m_roterVector[1].x - m_roterVector[0].x;
+					offY = m_roterVector[1].y - m_roterVector[0].y;
+					
+					centerX = m_roterVector[0].x + offX * rate;
+					centerY = m_roterVector[0].y + offY * rate;
+					
+					scale = rate * 0.3 + 0.7;
+
+				}
+				
+				
 				
 				m_bmpShape.graphics.moveTo(centerX + v.x * scale , centerY + v.y * scale );
 				m_bmpShape.graphics.lineTo(centerX - v.x * scale , centerY - v.y * scale );
-				
 			}
 			
 		}
@@ -221,13 +341,19 @@ package editor.module.head
 			m_bmpShape.graphics.drawCircle(m_headRoot.x , m_headRoot.y , 5);
 		}
 		
-		
-		
-		
+		private function onAddMeridian(btn : BSSButton) : void {
+			if (!m_meridianAddUI.parent)
+			{
+				m_meridianAddUI.x = btn.x;
+				m_meridianAddUI.y = btn.y + 50;
+				m_content.addChild(m_meridianAddUI);
+			
+				
+			}
+			
+		}
 		private function onAddCircle(btn : BSSButton) : void {
 			
-			
-			var radian : Number = Math.atan2(m_roterVector[2].x  - m_roterVector[0].x  , m_roterVector[2].y  - m_roterVector[0].y );
 			
 			if (!m_circleAddUI.parent)
 			{
@@ -346,6 +472,7 @@ package editor.module.head
 			
 			m_bmpCnt = null;
 			m_roterVector = null;
+			m_roterVectorAll = null;
 			
 			super.dispose();
 		}
