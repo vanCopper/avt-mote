@@ -13,6 +13,7 @@ package editor.module.head
 		public var btnImport : BSSButton;
 		public var btnAR : BSSButton;
 		public var btnAC : BSSButton;
+		public var btnAM : BSSButton;
 		
 		public function ModuleHeadToolbar() 
 		{
@@ -34,6 +35,12 @@ package editor.module.head
 			btnAC.y = 5 ;
 			addChild(btnAC) ;
 			
+			btnAM= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_ADD_MERIDIAN , true);
+			btnAM.x = 5 + btnAC.x + btnAC.width;
+			btnAM.y = 5 ;
+			addChild(btnAM) ;
+			
+			
 			
 		}
 		
@@ -42,10 +49,14 @@ package editor.module.head
 			btnImport.deactivate();
 			btnAR.deactivate();
 			btnAC.deactivate();
+			btnAM.deactivate();
 			
 			btnImport.alpha = 
 			btnAR.alpha =
-			btnAC.alpha = 0.5;
+			btnAC.alpha = 
+			btnAM.alpha = 
+			
+			0.5;
 			
 			for each (var btn : BSSButton in exceptArr)
 			{

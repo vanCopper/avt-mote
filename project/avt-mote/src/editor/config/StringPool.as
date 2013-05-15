@@ -27,6 +27,7 @@ package editor.config
 		public static var MODULE_HEAD_IMPORT_IMAGE:String = "import image";
 		public static var MODULE_HEAD_ADD_ROTOR:String = "add rotor";
 		public static var MODULE_HEAD_ADD_CIRCLE:String = "add circle";
+		public static var MODULE_HEAD_ADD_MERIDIAN:String = "add meridian";
 	}
 
 }
