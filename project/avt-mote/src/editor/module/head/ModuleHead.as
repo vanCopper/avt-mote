@@ -280,18 +280,14 @@ package editor.module.head
 			if (!m_quadrant3)
 				m_quadrant3 = new EdtQuadrant(3);	
 				
-			m_eqm.addChildAt(m_quadrant0 , 0);
-			m_eqm.addChildAt(m_quadrant1 , 1);
-			m_eqm.addChildAt(m_quadrant2 , 2);
-			m_eqm.addChildAt(m_quadrant3 , 3);
 			
 			m_eqm.setQuadrant(m_quadrant0 , m_quadrant1 , m_quadrant2 , m_quadrant3);
 			
 			m_quadrant2.fullSreen = false;
-			m_quadrant2.setVertex(m_roterVectorAll);
-			m_quadrant0.setVertex(m_roterVectorAll);
 			
+			m_eqm.setVertex(m_roterVectorAll);
 			
+			m_content.stage.focus = m_content.stage;
 			
 		}
 		
@@ -398,6 +394,7 @@ package editor.module.head
 			m_circleAddUI.visible = false;
 			
 			m_tb.deactivateAll([m_tb.btnAM]);
+			
 			
 		}
 		

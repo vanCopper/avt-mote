@@ -114,13 +114,21 @@ package editor.ui {
 			GraphicsUtil.removeAllChildren(this);
 		
 		}
+		
+		public function get quadrant() : int
+		{
+			return _quadrant;
+		}
+		
 		public function EdtQuadrant( position : int ) {
+			
+			_quadrant = position;
 			
 			this.x = (_quadrant % 2) * EdtDEF.QUADRANT_WIDTH ;
 			this.y = (int)(_quadrant / 2) * EdtDEF.QUADRANT_HEIGHT ;
 			
 			
-			_quadrant = position;
+			
 			
 			
 		
@@ -240,6 +248,17 @@ package editor.ui {
 			
 		}
 		
+		public function  updateDotStatus(_ptVArr : Vector.<EdtVertexInfo>):void
+		{
+			for each (var _ev : EdtVertexInfo in _ptVArr)
+			{
+				var _myev : EdtVertexInfo = EdtVertexInfo.getEdtVertexInfo(_ev.vertex , _edtVertexArray);
+				
+				_myev.dot.mode = _ev.dot.mode;
+			}
+			
+		}
+		
 		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
 		{
 			for each( var ev : EdtVertexInfo in _edtVertexArray)
@@ -286,6 +305,19 @@ package editor.ui {
 		public function map3DTo2D() : void
 		{
 			var __scale : Number = (_isThisFull ? 2 : 1) * scaleQ ;
+			
+			if (_quadrant == PERSP)
+			{
+				var _g3 : Number = Math.sqrt(3);
+				var xV : Point = new Point();
+				xV.x = -_g3;
+				xV.y = -0.5;
+				
+				var zV : Point = new Point();
+				zV.x = _g3;
+				zV.y = -0.5;
+				
+			}
 			for each( var ev : EdtVertexInfo in _edtVertexArray)
 			{
 				if (_quadrant == 2)
@@ -293,9 +325,10 @@ package editor.ui {
 					ev.dot.x = ev.vertex.x * __scale;
 					ev.dot.y = ev.vertex.y * __scale;
 				}
-				else if (_quadrant == 1)
+				else if (_quadrant == PERSP)
 				{
-					ASSERT(false , "");
+					ev.dot.x = (xV.x * ev.vertex.x + zV.x * ev.vertex.z)  * __scale;
+					ev.dot.y = (ev.vertex.y + xV.y * ev.vertex.x + zV.y * ev.vertex.z) * __scale;
 				}
 				else if (_quadrant == 0)
 				{
@@ -303,6 +336,11 @@ package editor.ui {
 					ev.dot.y = ev.vertex.z * __scale;
 				}
 				else if (_quadrant == 3)
+				{
+					ev.dot.x = -ev.vertex.z * __scale;
+					ev.dot.y = ev.vertex.y * __scale;
+				}
+				else
 				{
 					ASSERT(false , "");
 				}
@@ -318,9 +356,15 @@ package editor.ui {
 					ev.vertex.x = ev.dot.x / __scale;
 					ev.vertex.y = ev.dot.y / __scale;
 				}
-				else
+				else if (_quadrant == 0)
 				{
-					ASSERT(false , "");
+					ev.vertex.x = ev.dot.x / __scale;
+					ev.vertex.z = ev.dot.y / __scale;
+				}
+				else if (_quadrant == 3)
+				{
+					ev.vertex.z = -ev.dot.x / __scale;
+					ev.vertex.y = ev.dot.y / __scale;
 				}
 			}
 		}
