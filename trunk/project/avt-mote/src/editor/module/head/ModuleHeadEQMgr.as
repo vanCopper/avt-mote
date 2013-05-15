@@ -9,6 +9,7 @@ package editor.module.head
 	import editor.ui.EdtOperator;
 	import editor.ui.EdtQuadrant;
 	import editor.ui.EdtSelector;
+	import editor.ui.EdtVertex3D;
 	import editor.ui.EdtVertexInfo;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -50,12 +51,12 @@ package editor.module.head
 		
 		public var changeFunction : Function;
 		
-		public var m_edtQuadrantVector : Vector<EdtQuadrant> = new Vector<EdtQuadrant>(4 , true);
+		public var m_edtQuadrantVector : Vector.<EdtQuadrant> = new Vector.<EdtQuadrant>(4 , true);
 		
 		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
 		{
 			for each( var _e : EdtQuadrant in m_edtQuadrantVector )
-				 _e.setVertex(_e);
+				 _e.setVertex(_vertexArray);
 		}
 		
 		public function setQuadrant(_e0 : EdtQuadrant , _e1 : EdtQuadrant , _e2 : EdtQuadrant , _e3 : EdtQuadrant ) : void
