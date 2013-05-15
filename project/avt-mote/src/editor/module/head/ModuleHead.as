@@ -280,9 +280,10 @@ package editor.module.head
 			if (!m_quadrant3)
 				m_quadrant3 = new EdtQuadrant(3);	
 				
-			//m_eqm.addChildAt(m_quadrant1 , 1);
-			m_eqm.addChildAt(m_quadrant0 , 2);
-			//m_eqm.addChildAt(m_quadrant3 , 3);
+			m_eqm.addChildAt(m_quadrant0 , 0);
+			m_eqm.addChildAt(m_quadrant1 , 1);
+			m_eqm.addChildAt(m_quadrant2 , 2);
+			m_eqm.addChildAt(m_quadrant3 , 3);
 			
 			m_eqm.setQuadrant(m_quadrant0 , m_quadrant1 , m_quadrant2 , m_quadrant3);
 			
