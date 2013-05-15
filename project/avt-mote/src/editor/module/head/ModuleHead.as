@@ -72,7 +72,6 @@ package editor.module.head
 			m_bmpCnt.addChild(m_bmp);
 			m_bmpCnt.addChild(m_bmpShape);
 			
-			m_quadrant2.addChildAt(m_bmpCnt , 5);
 			m_quadrant2.indicate = m_bmpCnt;
 			
 			m_quadrant2.fullScreen = (true);
