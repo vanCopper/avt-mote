@@ -55,10 +55,32 @@ package editor.ui
 		
 		public function setMode(_str : String) : void
 		{
+			mouseChildren = mouseEnabled = true;
 			if (_str == "XY")
 			{
 				m_moveOPTR.transform.colorTransform = X_CF;
 				m_moveOPTU.transform.colorTransform = Y_CF;
+				scaleY = -1;
+			}
+			else if (_str == "XZ")
+			{
+				m_moveOPTR.transform.colorTransform = X_CF;
+				m_moveOPTU.transform.colorTransform = Z_CF;
+				scaleY = 1;
+			}
+			else if (_str == "ZY")
+			{
+				m_moveOPTR.transform.colorTransform = Z_CF;
+				m_moveOPTU.transform.colorTransform = Y_CF;
+				scaleY = -1;
+			}
+			else if (_str == "PERSP")
+			{
+				m_moveOPTR.transform.colorTransform = X_CF;
+				m_moveOPTU.transform.colorTransform = Z_CF;
+				scaleY = 1;
+				
+				mouseChildren = mouseEnabled = false;
 			}
 		}
 		
