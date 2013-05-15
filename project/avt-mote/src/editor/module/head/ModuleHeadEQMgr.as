@@ -438,6 +438,9 @@ package editor.module.head
 			{
 				setVertexPosMove();
 				
+				var _ptm : Point = curEdtQuadrant.globalToLocal(new Point(me.stageX , me.stageY));
+				m_indicate.x = _ptm.x;
+				m_indicate.y = _ptm.y;
 				
 				
 				curEdtQuadrant.map2DTo3D();
@@ -481,6 +484,8 @@ package editor.module.head
 				}
 				m_operatorMoving = false;
 				m_selectorIndicate.alpha = 1;
+				m_selectorIndicate.visible = true;
+				
 				
 			} else if (isMovineQuadrant)
 			{
