@@ -480,6 +480,7 @@ package editor.module.head
 					setOperatorIndicatePos();
 				}
 				m_operatorMoving = false;
+				m_selectorIndicate.alpha = 1;
 				
 			} else if (isMovineQuadrant)
 			{
@@ -590,7 +591,7 @@ package editor.module.head
 				__y += __ptv.point.y;
 				
 			}
-			trace(__x , __y);
+			//trace(__x , __y);
 			
 			__x /= m_selectedEVI.length;
 			__y /= m_selectedEVI.length;

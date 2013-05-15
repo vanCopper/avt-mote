@@ -1,5 +1,6 @@
 package   UISuit.UIComponent   {  
 	
+
 	import flash.ui.Mouse;
 	import UISuit.UIUtils.GraphicsUtil;
     
@@ -16,8 +17,8 @@ package   UISuit.UIComponent   {
 		private var m_left : int;
 		private var m_right : int;
 		
-		public var m_min : Number;
-		public var m_max : Number;
+		private var m_min : Number;
+		private var m_max : Number;
 		
 		private  var m_isHorizontal : Boolean;
 
@@ -51,15 +52,15 @@ package   UISuit.UIComponent   {
 			if (m_bgData) 
 				this.addChild (m_bgData) ;
 				
-                    if (isNaN(__left ))
-                        m_left = this.getRect(this).left;
-                    else
-                        m_left = __left;
-                        
-                    if (isNaN(__right))
-                        m_right = this.getRect(this).right;
-                    else
-                        m_right = __right;
+			if (isNaN(__left ))
+				m_left = this.getRect(this).left;
+			else
+				m_left = __left;
+				
+			if (isNaN(__right))
+				m_right = this.getRect(this).right;
+			else
+				m_right = __right;
 
 			
 			m_min = min;
@@ -121,6 +122,19 @@ package   UISuit.UIComponent   {
 			}
 		}
 		
+		public function getThumbValue(  thumbIndex : int ) : Number
+		{
+			CONFIG::ASSERT {
+				ASSERT(thumbIndex >= 0 && thumbIndex < m_thumbList.length , ("error index "));
+			}
+			if (thumbIndex >= 0 && thumbIndex < m_thumbList.length)
+			{
+				return ( (m_max - m_min) * (m_thumbList[thumbIndex].x - m_left) / (m_right - m_left) + m_min );
+			}
+			else
+				return(m_min);
+		}
+		
 		public function setThumbPos ( thumbIndex : int , newPos : int , bound : Boolean = true)
 		: void {
 			CONFIG::ASSERT {
@@ -180,34 +194,39 @@ package   UISuit.UIComponent   {
 			m_bgData = null;
 		}
 
-                public static function createSimpleBSSSlider ( isHorizontal : Boolean = true, __left : Number = NaN, __right : Number = NaN , min : Number = 0, max : Number = 0 )
-                : BSSSlider {
-                        var shape : Shape = new Shape();
-                        /*
-                        var g : Graphics = shape.graphics;
-                        g.lineStyle(2, 0, 1);
-                        g.moveTo( -2, -10);
-                        g.lineTo( -2, 10);
-                        g.lineStyle(2, 0, 0.5);
-                        g.moveTo( +2, -10);
-                        g.lineTo( +2, 10);
-                        */
-                        GraphicsUtil.DrawRect(shape.graphics , -6 , -12 , 12 , 24 , 0xFFCCCC , 0.8);
-                        var btnCtar : Sprite = new Sprite();
-                        btnCtar.addChild(shape);
+		public static function createSimpleBSSSlider ( isHorizontal : Boolean = true, _btn:BSSButton = null , __left : Number = NaN, __right : Number = NaN , min : Number = 0, max : Number = 0 )
+		: BSSSlider {
+				
+				/*
+				var g : Graphics = shape.graphics;
+				g.lineStyle(2, 0, 1);
+				g.moveTo( -2, -10);
+				g.lineTo( -2, 10);
+				g.lineStyle(2, 0, 0.5);
+				g.moveTo( +2, -10);
+				g.lineTo( +2, 10);
+				*/
+				
+				if (!_btn)
+				{
+					var shape : Shape = new Shape();
+					GraphicsUtil.DrawRect(shape.graphics , -6 , -12 , 12 , 24 , 0xFFCCCC , 0.8);
+					var btnCtar : Sprite = new Sprite();
+					btnCtar.addChild(shape);
+					_btn = new BSSButton(btnCtar);
+				}
+				
+				var bgData : Shape ;
+				if (!isNaN(__left) && !isNaN(__right))
+				{ 
+					bgData = new Shape();
+					bgData.graphics.lineStyle(2, 0 , 0.5);
+					bgData.graphics.moveTo(__left , 0);
+					bgData.graphics.lineTo(__right , 0);
+				}
 
-
-                        var bgData : Shape ;
-                        if (!isNaN(__left) && !isNaN(__right))
-                        { 
-                            bgData = new Shape();
-                            bgData.graphics.lineStyle(2, 0 , 0.5);
-                            bgData.graphics.moveTo(__left , 0);
-                            bgData.graphics.lineTo(__right , 0);
-                        }
-
-                        return new BSSSlider(bgData , btnCtar , isHorizontal, __left, __right , min , max ) ;
-                }
+				return new BSSSlider(bgData , _btn , isHorizontal, __left, __right , min , max ) ;
+		}
 
 
         public static function BSSSlider_init()
@@ -246,13 +265,27 @@ package   UISuit.UIComponent   {
 			
 			if (!s_BSSSlider_FocusBSSSlider) //��Ϊ�� ��ǰ��ӹ� ��ûɾ��
 			{
-				fBSSSlider_FocusBSSSlider.addEventListener(MouseEvent.MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove);
-				fBSSSlider_FocusBSSSlider.addEventListener(MouseEvent.MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
-				//CallBackMgr.registerCallBack(CALLBACK.STAGE_MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove);
-				//CallBackMgr.registerCallBack(CALLBACK.STAGE_MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
+				//fBSSSlider_FocusBSSSlider.addEventListener(MouseEvent.MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove);
+				//fBSSSlider_FocusBSSSlider.addEventListener(MouseEvent.MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
+				
+				import CallbackUtil.CallbackCenter;
+				import editor.config.CALLBACK;
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove_CB);
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp_CB);
 			}
 			s_BSSSlider_FocusBSSSlider = fBSSSlider_FocusBSSSlider;
 		}
+		private static function BSSSlider_onFocusBSSSliderThumbMouseMove_CB(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		{
+			BSSSlider_onFocusBSSSliderThumbMouseMove(args as MouseEvent);
+			return 0;
+		}
+		private static function BSSSlider_onFocusBSSSliderThumbMouseUp_CB(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		{
+			BSSSlider_onFocusBSSSliderThumbMouseUp(args as MouseEvent);
+			return 0;
+		}
+		
 		
 		private static function BSSSlider_onFocusBSSSliderThumbMouseMove(e : MouseEvent): void
 		 {
@@ -280,10 +313,14 @@ package   UISuit.UIComponent   {
 				if (s_BSSSlider_FocusBSSSlider.changeFunction != null)
 					s_BSSSlider_FocusBSSSlider.changeFunction(s_BSSSlider_FocusBSSSlider);	
 		
-				//CallBackMgr.unregisterCallBack(CALLBACK.STAGE_MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove);
-				//CallBackMgr.unregisterCallBack(CALLBACK.STAGE_MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
-				s_BSSSlider_FocusBSSSlider.removeEventListener(MouseEvent.MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove);
-				s_BSSSlider_FocusBSSSlider.removeEventListener(MouseEvent.MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
+				
+				//s_BSSSlider_FocusBSSSlider.removeEventListener(MouseEvent.MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove);
+				//s_BSSSlider_FocusBSSSlider.removeEventListener(MouseEvent.MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
+				
+				import CallbackUtil.CallbackCenter;
+				import editor.config.CALLBACK;
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove_CB);
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp_CB);
 			  
 				s_BSSSlider_FocusBSSSlider.focusBSSSliderBtnIndex = -1;
 				s_BSSSlider_FocusBSSSlider = null;
