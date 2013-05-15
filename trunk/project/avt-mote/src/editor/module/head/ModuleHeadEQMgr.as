@@ -57,6 +57,7 @@ package editor.module.head
 		
 		private var m_autoSwitch : Boolean;
 		private var m_timeoutInv : int;
+		private var m_crossShape : Shape;
 		
 		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
 		{
@@ -87,6 +88,7 @@ package editor.module.head
 			addChildAt(m_edtQuadrantVector[0] , 0);
 									
 			addChild(_shp);
+			m_crossShape = _shp;
 			
 			m_autoSwitch = true;
 		}
@@ -236,6 +238,7 @@ package editor.module.head
 					if (curEdtQuadrant.fullScreen)
 					{	
 						curEdtQuadrant.fullScreen = false;
+						m_crossShape.visible = true;
 						
 						for each (_eq in m_edtQuadrantVector)
 						{
@@ -257,6 +260,7 @@ package editor.module.head
 					}
 					if (m_operatorIndicate.visible)
 						computeOperatorIndicatePos(true);
+					m_crossShape.visible = false;
 				}
 				
 			}

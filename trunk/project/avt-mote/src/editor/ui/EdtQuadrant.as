@@ -59,7 +59,7 @@ package editor.ui {
 		private var _CoordinateAxisX_y : Number;
 		
 		private var _indicate : DisplayObject;
-		
+		private var _maskContainer : Sprite;
 		
 		public function set indicate ( _dsp : DisplayObject) : void {
 			
@@ -69,18 +69,12 @@ package editor.ui {
 				_indicate.x = _CoordinateAxisY.x;
 				_indicate.y = _CoordinateAxisX.y;
 				
-				var _girdBG : Shape= new Shape();
-				_girdBG.graphics.beginFill(0xFFFFFF);
-				_girdBG.graphics.drawRect(0,0,EdtDEF.QUADRANT_WIDTH,EdtDEF.QUADRANT_HEIGHT);
-				_girdBG.graphics.endFill();
-				addChild(_girdBG);
-				
-				_indicate.mask = _girdBG;
+				_maskContainer.addChildAt(_indicate , 0);
 			}
 			else 
 			{
-				if (_indicate)	
-					_indicate.mask = null;
+				if (_indicate && _indicate.parent)
+					_indicate.parent.removeChild( _indicate);
 				_indicate = null;
 			}
 		}
@@ -108,10 +102,12 @@ package editor.ui {
 			_lineShapeDym = null;
 			_dotShape = null;
 		
-			if (_indicate)	
-				_indicate.mask = null;
 			_indicate = null;
 			 
+			if (_maskContainer)
+				_maskContainer.mask = null;
+			_maskContainer = null;
+			
 			import  UISuit.UIUtils.*;
 			GraphicsUtil.removeAllChildren(this);
 		
@@ -142,13 +138,31 @@ package editor.ui {
 				BGColor = EdtSET.bg_color;
 				
 				
-				var _girdMask : Shape = new Shape();
-				_girdMask.graphics.beginFill(0xFFFFFF);
-				_girdMask.graphics.drawRect(0,0,EdtDEF.QUADRANT_WIDTH,EdtDEF.QUADRANT_HEIGHT);
-				_girdMask.graphics.endFill();
+				var _girdMask : Shape;
+				_maskContainer = new Sprite();
+				{
+					_girdMask = new Shape();
+					_girdMask.graphics.beginFill(0xFFFFFF);
+					_girdMask.graphics.drawRect(0,0,EdtDEF.QUADRANT_WIDTH,EdtDEF.QUADRANT_HEIGHT);
+					_girdMask.graphics.endFill();
+					addChild(_girdMask);
+					_maskContainer.mask = _girdMask;
+				}
 				
 				
-				_gird = new Shape(); _gird.mask = _girdMask;
+				
+				
+				
+				_gird = new Shape(); 
+				{
+					_girdMask = new Shape();
+					_girdMask.graphics.beginFill(0xFFFFFF);
+					_girdMask.graphics.drawRect(0,0,EdtDEF.QUADRANT_WIDTH,EdtDEF.QUADRANT_HEIGHT);
+					_girdMask.graphics.endFill();
+					addChild(_girdMask);
+					_gird.mask = _girdMask;
+				}
+				
 				var l : int;
 			
 				_gird.graphics.lineStyle (1, 0xAAAAAA);  
@@ -224,7 +238,6 @@ package editor.ui {
 			}
 			
 			addChild (_girdBG);
-			addChild (_girdMask);
 			addChild (_gird);
 			addChild (_CoordinateAxisX);
 			addChild (_CoordinateAxisY);
@@ -241,9 +254,11 @@ package editor.ui {
 				EditorMain.myWorld3D.y =  EdtDEF.QUADRANT_HEIGHT /2;
 			}*/
 			
-			addChild (_lineShape);
-			addChild (_lineShapeDym);
-			addChild (_dotShape);
+			_maskContainer.addChild (_lineShape);
+			_maskContainer.addChild (_lineShapeDym);
+			_maskContainer.addChild (_dotShape);
+			addChild(_maskContainer);
+			
 			
 			_xQ = 0;
 			_yQ = 0;
@@ -533,7 +548,7 @@ package editor.ui {
 
 			if (_indicate)
 			{	
-				_indicate.scaleX = _indicate.scaleY = _indicate.mask.scaleX * scaleQ;
+				_indicate.scaleX = _indicate.scaleY = (fullScreen ? 2 : 1) * scaleQ;
 			}
 			
 			renderLine();
@@ -650,6 +665,8 @@ package editor.ui {
 			_CoordinateAxisY.scaleY = 
 			_girdBG.scaleX = 
 			_girdBG.scaleY = 
+			_maskContainer.mask.scaleX = 
+			_maskContainer.mask.scaleY = 
 			_gird.mask.scaleX = 
 			_gird.mask.scaleY = 
 			_gird.scaleX = 
@@ -657,8 +674,7 @@ package editor.ui {
 			
 			if (_indicate)
 			{	
-				_indicate.mask.scaleX = _indicate.mask.scaleY = isFull ? 2 : 1;
-				_indicate.scaleX = _indicate.scaleY = _indicate.mask.scaleX * scaleQ;
+				_indicate.scaleX = _indicate.scaleY = (isFull ? 2 : 1) * scaleQ;
 			}
 			_xQ = _xQ;
 			_yQ = _yQ;
@@ -674,9 +690,9 @@ package editor.ui {
 					
 			
 			
-			if (_quadrant == EdtQuadrant.PERSP) {
+			//if (_quadrant == EdtQuadrant.PERSP) {
 				renderLine();
-			}
+			//}
 			
 		}
 		
