@@ -213,15 +213,20 @@ package editor.ui {
 				_posX.x = EdtDEF.POSX ;
 				_posX.y = EdtDEF.INFOY ;
 				_posX.selectable = false;
-				_posY.x = EdtDEF.POSX  + 50;
+				_posY.x = EdtDEF.POSX  + 55;
 				_posY.y = EdtDEF.INFOY ;
 				_posY.selectable = false;
 				updataPosInfo();
 				
 				_sQ = 10;
-				_scaleQ.x = EdtDEF.POSX  - 50;
+				_scaleQ.x = EdtDEF.POSX  - 48;
 				_scaleQ.y = EdtDEF.INFOY ;
 				_scaleQ.selectable = false;
+				
+				_posX.mouseEnabled = 
+				_posY.mouseEnabled = 
+				_scaleQ.mouseEnabled = false;
+				
 				
 				//_dotShape.x = EdtDEF.QUADRANT_WIDTH /2;
 				//_dotShape.y = EdtDEF.QUADRANT_HEIGHT /2;
@@ -243,9 +248,7 @@ package editor.ui {
 			addChild (_CoordinateAxisY);
 			addChild (_hotSpots);
 			addChild (_quadrantInfo);
-			addChild (_posX);
-			addChild (_posY);
-			addChild (_scaleQ);
+			
 			
 			/*
 			if (_quadrant == PERSP ) {
@@ -258,6 +261,10 @@ package editor.ui {
 			_maskContainer.addChild (_lineShapeDym);
 			_maskContainer.addChild (_dotShape);
 			addChild(_maskContainer);
+			
+			addChild (_posX);
+			addChild (_posY);
+			addChild (_scaleQ);
 			
 			
 			_xQ = 0;
@@ -319,8 +326,8 @@ package editor.ui {
 			
 		}
 		
-		public static var PERSP_Y_R : Number = 0;
-		public static var PERSP_X_R : Number = 0;
+		//public static var PERSP_Y_R : Number = 0;
+		//public static var PERSP_X_R : Number = 0;
 		
 		
 		public function map3DTo2D() : void
@@ -350,10 +357,10 @@ package editor.ui {
 				{
 					var m : Matrix4x4 = new Matrix4x4();
 					var v : Vertex3D = new Vertex3D();
-					v.y = -PERSP_X_R;
-					v.x = PERSP_Y_R;
+					v.y = -xQ;
+					v.x = yQ;
 					
-					Matrix4x4.rotateArbitraryAxis(m , v  , Math.sqrt(PERSP_X_R * PERSP_X_R + PERSP_Y_R * PERSP_Y_R)/180*Math.PI);
+					Matrix4x4.rotateArbitraryAxis(m , v  , Math.sqrt(yQ * yQ + xQ * xQ)/180*Math.PI);
 					
 					ev.dot.x = (m.Xx * ev.vertex.x + m.Xy * ev.vertex.y + m.Xz * ev.vertex.z)  * __scale;
 					ev.dot.y = (m.Yx * ev.vertex.x + m.Yy * ev.vertex.y + m.Yz * ev.vertex.z)  * __scale;
@@ -440,8 +447,8 @@ package editor.ui {
 				_posY.text = "Z: " + int(-_yQ);
 			}
 			else if (_quadrant == 1 ) {
-				_posX.text = "XR: "+ (PERSP_X_R);
-				_posY.text = "YR: " + (PERSP_Y_R);
+				_posX.text = "XR: " + int(xQ) + "." + (int(xQ * 10) % 10);
+				_posY.text = "YR: " + int(yQ) + "." + (int(yQ * 10) % 10);
 			}
 			else if (_quadrant == 2 ) {
 				_posX.text = "X: "+ int(_xQ);
@@ -510,8 +517,8 @@ package editor.ui {
 			}
 			else
 			{
-				PERSP_Y_R += yOff;
-				PERSP_X_R += xOff;
+				yQ += yOff;
+				xQ += xOff;
 				renderLine();
 			}
 			
@@ -676,8 +683,26 @@ package editor.ui {
 			{	
 				_indicate.scaleX = _indicate.scaleY = (isFull ? 2 : 1) * scaleQ;
 			}
-			_xQ = _xQ;
-			_yQ = _yQ;
+			
+			if (_quadrant != EdtQuadrant.PERSP)
+			{
+				_xQ = _xQ;
+				_yQ = _yQ;
+			}
+			else {
+				var _CoordinateAxisY_x : int = EdtDEF.QUADRANT_WIDTH /2;
+				_CoordinateAxisY.x = int(_CoordinateAxisY_x * (isFull ? 2 : 1));
+				var _CoordinateAxisX_y : int = EdtDEF.QUADRANT_WIDTH /2;
+				_CoordinateAxisX.y = int(_CoordinateAxisX_y * (isFull ? 2 : 1));
+				
+				_dotShape.x = 
+				_lineShape.x = 
+				_lineShapeDym.x = _CoordinateAxisY.x;
+			
+				_dotShape.y = 
+				_lineShape.y = 
+				_lineShapeDym.y = _CoordinateAxisX.y;
+			}
 			
 			//_xQ -= ((((_quadrant&1)!=0)?1:-1)* EdtDEF.QUADRANT_WIDTH /2) * (isFull ? 1:-1);
 			//_yQ -= ((((_quadrant&2)!=0)?1:-1)* EdtDEF.QUADRANT_HEIGHT /2) * (isFull ? 1:-1);
