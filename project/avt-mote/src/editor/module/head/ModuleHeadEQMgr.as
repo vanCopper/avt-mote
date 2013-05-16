@@ -534,6 +534,7 @@ package editor.module.head
 			if (m_autoSwitch)
 			{
 				curEdtQuadrant.map2DTo3D();
+				ModuleHeadData.genUVData();
 				
 				for each (var _eq : EdtQuadrant in m_edtQuadrantVector)
 				{	
