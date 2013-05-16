@@ -60,6 +60,7 @@ package editor.module.head
 		private var m_crossShape : Shape;
 		
 		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
+		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
 		{
 			for each( var _e : EdtQuadrant in m_edtQuadrantVector )
 				 _e.setVertex(_vertexArray);
@@ -221,7 +222,7 @@ package editor.module.head
 					m_editMode = EDIT_MODE_MOVE;
 					if (m_selectedEVI.length)
 					{
-						computeOperatorIndicatePos();
+						computeOperatorIndicatePos(true);
 					}
 					
 				}

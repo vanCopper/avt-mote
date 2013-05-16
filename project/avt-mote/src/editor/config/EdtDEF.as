@@ -34,7 +34,7 @@ package editor.config   {
 		public static const   INFOX   :   int   =   10 ; 
 		public static const   INFOY   :   int   =   4 ; 
 		
-		public static const   POSX   :   int   =   EdtDEF.QUADRANT_WIDTH  - 100 ; 
+		public static const   POSX   :   int   =   EdtDEF.QUADRANT_WIDTH  - 108 ; 
 		public static const   FRESH_TIME   :   int   =   30 ; 
 		
 		public static const   Z_SCALE   :   int   =   4 ; 
