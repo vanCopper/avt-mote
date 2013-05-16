@@ -43,6 +43,9 @@ package editor.module.head
 		private var m_bmpShape : Shape;
 		
 		private var m_bmpCnt : DisplayObjectContainer;
+		
+		private var m_3dView : ModuleHead3DView;
+		
 		private var m_roterVector : Vector.<EdtVertex3D> ;
 		private var m_roterVectorAll : Vector.<EdtVertex3D> ;
 		
@@ -356,9 +359,20 @@ package editor.module.head
 			
 			m_tb.deactivateAll([]);
 			
+			ModuleHeadData.s_vertexData = m_roterVectorAll;
+			ModuleHeadData.s_pointPerLine = totalPerLine;
+			ModuleHeadData.s_totalLine = totalLine;
+			ModuleHeadData.genindicesData();
+			ModuleHeadData.genUVData();
 			
 			if (!m_quadrant1)
+			{	
 				m_quadrant1 = new EdtQuadrant(1);
+				m_3dView = new ModuleHead3DView();
+				m_quadrant1.indicate = m_3dView;
+				
+				
+			}
 			if (!m_quadrant0)
 				m_quadrant0 = new EdtQuadrant(0);	
 			if (!m_quadrant3)
@@ -633,6 +647,8 @@ package editor.module.head
 			m_bmp.x =  -  (( bitmapData.width ) >> 1);
 			m_bmp.y =  - ((bitmapData.height)  >> 1);
 			
+			ModuleHeadData.s_texture = bitmapData;
+			
 			m_tb.deactivateAll([m_tb.btnAR]);
 		}
 		
@@ -679,7 +695,7 @@ package editor.module.head
 				m_bmp = null;
 			}
 			m_bmpShape = null;
-			
+			m_3dView = null;
 			
 			m_bmpCnt = null;
 			m_roterVector = null;

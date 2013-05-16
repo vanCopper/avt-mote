@@ -118,6 +118,28 @@ package editor.ui {
 			return _quadrant;
 		}
 		
+		public function setViewVisible(v : int) : void
+		{
+			if (v == 1)
+			{
+				_dotShape.visible = !_dotShape.visible;
+			} 
+			else if (v == 2)
+			{
+				_lineShape.visible = !_lineShape.visible;
+			}
+			else if (v == 3)
+			{
+				if (_indicate)
+					_indicate.visible = !_indicate.visible;
+			}
+			else if (v == 4)
+			{
+				if (_indicate)
+					_indicate.alpha = (_indicate.alpha == 1) ? 0.5 : 1;
+			}
+		}
+		
 		public function EdtQuadrant( position : int ) {
 			
 			_quadrant = position;
@@ -345,6 +367,14 @@ package editor.ui {
 				zV.x = _g3;
 				zV.y = -0.5;
 				
+				
+				var m : Matrix4x4 = new Matrix4x4();
+				var v : Vertex3D = new Vertex3D();
+				v.y = -xQ;
+				v.x = yQ;
+				
+				Matrix4x4.rotateArbitraryAxis(m , v  , Math.sqrt(yQ * yQ + xQ * xQ)/180*Math.PI);
+				
 			}
 			for each( var ev : EdtVertexInfo in _edtVertexArray)
 			{
@@ -355,18 +385,10 @@ package editor.ui {
 				}
 				else if (_quadrant == PERSP)
 				{
-					var m : Matrix4x4 = new Matrix4x4();
-					var v : Vertex3D = new Vertex3D();
-					v.y = -xQ;
-					v.x = yQ;
-					
-					Matrix4x4.rotateArbitraryAxis(m , v  , Math.sqrt(yQ * yQ + xQ * xQ)/180*Math.PI);
 					
 					ev.dot.x = (m.Xx * ev.vertex.x + m.Xy * ev.vertex.y + m.Xz * ev.vertex.z)  * __scale;
 					ev.dot.y = (m.Yx * ev.vertex.x + m.Yy * ev.vertex.y + m.Yz * ev.vertex.z)  * __scale;
 					
-					//ev.dot.x = (xV.x * ev.vertex.x + zV.x * ev.vertex.z)  * __scale;
-					//ev.dot.y = (ev.vertex.y + xV.y * ev.vertex.x + zV.y * ev.vertex.z) * __scale;
 				}
 				else if (_quadrant == 0)
 				{
@@ -383,6 +405,13 @@ package editor.ui {
 					ASSERT(false , "");
 				}
 			}
+			
+			if (_quadrant == PERSP && _indicate && _indicate["render"])
+			{
+				_indicate["render"](_edtVertexArray);
+				
+			}
+			
 		}
 		public function map2DTo3D() : void
 		{
@@ -560,13 +589,6 @@ package editor.ui {
 			
 			renderLine();
 			
-			
-			
-			//TODO
-			//for (var i : int = 0 ; i < EdtDotArray.length ; i++) {
-			//	map3DTo2D (i);
-			//	biuldLineCache (i);
-			//}
 		}	
 		
 		public function set _xQ (x : Number) : void {

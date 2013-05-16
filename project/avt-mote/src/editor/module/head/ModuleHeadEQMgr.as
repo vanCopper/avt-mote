@@ -60,7 +60,6 @@ package editor.module.head
 		private var m_crossShape : Shape;
 		
 		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
-		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
 		{
 			for each( var _e : EdtQuadrant in m_edtQuadrantVector )
 				 _e.setVertex(_vertexArray);
@@ -264,6 +263,11 @@ package editor.module.head
 					m_crossShape.visible = false;
 				}
 				
+			}
+			else if (me.keyCode >= 49 || me.keyCode <= 52 )
+			{
+				if (curEdtQuadrant)
+					curEdtQuadrant.setViewVisible(me.keyCode - 48);
 			}
 			
 			return CallbackCenter.EVENT_OK;
@@ -631,7 +635,7 @@ package editor.module.head
 				curEdtQuadrant.map2DTo3D();
 				if (m_autoSwitch) 
 				{
-					
+					ModuleHeadData.genUVData();
 					for each (var _eq : EdtQuadrant in m_edtQuadrantVector)
 					{	
 						if (_eq && _eq != curEdtQuadrant)
@@ -683,6 +687,7 @@ package editor.module.head
 				m_operatorMoving = false;
 				m_selectorIndicate.alpha = 1;
 				m_selectorIndicate.visible = true;
+				
 				
 				
 			} else if (isMovineQuadrant)
