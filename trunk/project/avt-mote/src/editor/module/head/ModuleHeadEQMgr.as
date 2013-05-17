@@ -831,16 +831,28 @@ package editor.module.head
 			m_operatorIndicate.x = __x;
 			m_operatorIndicate.y = __y;
 			
-			if (quadChange)
+			//if (quadChange)
 			{
 				if (curEdtQuadrant == m_edtQuadrantVector[0])
+				{	
 					m_operatorIndicate.setMode("XZ");
+					//m_operatorIndicate.rotation = 0;
+				}
 				else if (curEdtQuadrant == m_edtQuadrantVector[1])
+				{	
 					m_operatorIndicate.setMode("PERSP");
+					//m_operatorIndicate.rotation = (-curEdtQuadrant._yQ);
+				}
 				else if (curEdtQuadrant == m_edtQuadrantVector[2])
+				{	
 					m_operatorIndicate.setMode("XY");
+					//m_operatorIndicate.rotation = 0;
+				}
 				else if (curEdtQuadrant == m_edtQuadrantVector[3])
+				{	
 					m_operatorIndicate.setMode("ZY");
+					//m_operatorIndicate.rotation = 0;
+				}
 			}
 			
 				

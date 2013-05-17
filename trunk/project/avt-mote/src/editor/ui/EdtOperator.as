@@ -22,8 +22,9 @@ package editor.ui
 		public var startMoveFunc : Function;
 		//private var movingFunc : Function;
 		//private var endMoveFunc : Function;
+		private var m_curMode : String;
 		
-		private function drawArrow(_graphics : Graphics) : void
+		private function drawArrow(_graphics : Graphics , drawArrow : Boolean) : void
 		{
 			const leng : int = 52;
 			const leng2 : int = 35;
@@ -31,19 +32,29 @@ package editor.ui
 			const w2 : int = 0.75;
 			
 			//_opt.graphics.lineStyle(1);
-			_graphics.beginFill(0xFFFFFF);
+			_graphics.clear();
 			
-			//_opt.graphics.moveTo( -w2 , w2);
-			//_opt.graphics.lineTo(-w2 , -leng2);
-			_graphics.moveTo( -w , -leng2);
-			_graphics.lineTo(0 , -leng);
-			_graphics.lineTo(w , -leng2);
-			_graphics.lineTo(-w , -leng2);
-			_graphics.endFill();
+			if (drawArrow)
+			{
+				_graphics.beginFill(0xFFFFFF);
 			
-			_graphics.lineStyle(1.5);
-			_graphics.moveTo( 0 , 0);
-			_graphics.lineTo( 0 , -leng2);
+				//_opt.graphics.moveTo( -w2 , w2);
+				//_opt.graphics.lineTo(-w2 , -leng2);
+				_graphics.moveTo( -w , -leng2);
+				_graphics.lineTo(0 , -leng);
+				_graphics.lineTo(w , -leng2);
+				_graphics.lineTo(-w , -leng2);
+				_graphics.endFill();
+				
+				_graphics.lineStyle(1.5);
+				_graphics.moveTo( 0 , 0);
+				_graphics.lineTo( 0 , -leng2);
+			
+			} else {
+				_graphics.lineStyle(1.5);
+				_graphics.moveTo( 0 , 0);
+				_graphics.lineTo( 0 , -leng);
+			}
 			
 			
 			
@@ -55,30 +66,61 @@ package editor.ui
 		
 		public function setMode(_str : String) : void
 		{
+			if (m_curMode == _str)
+				return;
+				
+			var _redraw : Boolean;
+			if (m_curMode == "PERSP" || _str == "PERSP")	
+				_redraw = true;
+				
+			m_curMode = _str;
+			
+			
+			
 			mouseChildren = mouseEnabled = true;
 			if (_str == "XY")
 			{
 				m_moveOPTR.transform.colorTransform = X_CF;
 				m_moveOPTU.transform.colorTransform = Y_CF;
 				scaleY = -1;
+				if (_redraw)
+				{
+					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
+					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
+				}
 			}
 			else if (_str == "XZ")
 			{
 				m_moveOPTR.transform.colorTransform = X_CF;
 				m_moveOPTU.transform.colorTransform = Z_CF;
 				scaleY = 1;
+				if (_redraw)
+				{
+					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
+					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
+				}
 			}
 			else if (_str == "ZY")
 			{
 				m_moveOPTR.transform.colorTransform = Z_CF;
 				m_moveOPTU.transform.colorTransform = Y_CF;
 				scaleY = -1;
+				if (_redraw)
+				{
+					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
+					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
+				}
 			}
 			else if (_str == "PERSP")
 			{
 				m_moveOPTR.transform.colorTransform = X_CF;
-				m_moveOPTU.transform.colorTransform = Z_CF;
-				scaleY = 1;
+				m_moveOPTU.transform.colorTransform = Y_CF;
+				scaleY = -1;
+				if (_redraw)
+				{
+					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , false);
+					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , false);
+				}
 				
 				mouseChildren = mouseEnabled = false;
 			}
@@ -90,8 +132,8 @@ package editor.ui
 			addChild(m_moveOPTR);
 			addChild(m_moveOPTA);
 			
-			drawArrow(Shape(m_moveOPTU.addChild(new Shape())).graphics);
-			drawArrow(Shape(m_moveOPTR.addChild(new Shape())).graphics);
+			drawArrow(Shape(m_moveOPTU.addChild(new Shape())).graphics , true);
+			drawArrow(Shape(m_moveOPTR.addChild(new Shape())).graphics , true);
 			m_moveOPTR.rotation = 90;
 			
 			m_moveOPTA.graphics.lineStyle(1, 0xFFFF00 , 0.75);
