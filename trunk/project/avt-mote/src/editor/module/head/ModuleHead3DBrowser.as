@@ -19,11 +19,12 @@ package editor.module.head
 			addChild(m_viewer);
 			addChild(m_controler);
 			
+			m_controler.x = m_controler.y = 400;
 		}
 		
 		public function activate() : void
 		{
-			
+			m_controler.rotation = ModuleHeadData.s_rotorR * 180 / Math.PI;
 		}
 		
 		public function dispose() : void 
