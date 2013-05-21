@@ -33,6 +33,7 @@ package editor.module.head
 		private var m_tb : ModuleHeadToolbar;
 		
 		private var m_eqm : ModuleHeadEQMgr;
+		private var m_browser : ModuleHead3DBrowser;
 		
 		private var m_quadrant2 : EdtQuadrant;
 		private var m_quadrant1 : EdtQuadrant;
@@ -47,7 +48,7 @@ package editor.module.head
 		private var m_3dView : ModuleHead3DView;
 		
 		private var m_roterVector : Vector.<EdtVertex3D> ;
-		private var m_roterVectorAll : Vector.<EdtVertex3D> ;
+		private var m_edtVectorAll : Vector.<EdtVertex3D> ;
 		
 		private var m_circleAddUI : EdtAddUI;
 		private var m_meridianAddUI : EdtAddUI;
@@ -82,12 +83,35 @@ package editor.module.head
 			
 			m_eqm.curEdtQuadrant = m_quadrant2;
 			
+			m_browser = new ModuleHead3DBrowser();
+			
+			
 			m_tb.deactivateAll([m_tb.btnImport]);
 			
 			m_tb.btnImport.releaseFunction = onOpen;
 			m_tb.btnAR.releaseFunction = onAddRoter;
 			m_tb.btnAC.releaseFunction = onAddCircle;
 			m_tb.btnAM.releaseFunction = onAddMeridian;
+			
+			m_tb.btnEdit.releaseFunction = function(btn:BSSButton)
+			:void {
+				if (m_browser.parent)
+					m_browser.parent.removeChild(m_browser);
+				if (!m_eqm.parent)
+					m_content.addChild(m_eqm);
+				m_eqm.activate();
+				
+				};
+			m_tb.btnView.releaseFunction = function(btn:BSSButton)
+			: void {	
+				m_eqm.deactivate();
+				if (m_eqm.parent)
+					m_eqm.parent.removeChild(m_eqm);
+				if (!m_browser.parent)
+					m_content.addChild(m_browser);
+					
+				m_browser.activate();
+			};
 			
 			m_circleAddUI = new EdtAddUI(1 , 12);
 			m_circleAddUI.changeFunction = onCircleChanged;
@@ -137,27 +161,27 @@ package editor.module.head
 				for (var i : int = 0 ; i < s ; i++ )
 				{
 					var rate : Number = (1 + i) / sp;
-					for (var j : int = 3 ; j < m_roterVectorAll.length; j += 3 )
+					for (var j : int = 3 ; j < m_edtVectorAll.length; j += 3 )
 					{
 						
-						pt0.x = m_roterVectorAll[j-3].x + (m_roterVectorAll[j-2].x - m_roterVectorAll[j-3].x) * rate;
-						pt0.y = m_roterVectorAll[j-3].y + (m_roterVectorAll[j-2].y - m_roterVectorAll[j-3].y) * rate;
+						pt0.x = m_edtVectorAll[j-3].x + (m_edtVectorAll[j-2].x - m_edtVectorAll[j-3].x) * rate;
+						pt0.y = m_edtVectorAll[j-3].y + (m_edtVectorAll[j-2].y - m_edtVectorAll[j-3].y) * rate;
 						
-						pt1.x = m_roterVectorAll[j].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j].x) * rate;
-						pt1.y = m_roterVectorAll[j].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j].y) * rate;
+						pt1.x = m_edtVectorAll[j].x + (m_edtVectorAll[j+1].x - m_edtVectorAll[j].x) * rate;
+						pt1.y = m_edtVectorAll[j].y + (m_edtVectorAll[j+1].y - m_edtVectorAll[j].y) * rate;
 						
 						g.moveTo(pt0.x , pt0.y);
 						g.lineTo(pt1.x , pt1.y);
 					}
 					
-					for ( j  = 3 ; j < m_roterVectorAll.length; j += 3 )
+					for ( j  = 3 ; j < m_edtVectorAll.length; j += 3 )
 					{
 						
-						pt0.x = m_roterVectorAll[j-1].x + (m_roterVectorAll[j-2].x - m_roterVectorAll[j-1].x) * rate;
-						pt0.y = m_roterVectorAll[j-1].y + (m_roterVectorAll[j-2].y - m_roterVectorAll[j-1].y) * rate;
+						pt0.x = m_edtVectorAll[j-1].x + (m_edtVectorAll[j-2].x - m_edtVectorAll[j-1].x) * rate;
+						pt0.y = m_edtVectorAll[j-1].y + (m_edtVectorAll[j-2].y - m_edtVectorAll[j-1].y) * rate;
 						
-						pt1.x = m_roterVectorAll[j+2].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j+2].x) * rate;
-						pt1.y = m_roterVectorAll[j+2].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j+2].y) * rate;
+						pt1.x = m_edtVectorAll[j+2].x + (m_edtVectorAll[j+1].x - m_edtVectorAll[j+2].x) * rate;
+						pt1.y = m_edtVectorAll[j+2].y + (m_edtVectorAll[j+1].y - m_edtVectorAll[j+2].y) * rate;
 						
 						g.moveTo(pt0.x , pt0.y);
 						g.lineTo(pt1.x , pt1.y);
@@ -177,14 +201,17 @@ package editor.module.head
 		
 		private function onMeridianOK(s : int):void
 		{
-			var _roterVectorAll : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+			var _edtVectorAll : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
 			
 			
 			drawRotor();
 			
 			const totalPerLine : int = (s == 0) ? 3 : ((s + 1) * 2);
-			const totalLine : int = m_roterVectorAll.length / 3;
+			const totalLine : int = m_edtVectorAll.length / 3;
 				
+			
+			
+			
 			if (s)
 			{
 				
@@ -200,25 +227,25 @@ package editor.module.head
 				
 				
 				
-				for (var j : int = 0 ; j < m_roterVectorAll.length; j += 3 )
+				for (var j : int = 0 ; j < m_edtVectorAll.length; j += 3 )
 				{
 					_roterVectorL.length = 0;
 					_roterVectorR.length = 0;
 						
-					_roterVectorAll.push(m_roterVectorAll[j].cloneV());
+					_edtVectorAll.push(m_edtVectorAll[j].cloneV());
 					for (var i : int = 0 ; i < s ; i++ )
 					{
 						var rate : Number = (1 + i) / sp;
-						pt1.x = m_roterVectorAll[j].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j].x) * rate;
-						pt1.y = m_roterVectorAll[j].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j].y) * rate;
+						pt1.x = m_edtVectorAll[j].x + (m_edtVectorAll[j+1].x - m_edtVectorAll[j].x) * rate;
+						pt1.y = m_edtVectorAll[j].y + (m_edtVectorAll[j+1].y - m_edtVectorAll[j].y) * rate;
 						ev = new EdtVertex3D();
 						ev.x = pt1.x;
 						ev.y = pt1.y;
 						
 						_roterVectorL.push(ev);
 						
-						pt1.x = m_roterVectorAll[j+2].x + (m_roterVectorAll[j+1].x - m_roterVectorAll[j+2].x) * rate;
-						pt1.y = m_roterVectorAll[j+2].y + (m_roterVectorAll[j+1].y - m_roterVectorAll[j+2].y) * rate;
+						pt1.x = m_edtVectorAll[j+2].x + (m_edtVectorAll[j+1].x - m_edtVectorAll[j+2].x) * rate;
+						pt1.y = m_edtVectorAll[j+2].y + (m_edtVectorAll[j+1].y - m_edtVectorAll[j+2].y) * rate;
 						
 						ev = new EdtVertex3D();
 						ev.x = pt1.x;
@@ -232,25 +259,25 @@ package editor.module.head
 						
 					}
 					
-					var ti : int = _roterVectorAll.length;
+					var ti : int = _edtVectorAll.length;
 					
 					for each (ev in _roterVectorL)
-						_roterVectorAll.push(ev);
+						_edtVectorAll.push(ev);
 					
 					
 					_roterVectorR.reverse();	
 					for each (ev in _roterVectorR)
-						_roterVectorAll.push(ev);
-					_roterVectorAll.push(m_roterVectorAll[j + 2].cloneV());	
+						_edtVectorAll.push(ev);
+					_edtVectorAll.push(m_edtVectorAll[j + 2].cloneV());	
 					
 					
 					
-					for ( ; ti < _roterVectorAll.length ; ti++ )
+					for ( ; ti < _edtVectorAll.length ; ti++ )
 					{
-						_roterVectorAll[ti - 1].priority = ti - 1;
-						_roterVectorAll[ti].priority = ti;
+						_edtVectorAll[ti - 1].priority = ti - 1;
+						_edtVectorAll[ti].priority = ti;
 						
-						connect2PT(_roterVectorAll[ti] , _roterVectorAll[ti - 1] );
+						connect2PT(_edtVectorAll[ti] , _edtVectorAll[ti - 1] );
 
 					}
 				}
@@ -258,10 +285,10 @@ package editor.module.head
 				for ( ti = 0 ; ti < totalPerLine ; ti++ )
 				for (var l : int = 1 ; l < totalLine ;l++ )
 				{
-					connect2PT(_roterVectorAll[(l - 1) * totalPerLine + ti ] , _roterVectorAll[(l) * totalPerLine + ti ]);
+					connect2PT(_edtVectorAll[(l - 1) * totalPerLine + ti ] , _edtVectorAll[(l) * totalPerLine + ti ]);
 				}
 				
-				m_roterVectorAll = _roterVectorAll;
+				m_edtVectorAll = _edtVectorAll;
 				
 			}
 			
@@ -281,8 +308,8 @@ package editor.module.head
 				var _lengLine : Number = 0;
 				for ( ti = 1 ; ti < totalPerLine ; ti++ )
 				{
-					var __xOff : Number = m_roterVectorAll[startPos + ti].x - m_roterVectorAll[startPos + ti - 1].x;
-					var __yOff : Number = m_roterVectorAll[startPos + ti].y - m_roterVectorAll[startPos + ti - 1].y;
+					var __xOff : Number = m_edtVectorAll[startPos + ti].x - m_edtVectorAll[startPos + ti - 1].x;
+					var __yOff : Number = m_edtVectorAll[startPos + ti].y - m_edtVectorAll[startPos + ti - 1].y;
 					
 					_lengLine += Math.sqrt(__xOff * __xOff + __yOff * __yOff);
 					
@@ -302,19 +329,19 @@ package editor.module.head
 				var _lengLineCurAdd : Number = 0;
 				
 				var _zhongzhou : Number = _r * Math.cos(Math.PI * _angleView / 180);
-				m_roterVectorAll[startPos + 0].z = _zhongzhou;
+				m_edtVectorAll[startPos + 0].z = _zhongzhou;
 				
 				for ( ti = 1 ; ti < totalPerLine ; ti++ )
 				{
-					__xOff = m_roterVectorAll[startPos + ti].x - m_roterVectorAll[startPos + ti - 1].x;
-					__yOff = m_roterVectorAll[startPos + ti].y - m_roterVectorAll[startPos + ti - 1].y;
+					__xOff = m_edtVectorAll[startPos + ti].x - m_edtVectorAll[startPos + ti - 1].x;
+					__yOff = m_edtVectorAll[startPos + ti].y - m_edtVectorAll[startPos + ti - 1].y;
 					
 					var _lengLineCur : Number = Math.sqrt(__xOff * __xOff + __yOff * __yOff);
 					_lengLineCurAdd += _lengLineCur;
-					trace("_lengLineCurAdd" , _lengLineCurAdd);
+					//trace("_lengLineCurAdd" , _lengLineCurAdd);
 					var _rotOff : Number = _lengLineCurAdd / zhouchang * 360;
 					var _rotOb : Number =  _rotOff + (90 - _angleView);
-					trace("_rotOb" , _rotOb);
+					//trace("_rotOb" , _rotOb);
 					
 					_rotOb = Math.abs(90  - _rotOb);
 					
@@ -338,7 +365,7 @@ package editor.module.head
 					
 					//trace("_angleR" , _angleR , _angleR / Math.PI * 180 , Math.cos(_angleR) );
 					
-					m_roterVectorAll[startPos + ti].z = Math.cos(_angleR) * _r;
+					m_edtVectorAll[startPos + ti].z = Math.cos(_angleR) * _r;
 					
 					
 					//stageShpae.graphics.moveTo(_lengLine1_2, 0);
@@ -357,9 +384,9 @@ package editor.module.head
 			
 			
 			
-			m_tb.deactivateAll([]);
+			m_tb.deactivateAll([m_tb.btnEdit , m_tb.btnView]);
 			
-			ModuleHeadData.s_vertexData = m_roterVectorAll;
+			ModuleHeadData.s_vertexData = m_edtVectorAll;
 			ModuleHeadData.s_pointPerLine = totalPerLine;
 			ModuleHeadData.s_totalLine = totalLine;
 			ModuleHeadData.genindicesData();
@@ -383,7 +410,9 @@ package editor.module.head
 			
 			m_quadrant2.fullScreen = false;
 			
-			m_eqm.setVertex(m_roterVectorAll);
+			m_eqm.setVertex(m_edtVectorAll);
+			
+			m_tb.btnEdit.releaseFunction(m_tb.btnEdit);
 			
 			m_content.stage.focus = m_content.stage;
 			
@@ -410,7 +439,9 @@ package editor.module.head
 			_roterVector[1].conect.push(_roterVector[2] );
 			_roterVector[2].conect.push(_roterVector[1] );
 			
-			var _roterVectorAll : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+			var _edtVectorAll : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+			
+			
 			
 			for (var i : int = 0 ; i <=  m; i++ )
 			{
@@ -469,25 +500,25 @@ package editor.module.head
 				_roterVector[1].conect.push(_roterVector[2] );
 				_roterVector[2].conect.push(_roterVector[1] );
 				
-				if (_roterVectorAll.length)
+				if (_edtVectorAll.length)
 				{
-					var _roterVectorAll_length : int = _roterVectorAll.length;
-					_roterVector[0].conect.push(_roterVectorAll[_roterVectorAll_length - 3]);
-					_roterVectorAll[_roterVectorAll_length - 3].conect.push(_roterVector[0]);
-					_roterVector[1].conect.push(_roterVectorAll[_roterVectorAll_length - 2]);
-					_roterVectorAll[_roterVectorAll_length - 2].conect.push(_roterVector[1]);
-					_roterVector[2].conect.push(_roterVectorAll[_roterVectorAll_length - 1]);
-					_roterVectorAll[_roterVectorAll_length - 1].conect.push(_roterVector[2]);
+					var _roterVectorAll_length : int = _edtVectorAll.length;
+					_roterVector[0].conect.push(_edtVectorAll[_roterVectorAll_length - 3]);
+					_edtVectorAll[_roterVectorAll_length - 3].conect.push(_roterVector[0]);
+					_roterVector[1].conect.push(_edtVectorAll[_roterVectorAll_length - 2]);
+					_edtVectorAll[_roterVectorAll_length - 2].conect.push(_roterVector[1]);
+					_roterVector[2].conect.push(_edtVectorAll[_roterVectorAll_length - 1]);
+					_edtVectorAll[_roterVectorAll_length - 1].conect.push(_roterVector[2]);
 				}
 				
-				_roterVectorAll.push(_roterVector[0]);
-				_roterVectorAll.push(_roterVector[1]);
-				_roterVectorAll.push(_roterVector[2]);
+				_edtVectorAll.push(_roterVector[0]);
+				_edtVectorAll.push(_roterVector[1]);
+				_edtVectorAll.push(_roterVector[2]);
 				
 			}
 			drawRotor();
-			m_quadrant2.setVertex(_roterVectorAll);
-			m_roterVectorAll = _roterVectorAll;
+			m_quadrant2.setVertex(_edtVectorAll);
+			m_edtVectorAll = _edtVectorAll;
 			
 			m_circleAddUI.visible = false;
 			
@@ -586,6 +617,16 @@ package editor.module.head
 				m_circleAddUI.y = btn.y + 50;
 				m_content.addChild(m_circleAddUI);
 			
+				
+				
+				ModuleHeadData.s_rotorR = 	Math.atan2(
+					(m_roterVector[2].y - m_roterVector[0].y)
+					,(m_roterVector[2].x - m_roterVector[0].x)
+				);
+				ModuleHeadData.s_rotorX = m_headRoot.x ;
+				ModuleHeadData.s_rotorY = m_headRoot.y;
+			
+				
 				m_quadrant2.setVertex(null);
 				
 				onCircleChanged(m_circleAddUI.value);
@@ -655,7 +696,8 @@ package editor.module.head
 		
 		public override function activate() : void
 		{
-			m_eqm.activate();
+			if (m_eqm.parent)
+				m_eqm.activate();
 			
 			super.activate();
 		}
@@ -676,6 +718,14 @@ package editor.module.head
 				m_eqm.dispose();
 				m_eqm = null;
 			}
+			if (m_browser)
+			{
+				if (!m_browser.parent)
+					m_content.addChild(m_browser); //TODO may not in stage
+				m_browser.dispose(); 
+				m_browser = null;
+			}
+			
 			if (m_tb)
 			{
 				m_tb.dispose();
@@ -699,7 +749,7 @@ package editor.module.head
 			
 			m_bmpCnt = null;
 			m_roterVector = null;
-			m_roterVectorAll = null;
+			m_edtVectorAll = null;
 			
 			if (m_quadrant2) { m_quadrant2.dispose(); m_quadrant2 = null; }
 			if (m_quadrant1) { m_quadrant1.dispose(); m_quadrant1 = null; }
