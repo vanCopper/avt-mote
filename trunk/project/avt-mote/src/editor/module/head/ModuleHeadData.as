@@ -10,6 +10,12 @@ package editor.module.head
 	public class ModuleHeadData 
 	{
 		
+		public static var s_rotorX : Number;
+		public static var s_rotorY : Number;
+		
+		public static var s_rotorR : Number;
+		
+		
 		public static var s_vertexData : Vector.<EdtVertex3D>;
 		public static var s_texture : BitmapData;
 		
