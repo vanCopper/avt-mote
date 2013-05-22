@@ -1,5 +1,6 @@
 package editor.module.head 
 {
+	import editor.struct.Vertex3D;
 	import editor.ui.EdtVertex3D;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
@@ -17,6 +18,7 @@ package editor.module.head
 		
 		
 		public static var s_vertexData : Vector.<EdtVertex3D>;
+		public static var s_vertexRelativeData : Vector.<Vertex3D>;
 		public static var s_texture : BitmapData;
 		
 		public static var s_pointPerLine : int;
@@ -65,6 +67,25 @@ package editor.module.head
 			
 			
 		}
+		
+		public static function genVertexRelativeData():void
+		{
+			s_vertexRelativeData = new Vector.<Vertex3D>();
+			var _evR : Vertex3D;
+			for each (var _ev : EdtVertex3D in s_vertexData)
+			{
+				_evR = new Vertex3D();
+				_evR.x = _ev.x - s_rotorX;
+				_evR.y = _ev.y - s_rotorY;
+				_evR.z = _ev.z;
+				
+				
+				s_vertexRelativeData.push(_evR);
+			}
+		}
+		
+		
+		
 		
 		public static function drawTriangles(g : Graphics , vertices:Vector.<Number>) : void
 		{

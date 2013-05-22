@@ -358,14 +358,14 @@ package editor.ui {
 			
 			if (_quadrant == PERSP)
 			{
-				var _g3 : Number = Math.sqrt(3);
-				var xV : Point = new Point();
-				xV.x = -_g3;
-				xV.y = -0.5;
+				//var _g3 : Number = Math.sqrt(3);
+				//var xV : Point = new Point();
+				//xV.x = -_g3;
+				//xV.y = -0.5;
 				
-				var zV : Point = new Point();
-				zV.x = _g3;
-				zV.y = -0.5;
+				//var zV : Point = new Point();
+				//zV.x = _g3;
+				//zV.y = -0.5;
 				
 				
 				var m : Matrix4x4 = new Matrix4x4();

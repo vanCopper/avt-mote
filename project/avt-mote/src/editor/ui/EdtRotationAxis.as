@@ -4,6 +4,7 @@ package editor.ui
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.ui.ContextMenuBuiltInItems;
 	
 	public class EdtRotationAxis extends Sprite
 	{
@@ -16,10 +17,13 @@ package editor.ui
 		private var sectorShape:Shape;
 		private var downAxis:String;
 		
-		private var oldAngle:Number;			//弧度
-		private var endAngle:Number;
-		private var startAngle:Number;
+		//private var oldAngle:Number;			//弧度
+		private var endAngle:Number = 0;
+		private var startAngle:Number = 0;
 		
+		public var xStartValue:Number = 0;
+		public var yStartValue:Number = 0;
+		public var zStartValue:Number = 0;
 		
 		public var xValue:Number = 0;
 		public var yValue:Number = 0;
@@ -28,7 +32,12 @@ package editor.ui
 		
 		private var isDown:Boolean;
 		
-		
+		private function clearStatus():void
+		{
+			xShape.alpha =
+			yShape.alpha =
+			zShape.alpha = 0.5;
+		}
 		public function EdtRotationAxis()
 		{
 			this.graphics.beginFill(0x000000);
@@ -44,15 +53,19 @@ package editor.ui
 			addChild(zShape);
 			addChild(sectorShape);
 			
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 			
 			drawCircle();
+				
+			this.addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
+		
 		}
 		
 		protected function onAddToStage(event:Event):void
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onDownHandler);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMoveHandler);
+			clearStatus();
 		}		
 		
 		public function dispose() : void
@@ -70,14 +83,11 @@ package editor.ui
 				stage.removeEventListener(MouseEvent.MOUSE_DOWN, onDownHandler);	
 			
 		}
-		
-		
-		protected function onMoveHandler(event:MouseEvent):void
+		private function getAxisValue() : Number
 		{
-			if(!isDown)return;
-			
 			var tempAng:Number = getAngleByPoint(0,0, mouseX, mouseY);
-			
+			return tempAng;
+			/*
 			var dAng:Number;
 			if(tempAng>0 &&oldAngle<0)
 			{
@@ -91,67 +101,174 @@ package editor.ui
 			{
 				dAng = tempAng - oldAngle;
 			}
+			return dAng;
+			*/
+		}
+		
+		
+
+		protected function onMoveHandler(event:MouseEvent):void
+		{
+			if (!isDown)
+			{	
+				
+				clearStatus();
+			
+				var opt : String = getOperateXYZ();
+				if (opt)
+					this[opt + "Shape"].alpha = 0.8;
+				
+				return;
+			}
+			
 			
 			
 			if(downAxis)
 			{
-				this[downAxis+"Value"] += dAng;
+				///this[downAxis+"Value"] += dAng;
+				var oldV : Number = this[downAxis + "Value"];
+				var newV : Number  = getAxisValue();
+				
+				//trace(oldV , newV)
+				
+				var off : Number = Math.abs(oldV - newV);
+				var _2PI : Number = Math.PI * 2;
+				var _2PI_99 : Number = _2PI * 0.9;
+				
+				if ( off > _2PI_99)
+				{
+					var newOff : Number;
+					newOff = Math.abs(oldV - (newV + _2PI));
+					if (newOff < off)
+					{
+						for (;; )
+						{	
+							
+							newV += _2PI;
+							newOff = Math.abs(oldV - newV);
+							
+							if (newOff < _2PI_99)
+								break;
+						}
+					}
+					else {
+						newOff = Math.abs(oldV - (newV - _2PI));
+						if (newOff < off)
+						{
+							for (;; )
+							{	
+								
+								newV -= _2PI;
+								newOff = Math.abs(oldV - newV);
+								
+								if (newOff < _2PI_99)
+									break;
+							}
+						}
+					}
+				}
+				
+				this[downAxis + "Value"] = newV;
+				
+				//trace(this[downAxis + "Value"] , this[downAxis + "StartValue"]);
+				
 //				trace(R2D(xValue), R2D(yValue), R2D(zValue));
 				
 				if(onUpdate!=null)
-					onUpdate(R2D(xValue), R2D(yValue), R2D(zValue));
+					onUpdate(xValue - xStartValue, yValue - yStartValue, zValue - zStartValue , false );
+					
+				endAngle = this[downAxis + "Value"];
+				//oldAngle = this[downAxis + "StartValue"];
+			
+				drawSector();
 			}
 			
 			
 			
 			
-			endAngle += dAng;
-			oldAngle = tempAng;
+			//endAngle += dAng;
+			//oldAngle = tempAng;
 			
-			drawSector();
+			
 		}
-		
+		private function getOperateXYZ():String
+		{
+			var xP:Object = oval2(0,0,mouseX,mouseY,10,50);
+			var yP:Object = oval2(0,0,mouseX,mouseY,50,10);
+			var zP:Object = oval(0,0,radius,radius, Math.atan2(mouseY , mouseX));
+			
+			
+			
+			var dx:Number = getDistance(mouseX, mouseY, xP.x, xP.y);
+			var dy:Number = getDistance(mouseX, mouseY, yP.x, yP.y);
+			var dz:Number = getDistance(mouseX, mouseY, zP.x, zP.y);
+			
+			//trace(xP , yP , zP , dx , dy , dz)
+			
+			if (dx > 15 && dy > 15 && dz > 15 )
+				return null;
+			
+			
+				
+				
+			if(dx<=dy && dx<=dz)
+			{
+				return "x";
+			}
+			else if(dz < dy && dz < dx)
+			{
+				return "z";
+			}
+			else
+			{
+				return "y";
+			}
+			
+			
+		}
 		
 		protected function onDownHandler(event:MouseEvent):void
 		{
 			if(getDistance(0,0,mouseX,mouseY)>radius+10)return;
 			
 			isDown = true;
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMoveHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onUpHandler);
+			clearStatus();
 			
-			endAngle = startAngle = oldAngle = getAngleByPoint(0,0, mouseX, mouseY);
+			endAngle = startAngle = getAngleByPoint(0,0, mouseX, mouseY);
+			xValue = yValue = zValue = xStartValue = yStartValue = zStartValue = 0;
 			
-			var xP:Object = oval2(0,0,mouseX,mouseY,10,50);
-			var yP:Object = oval2(0,0,mouseX,mouseY,50,10);
-			var zP:Object = oval(0,0,radius,radius,startAngle);
+			var opt : String = getOperateXYZ();
 			
-			
-			var distance:Number = 0;
-			var dx:Number = getDistance(mouseX, mouseY, xP.x, xP.y);
-			var dy:Number = getDistance(mouseX, mouseY, yP.x, yP.y);
-			var dz:Number = getDistance(mouseX, mouseY, zP.x, zP.y);
-			
-			if(dx<=dy)
-			{
-				distance = dx;
-				downAxis = "x";
-			}
-			else
-			{
-				distance = dy;
-				downAxis = "y";
-			}
-			
-			if(dz<distance)
-			{
-				distance = dz;
-				downAxis = "z";
-			}
-			
-			if(Math.abs(distance)>10)
+			if (!opt )
 			{
 				downAxis = null;
+				return;
+			}
+			
+			//var distance:Number = 0;
+			
+			if(opt == "x")
+			{
+				//distance = dx;
+				downAxis = "x";
+				xStartValue = startAngle;
+				xShape.alpha = 1;
+				
+			}
+			else if(opt == "z")
+			{
+				//distance = dz;
+				downAxis = "z";
+				zStartValue = startAngle;
+				zShape.alpha = 1;
+			} 
+			else if(opt == "y")
+			{
+				//distance = dy;
+				downAxis = "y";
+				yStartValue = startAngle;
+				yShape.alpha = 1;
 			}
 		}
 		
@@ -159,16 +276,18 @@ package editor.ui
 		
 		protected function onUpHandler(event:MouseEvent):void
 		{
+			clearStatus();
+			
+			
 			if(isDown)
 			{
 				isDown = false;
-				stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMoveHandler);
 				stage.removeEventListener(MouseEvent.MOUSE_UP, onUpHandler);
 				
 				sectorShape.graphics.clear();
 				
-//				if(onUpdate!=null)
-//					onUpdate(xValue, yValue, zValue);
+				if(onUpdate!=null)
+					onUpdate(xValue - xStartValue, yValue - yStartValue, zValue - zStartValue , true );
 			}
 		}	
 		
@@ -185,54 +304,117 @@ package editor.ui
 		 */		
 		protected function drawSector():void
 		{
-			var ang1:Number = startAngle;
+			//var ang1:Number = startAngle;
 			
-			var dAng:Number = 0.1;
-			if(ang1 < endAngle)
-				dAng = -0.1;
+			
 			
 			var objStart:Object = new Object();
 			var objEnd:Object = new Object();
 			
 			
-			
+			var _color : uint;
 			sectorShape.graphics.clear();
 			if(downAxis=="x")
 			{
-				objStart = oval3(0,0,10,50,startAngle);
-				sectorShape.graphics.beginFill(0xFF0000, 0.5);
+				_color = 0xFF0000;
 			}
 			else if(downAxis=="y")
 			{
-				objStart = oval3(0,0,50,10,startAngle);
-				sectorShape.graphics.beginFill(0x00FF00, 0.5);
+				_color = 0x00FF00;
 			}
 			else if(downAxis=="z")
 			{
-				objStart = oval(0,0,radius,radius,startAngle);
-				sectorShape.graphics.beginFill(0x0000FF, 0.5);
+				_color = 0x0000FF;
 			}
 			
 			
-			sectorShape.graphics.moveTo(0,0);
-			sectorShape.graphics.lineTo(objStart.x, objStart.y);
+			//trace("起始角度" + int(R2D(startAngle)) + " 结束角度" + int(R2D(endAngle)) );
 			
+			var _loop : int = 1;
+			var totalAngel : Number = endAngle - startAngle;
 			
-			var leng:int = Math.abs((endAngle-ang1)/dAng);
-			for (var i:int = 0; i < leng; i++) 
+			//trace("总角度" + int(R2D(totalAngel)) );
+			
+			var _2PI : Number = Math.PI * 2;
+			if (totalAngel > 0)
 			{
-				ang1 -= dAng;
-				if(downAxis=="x")
-					objEnd = oval3(0,0,10,50,ang1);
-				else if(downAxis=="y")
-					objEnd = oval3(0,0,50,10,ang1);
-				else if(downAxis=="z")
-					objEnd = oval(0,0,radius,radius,ang1);
-				
-				sectorShape.graphics.lineTo(objEnd.x,objEnd.y);
+				while (totalAngel >  _2PI)
+				{
+					totalAngel -= _2PI;
+					_loop++;
+				}
+			} else {
+				while (totalAngel < -_2PI)
+				{
+					totalAngel += _2PI;
+					_loop ++;
+				}
 			}
-			sectorShape.graphics.lineTo(0,0);
-			sectorShape.graphics.endFill();
+			
+			
+			
+			
+				
+			var angle : Number;
+			const dAng:Number = 1;
+
+			
+			while (_loop)
+			{
+				
+				var startDegress : int = R2D(startAngle);
+				var endDegress : int = R2D(startAngle);
+				
+				
+				if (_loop == 1)
+					endDegress = R2D(totalAngel + startAngle) ;
+				else
+					endDegress = 360 + startDegress ;
+				
+				sectorShape.graphics.beginFill(_color, 0.4);
+				sectorShape.graphics.moveTo(0,0);
+				
+				var _dDegree : int;
+				if (endDegress > startDegress)
+				{	
+
+					for (_dDegree = startDegress ;_dDegree <= endDegress; _dDegree++) 
+					{
+						if(downAxis=="x")
+							objEnd = oval3(0,0,10,50,D2R(_dDegree));
+						else if(downAxis=="y")
+							objEnd = oval3(0,0,50,10,D2R(_dDegree));
+						else if(downAxis=="z")
+							objEnd = oval(0,0,radius,radius,D2R(_dDegree));
+						
+						sectorShape.graphics.lineTo(objEnd.x,objEnd.y);
+					}
+				}
+				else
+				{	
+					for (_dDegree = startDegress ;_dDegree >= endDegress; _dDegree--) 
+					{
+						if(downAxis=="x")
+							objEnd = oval3(0,0,10,50,D2R(_dDegree));
+						else if(downAxis=="y")
+							objEnd = oval3(0,0,50,10,D2R(_dDegree));
+						else if(downAxis=="z")
+							objEnd = oval(0,0,radius,radius,D2R(_dDegree));
+						
+						sectorShape.graphics.lineTo(objEnd.x,objEnd.y);
+					}
+				}
+				
+				sectorShape.graphics.lineTo(0, 0);
+				sectorShape.graphics.endFill();
+				
+				_loop--;
+			}
+		
+			
+			
+			
+			
 			
 		}
 		
@@ -267,7 +449,10 @@ package editor.ui
 			return Math.atan2(dy, dx);
 		}
 		
-		
+		protected function D2R(degress:Number):Number
+		{
+			return degress / 180 * Math.PI;
+		}
 		protected function R2D(radian:Number):Number
 		{
 			return radian * 180 / Math.PI;
