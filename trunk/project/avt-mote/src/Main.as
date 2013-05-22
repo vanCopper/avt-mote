@@ -26,6 +26,13 @@ package
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
+			//import editor.ui.EdtRotationAxis;
+			///var _dtRotationAxis : EdtRotationAxis = new EdtRotationAxis();
+			//addChild(_dtRotationAxis);
+			//_dtRotationAxis.x = _dtRotationAxis.y = 500;
+			//return;
+			
 			// entry point
 			var tb : Toolbar = new Toolbar();
 			addChild(tb);
