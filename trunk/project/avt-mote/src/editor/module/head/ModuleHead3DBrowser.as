@@ -55,27 +55,52 @@ package editor.module.head
 		private function render(xValue : Number, yValue : Number, zValue: Number):void
 		{
 						
-			var m : Matrix4x4 = new Matrix4x4();
+			var mX : Matrix4x4 = new Matrix4x4();
+			//var mXT : Matrix4x4 = new Matrix4x4();
+			
 			var v : Vertex3D = new Vertex3D();
+			var vX : Vertex3D = new Vertex3D();
+			var vY : Vertex3D = new Vertex3D();
+			var vZ : Vertex3D = new Vertex3D();
+			
 			v.y = Math.sin(ModuleHeadData.s_rotorR);
 			v.x = Math.cos(ModuleHeadData.s_rotorR);
 			
-			Matrix4x4.rotateArbitraryAxis(m , v  , xValue);
-				
+			
+			vX.x = v.x;
+			vX.y = v.y;
+			
+			Matrix4x4.rotateArbitraryAxis(mX ,  vX  , xValue);
+			//Matrix4x4.rotateArbitraryAxis(mXT , vX  , -xValue);
+			
+			var mY : Matrix4x4 = new Matrix4x4();
+			mX.effectPoint3D(v.y , -v.x , 0 , vY);
+			Matrix4x4.rotateArbitraryAxis(mY , vY  , yValue);
+			
+			var mXY : Matrix4x4 = Matrix4x4.contact(mX , mY); 
+			
+			var mZ : Matrix4x4 = new Matrix4x4();
+			mXY.effectPoint3D(0 , 0 , 1 ,vZ);
+			Matrix4x4.rotateArbitraryAxis(mZ , vZ  , -zValue);
+			
+			
+			var md : Matrix4x4 = Matrix4x4.contact(mXY , mZ);
+			//trace(md);
+			
 			
 			var __v : Vector.<Number> = new Vector.<Number>();
 			var _vx : Number;
 			var _vy : Number;
 			
-			
+			//md = mY;
 			
 			for each( var ev : Vertex3D in ModuleHeadData.s_vertexRelativeData)
 			{
 				//__v.push(ev.dot.x);
 				//__v.push(ev.dot.y);
 				
-				_vx = (m.Xx * ev.x + m.Xy * ev.y + m.Xz * ev.z) ;
-				_vy = (m.Yx * ev.x + m.Yy * ev.y + m.Yz * ev.z) ;
+				_vx = (md.Xx * ev.x + md.Xy * ev.y + md.Xz * ev.z) ;
+				_vy = (md.Yx * ev.x + md.Yy * ev.y + md.Yz * ev.z) ;
 				
 				__v.push(_vx + EdtDEF.QUADRANT_WIDTH );
 				__v.push(_vy + EdtDEF.QUADRANT_HEIGHT );
