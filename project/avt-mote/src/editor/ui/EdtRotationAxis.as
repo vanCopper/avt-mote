@@ -316,11 +316,11 @@ package editor.ui
 			sectorShape.graphics.clear();
 			if(downAxis=="x")
 			{
-				_color = 0xFF0000;
+				_color = 0x00FF00;
 			}
 			else if(downAxis=="y")
 			{
-				_color = 0x00FF00;
+				_color = 0xFF0000;
 			}
 			else if(downAxis=="z")
 			{
@@ -426,12 +426,12 @@ package editor.ui
 		protected function drawCircle():void
 		{
 			xShape.graphics.clear();
-			xShape.graphics.lineStyle(2,0xff0000, 1);
+			xShape.graphics.lineStyle(2,0x00FF00, 1);
 			xShape.graphics.drawEllipse(-10,-radius,radius2*2, 2*radius);
 			xShape.graphics.endFill();
 			
 			yShape.graphics.clear();
-			yShape.graphics.lineStyle(2,0x00ff00, 1);
+			yShape.graphics.lineStyle(2,0xff0000, 1);
 			yShape.graphics.drawEllipse(-radius,-10, 2*radius ,radius2*2);
 			yShape.graphics.endFill();
 			
