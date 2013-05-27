@@ -30,6 +30,15 @@ package editor.config
 		public static var MODULE_HEAD_ADD_MERIDIAN:String = "add meridian";
 		public static var MODULE_HEAD_EDIT:String = "edit";
 		public static var MODULE_HEAD_VIEW:String = "view";
+		
+		public static var MODULE_HEAD_BROWSE_EXACT:String = "exact";
+		public static var MODULE_HEAD_BROWSE_APPRO:String = "approximation";
+		public static var MODULE_HEAD_BROWSE_RELATIVE:String = "relative";
+		public static var MODULE_HEAD_BROWSE_ABSOLUTE:String = "absolute";
+		
+		public static var MODULE_HEAD_BROWSE_ADJUST:String = "adjust";
+		public static var MODULE_HEAD_BROWSE_RESET:String = "reset";
+		
 	}
 
 }

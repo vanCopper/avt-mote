@@ -10,7 +10,6 @@ package editor.module.head
 	 */
 	public class ModuleHeadData 
 	{
-		
 		public static var s_rotorX : Number;
 		public static var s_rotorY : Number;
 		
@@ -26,6 +25,16 @@ package editor.module.head
 		
 		public static var s_uvData : Vector.<Number> ;
 		public static var s_indices : Vector.<int>;
+		
+		public static var s_approximationMode : Boolean = true;
+		public static var s_xRotor : Vertex3D = new Vertex3D();
+		public static var s_yRotor : Vertex3D = new Vertex3D();
+		public static var s_zRotor : Vertex3D = new Vertex3D();
+		
+		public static var s_absRX : Number;
+		public static var s_absRY : Number;
+		public static var s_absRZ : Number;
+		
 		
 		public static function genindicesData():void
 		{
@@ -90,7 +99,7 @@ package editor.module.head
 		public static function drawTriangles(g : Graphics , vertices:Vector.<Number>) : void
 		{
 			g.clear();
-			g.beginBitmapFill(s_texture);
+			g.beginBitmapFill(s_texture,null,false,true);
 			g.drawTriangles(vertices , s_indices, s_uvData);
 			g.endFill();
 		}
