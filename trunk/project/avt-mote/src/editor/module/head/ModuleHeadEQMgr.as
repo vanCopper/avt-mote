@@ -64,6 +64,32 @@ package editor.module.head
 			for each( var _e : EdtQuadrant in m_edtQuadrantVector )
 				 _e.setVertex(_vertexArray);
 		}
+		public function remainQuadrant(_e0 : EdtQuadrant):void
+		{
+			if (m_edtQuadrantVector[0] && m_edtQuadrantVector[0].parent)
+				m_edtQuadrantVector[0].parent.removeChild(m_edtQuadrantVector[0]);
+			if (m_edtQuadrantVector[1] && m_edtQuadrantVector[1].parent)
+				m_edtQuadrantVector[1].parent.removeChild(m_edtQuadrantVector[1]);
+			if (m_edtQuadrantVector[2] && m_edtQuadrantVector[2].parent)
+				m_edtQuadrantVector[2].parent.removeChild(m_edtQuadrantVector[2]);
+			if (m_edtQuadrantVector[3] && m_edtQuadrantVector[3].parent)
+				m_edtQuadrantVector[3].parent.removeChild(m_edtQuadrantVector[3]);
+			
+			m_edtQuadrantVector[0] = 	
+			m_edtQuadrantVector[1] = 
+			m_edtQuadrantVector[2] = 
+			m_edtQuadrantVector[3] = null;
+			curEdtQuadrant = _e0;
+			curEdtQuadrant.state = 2;
+			
+			addChildAt(_e0 , 0);
+			_e0.fullScreen = true;
+			
+			m_operatorDir = 2;
+			m_selectedEVI = new Vector.<EdtVertexInfo>();
+			 
+			m_autoSwitch = false;
+		}
 		
 		public function setQuadrant(_e0 : EdtQuadrant , _e1 : EdtQuadrant , _e2 : EdtQuadrant , _e3 : EdtQuadrant ) : void
 		{
@@ -72,14 +98,22 @@ package editor.module.head
 			m_edtQuadrantVector[2] = _e2;
 			m_edtQuadrantVector[3] = _e3;
 			
-			var _shp : Shape = new Shape();
-			_shp.graphics.lineStyle(1);
+			if (!m_crossShape)
+			{
+				var _shp : Shape = new Shape();
+				_shp.graphics.lineStyle(1);
+				
+				_shp.graphics.moveTo(EdtDEF.QUADRANT_WIDTH , 0);
+				_shp.graphics.lineTo(EdtDEF.QUADRANT_WIDTH , EdtDEF.QUADRANT_HEIGHT * 2);
+				
+				_shp.graphics.moveTo(0 ,  EdtDEF.QUADRANT_HEIGHT);
+				_shp.graphics.lineTo(EdtDEF.QUADRANT_WIDTH * 2 , EdtDEF.QUADRANT_HEIGHT);
+				
+				m_crossShape = _shp;
+				
 			
-			_shp.graphics.moveTo(EdtDEF.QUADRANT_WIDTH , 0);
-			_shp.graphics.lineTo(EdtDEF.QUADRANT_WIDTH , EdtDEF.QUADRANT_HEIGHT * 2);
+			}
 			
-			_shp.graphics.moveTo(0 ,  EdtDEF.QUADRANT_HEIGHT);
-			_shp.graphics.lineTo(EdtDEF.QUADRANT_WIDTH * 2 , EdtDEF.QUADRANT_HEIGHT);
 			
 			
 			addChildAt(m_edtQuadrantVector[3] , 0);
@@ -87,8 +121,7 @@ package editor.module.head
 			addChildAt(m_edtQuadrantVector[1] , 0);
 			addChildAt(m_edtQuadrantVector[0] , 0);
 									
-			addChild(_shp);
-			m_crossShape = _shp;
+			addChild(m_crossShape);
 			
 			m_autoSwitch = true;
 		}
@@ -338,8 +371,8 @@ package editor.module.head
 			
 			if (!curEdtQuadrant.fullScreen && m_autoSwitch)
 			{
-				if (me.stageX < 0 || me.stageX >= EdtDEF.QUADRANT_WIDTH*2 
-				|| me.stageY < 0 || me.stageY >= EdtDEF.QUADRANT_HEIGHT*2 
+				if (mouseX < 0 || mouseX >= EdtDEF.QUADRANT_WIDTH*2 
+				|| mouseY < 0 || mouseY >= EdtDEF.QUADRANT_HEIGHT*2 
 				)
 					return;
 				

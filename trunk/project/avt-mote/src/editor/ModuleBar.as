@@ -32,6 +32,23 @@ package editor
 			m_firstX = tf.textWidth + tf.x + 10;
 		}
 		
+		public function onNew():void
+		{
+			for each (var _md : ModuleBase in  m_mdList)
+			{
+				_md.onNew();
+			}
+			m_mdList[0].activate();
+		}
+		public function onSave(__root : XML):void
+		{
+			for each (var _md : ModuleBase in  m_mdList)
+			{
+				_md.onSave(__root);
+			}
+		}
+		
+		
 		private function deactivateAll(except : ModuleBase) : void
 		{
 			if (m_mdList)

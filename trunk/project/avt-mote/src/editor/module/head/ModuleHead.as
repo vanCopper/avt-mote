@@ -5,6 +5,7 @@ package editor.module.head
 	import editor.config.EdtDEF;
 	import editor.config.StringPool;
 	import editor.module.ModuleBase;
+	import editor.struct.Texture2D;
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtAddUI;
 	import editor.ui.EdtQuadrant;
@@ -520,7 +521,8 @@ package editor.module.head
 			m_quadrant2.setVertex(_edtVectorAll);
 			m_edtVectorAll = _edtVectorAll;
 			
-			m_circleAddUI.visible = false;
+			if (m_circleAddUI && m_circleAddUI.parent)
+				m_circleAddUI.parent.removeChild(m_circleAddUI);
 			
 			m_tb.deactivateAll([m_tb.btnAM]);
 			
@@ -688,7 +690,7 @@ package editor.module.head
 			m_bmp.x =  -  (( bitmapData.width ) >> 1);
 			m_bmp.y =  - ((bitmapData.height)  >> 1);
 			
-			ModuleHeadData.s_texture = bitmapData;
+			ModuleHeadData.s_texture = new Texture2D(bitmapData);
 			
 			m_tb.deactivateAll([m_tb.btnAR]);
 		}
@@ -710,7 +712,38 @@ package editor.module.head
 			super.deactivate();
 		}
 		
+		public override function onNew():void
+		{
+			ModuleHeadData.clear();
+			m_eqm.remainQuadrant(m_quadrant2);
+			m_tb.deactivateAll([m_tb.btnImport]);
+			m_bmpShape.graphics.clear();
+			
+			m_quadrant2.setVertex(null);
+			if (m_quadrant1) m_quadrant1.setVertex(null);
+			if (m_quadrant0) m_quadrant0.setVertex(null);
+			if (m_quadrant3) m_quadrant3.setVertex(null);
+			
+			if (m_3dView) m_3dView.graphics.clear();
+			
+			if (m_circleAddUI && m_circleAddUI.parent)
+				m_circleAddUI.parent.removeChild(m_circleAddUI);
+			m_circleAddUI.reset();
+			if (m_meridianAddUI && m_meridianAddUI.parent)
+				m_meridianAddUI.parent.removeChild(m_meridianAddUI);	
+			m_meridianAddUI.reset();
+
+			m_roterVector = null;
+			
+			m_browser.reset();
+			m_tb.btnEdit.releaseFunction(m_tb.btnEdit);
+			deactivate();
+		}
 		
+		public override function onSave(__root : XML):void
+		{
+			
+		}
 		public override function dispose() : void
 		{
 			if (m_eqm)
@@ -737,6 +770,12 @@ package editor.module.head
 				m_circleAddUI.dispose();
 				m_circleAddUI = null;
 			}
+			if (m_meridianAddUI)
+			{
+				m_meridianAddUI.dispose();
+				m_meridianAddUI = null;
+			}
+			
 			
 			if (m_bmp )
 			{
@@ -758,6 +797,8 @@ package editor.module.head
 
 			super.dispose();
 		}
+		
+		
 	}
 
 }

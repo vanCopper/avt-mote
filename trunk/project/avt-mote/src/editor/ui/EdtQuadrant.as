@@ -466,9 +466,6 @@ package editor.ui {
 			 _lineShape.graphics.lineStyle(NaN);
 		}
 		
-		public function update () : void {
-		
-		}
 		
 		public function updataPosInfo() : void {
 			if (_quadrant == 0 ) {

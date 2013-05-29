@@ -43,6 +43,7 @@ package editor.module.head
 		
 		private var m_textCnt : Sprite = new Sprite();
 		private var m_xyzShape : Shape = new Shape();
+		private var btn : BSSButton;
 		
 		public function ModuleHead3DBrowser() 
 		{
@@ -135,7 +136,7 @@ package editor.module.head
 			m_textCnt.x = 500;
 			m_textCnt.y = 100;
 			
-			var btn : BSSButton = BSSButton.createSimpleBSSButton(120 , 20 , StringPool.MODULE_HEAD_BROWSE_ADJUST , false);
+			btn = BSSButton.createSimpleBSSButton(120 , 20 , StringPool.MODULE_HEAD_BROWSE_ADJUST , false);
 			addChild(btn);
 			btn.x = 500;
 			btn.y = 400;
@@ -278,6 +279,11 @@ package editor.module.head
 			{
 				render(m_roX + xValue,m_roY+ yValue,m_roZ+ zValue);
 			}
+		}
+		
+		public function reset():void
+		{
+			onReset(btn);
 		}
 		
 		private function render(xValue : Number, yValue : Number, zValue: Number):void
