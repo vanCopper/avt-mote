@@ -15,6 +15,8 @@ package editor.ui
 	public class EdtAddUI extends SpriteWH
 	{
 		private var _text : TextField;
+		private var m_slider : BSSSlider;
+		private var m_min : Number;
 		
 		public var okFunction : Function ;
 		public var changeFunction : Function ;
@@ -26,6 +28,7 @@ package editor.ui
 		
 		public function EdtAddUI(min : Number, max : Number)
 		{
+			m_min = min ;
 			var _btn:BSSButton;
 			
 			var shape : Shape;
@@ -68,25 +71,24 @@ package editor.ui
 			
 			_btn = new BSSButton(btnCtar);
 			
-			var _slider : BSSSlider = BSSSlider.createSimpleBSSSlider(true, _btn, 0, 150, min, max);
-			_slider.x  = 10;
-			_slider.y = 10;
-			addChild(_slider);
+			m_slider = BSSSlider.createSimpleBSSSlider(true, _btn, 0, 150, min, max);
+			m_slider.x  = 10;
+			m_slider.y = 10;
+			addChild(m_slider);
 			
-			_slider.dragFunction = onChange;
+			m_slider.dragFunction = onChange;
 			
 			_text = new TextField();
 			_text.width = 30;
 			_text.height = 20;
 			_text.background = true;
 			_text.border = true;
-			_text.x = _slider.x + _slider.width + 5;
+			_text.x = m_slider.x + m_slider.width + 5;
 			_text.y = 5;
 			_text.mouseEnabled = false;
 			addChild(_text);
 			
-			_slider.setThumbValue(0 , min);
-			_text.text = "" + int(_slider.getThumbValue(0));
+			reset();
 			
 			var btn : BSSButton = BSSButton.createSimpleBSSButton(20, 20, StringPool.OK);
 			btn.releaseFunction = onOK;
@@ -118,6 +120,11 @@ package editor.ui
 			{
 				changeFunction(value);
 			}
+		}
+		public function reset():void
+		{
+			m_slider.setThumbValue(0 , m_min);
+			_text.text = "" + int(m_min);
 		}
 		
 		public override function dispose():void

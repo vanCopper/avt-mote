@@ -1,5 +1,6 @@
 package editor.module.head 
 {
+	import editor.struct.Texture2D;
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtVertex3D;
 	import flash.display.BitmapData;
@@ -18,7 +19,7 @@ package editor.module.head
 		
 		public static var s_vertexData : Vector.<EdtVertex3D>;
 		public static var s_vertexRelativeData : Vector.<Vertex3D>;
-		public static var s_texture : BitmapData;
+		public static var s_texture : Texture2D;
 		
 		public static var s_pointPerLine : int;
 		public static var s_totalLine : int;
@@ -35,6 +36,18 @@ package editor.module.head
 		public static var s_absRY : Number;
 		public static var s_absRZ : Number;
 		
+		public static function clear():void
+		{
+			s_approximationMode = true;
+			s_vertexData = null;
+			s_vertexRelativeData = null;
+			if (s_texture)
+				s_texture.dispose();
+			s_texture = null;
+		
+			s_uvData = null;
+			s_indices = null;
+		}
 		
 		public static function genindicesData():void
 		{
@@ -66,8 +79,8 @@ package editor.module.head
 			s_uvData = new Vector.<Number>();
 			for each (var _ev : EdtVertex3D in s_vertexData)
 			{
-				s_uvData.push ((_ev.x + (s_texture.width >> 1)) / s_texture.width);
-				s_uvData.push ((_ev.y + (s_texture.height >> 1)) / s_texture.height);
+				s_uvData.push ((_ev.x + (s_texture.rectW >> 1) + s_texture.rectX) / s_texture.bitmapData.width);
+				s_uvData.push ((_ev.y + (s_texture.rectH >> 1) + s_texture.rectY) / s_texture.bitmapData.height);
 			}
 			
 			//var g : Graphics;
@@ -98,10 +111,14 @@ package editor.module.head
 		
 		public static function drawTriangles(g : Graphics , vertices:Vector.<Number>) : void
 		{
-			g.clear();
-			g.beginBitmapFill(s_texture,null,false,true);
-			g.drawTriangles(vertices , s_indices, s_uvData);
-			g.endFill();
+			if (s_texture && s_texture.bitmapData)
+			{
+				g.clear();
+				g.beginBitmapFill(s_texture.bitmapData,null,false,true);
+				g.drawTriangles(vertices , s_indices, s_uvData);
+				g.endFill();
+			}
+			
 		}
 	}
 

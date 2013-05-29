@@ -55,6 +55,15 @@ package editor.module
 				m_btn = null;
 			}
 		}
+		public function onNew():void
+		{
+			
+		}
+		
+		public function onSave(__root : XML):void
+		{
+			
+		}
 		
 	}
 

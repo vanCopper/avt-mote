@@ -15,6 +15,7 @@ package editor
 		public var btnNew : BSSButton;
 		public var btnOpen : BSSButton;
 		public var btnSave : BSSButton;
+		public var btnSaveAs : BSSButton;
 		public var btnCopy : BSSButton;
 		public var btnExport : BSSButton;
 		
@@ -30,14 +31,28 @@ package editor
 			btnOpen.x = btnNew.x + btnNew.width + 5;
 			btnOpen.y = 5 ;
 			addChild(btnOpen) ;
+			var _lastBtn : BSSButton = btnOpen;
 			
-			btnSave =  BSSButton.createSimpleBSSButton(20, 20, Config.isAirVersion ? StringPool.SAVE : StringPool.SAVE_AS , true);
-			btnSave.x = btnOpen.x + btnOpen.width + 5;
-			btnSave.y = 5 ;
-			addChild(btnSave) ;
+			if (Config.isAirVersion)
+			{
+				btnSave =  BSSButton.createSimpleBSSButton(20, 20, StringPool.SAVE , true);
+				btnSave.x = _lastBtn.x + _lastBtn.width + 5;
+				btnSave.y = 5 ;
+				addChild(btnSave) ;
+				_lastBtn = btnSave;
+			}
+			
+			
+			
+			btnSaveAs = BSSButton.createSimpleBSSButton(20, 20, StringPool.SAVE_AS , true);
+			btnSaveAs.x = _lastBtn.x + _lastBtn.width + 5;
+			btnSaveAs.y = 5 ;
+			addChild(btnSaveAs) ;
+			_lastBtn = btnSaveAs;
+			
 			
 			btnExport =  BSSButton.createSimpleBSSButton(20, 20, StringPool.EXPORT , true);
-			btnExport.x = btnSave.x + btnSave.width + 5;
+			btnExport.x = _lastBtn.x + _lastBtn.width + 5;
 			btnExport.y = 5 ;
 			addChild(btnExport) ;
 			

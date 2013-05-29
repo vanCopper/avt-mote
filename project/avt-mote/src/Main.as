@@ -9,6 +9,7 @@ package
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import UISuit.UIComponent.BSSButton;
 	
 	/**
 	 * ...
@@ -16,7 +17,7 @@ package
 	 */
 	public class Main extends Sprite 
 	{
-		
+		private var m_mb : ModuleBar;
 		public function Main():void 
 		{
 			if (stage) init();
@@ -37,8 +38,8 @@ package
 			var tb : Toolbar = new Toolbar();
 			addChild(tb);
 			
-			var mb : ModuleBar = new ModuleBar();
-			addChild(mb).x = tb.x + tb.width + 10;
+			m_mb = new ModuleBar();
+			addChild(m_mb).x = tb.x + tb.width + 10;
 			
 			var _mContainer : Sprite = new Sprite();
 			_mContainer.graphics.lineStyle(1,0,0.55);
@@ -46,10 +47,10 @@ package
 			_mContainer.graphics.lineTo(800, 0);
 			
 			
-			mb.addModule(new ModuleHead(_mContainer));
+			m_mb.addModule(new ModuleHead(_mContainer));
 			
 			
-			addChild(_mContainer).y = mb.y + mb.height + 5;
+			addChild(_mContainer).y = m_mb.y + m_mb.height + 5;
 			
 			var obj : Object = { };
 			obj[MouseEvent.MOUSE_WHEEL] = CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL;
@@ -61,8 +62,27 @@ package
 
 			 CallbackCenter.init(stage , obj);
 			
+			
+			tb.btnNew.releaseFunction = onNew;
+			tb.btnOpen.releaseFunction = onOpen;
+			tb.btnSaveAs.releaseFunction = onSaveAs;
 		}
 		
+		private function onOpen(btn:BSSButton):void 
+		{
+			
+		}
+		
+		private function onNew(btn:BSSButton):void 
+		{
+			m_mb.onNew();
+			
+		}
+		private function onSaveAs(btn:BSSButton):void 
+		{
+			var _data : XML = <avt-mote/>;
+			m_mb.onSave(_data);
+		}
 	}
 	
 }
