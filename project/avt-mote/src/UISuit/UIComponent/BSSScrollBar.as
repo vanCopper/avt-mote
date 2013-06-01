@@ -149,54 +149,75 @@ package   UISuit.UIComponent   {
 			}
 		
 //////////////////////////////////
+
+			public static function BSSScrollBar_onDragFocusBSSScrollBarMouseMoveCB(evtId : int, args : Object , senderInfo : Object , registerObj:Object):int
+			{
+				BSSScrollBar_onDragFocusBSSScrollBarMouseMove(args as MouseEvent);
+				return 0;
+			}
+			public static function BSSScrollBar_onDragFocusBSSScrollBarMouseUpCB(evtId : int, args : Object , senderInfo : Object , registerObj:Object):int
+			{
+				BSSScrollBar_onDragFocusBSSScrollBarMouseUp(args as MouseEvent);
+				return 0;
+			}
+
             public  static function BSSScrollBar_setDragFocusBSSScrollBar(fBSSScrollBar_DragFocusBSSScrollBar : BSSScrollBar)
             : void {
                 
                 if (!s_BSSScrollBar_DragFocusBSSScrollBar) //不为空 以前添加过 还没删除
                 {
-					fBSSScrollBar_DragFocusBSSScrollBar.addEventListener(MouseEvent.MOUSE_OUT , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
-					fBSSScrollBar_DragFocusBSSScrollBar.addEventListener(MouseEvent.MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
-					fBSSScrollBar_DragFocusBSSScrollBar.addEventListener(MouseEvent.MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
-                    //CallBackMgr.CallBackMgr_registerCallBack(CALLBACK.ON_MOUSE_STAGE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
-                    //CallBackMgr.CallBackMgr_registerCallBack(CALLBACK.ON_MOUSE_STAGE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
+					//fBSSScrollBar_DragFocusBSSScrollBar.addEventListener(MouseEvent.MOUSE_OUT , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
+					//fBSSScrollBar_DragFocusBSSScrollBar.addEventListener(MouseEvent.MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
+					//fBSSScrollBar_DragFocusBSSScrollBar.addEventListener(MouseEvent.MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
+                    
+					import CallbackUtil.CallbackCenter;
+					import editor.config.CALLBACK;
+					CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMoveCB);
+                    CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUpCB);
                 }
 
 				s_BSSScrollBar_DragFocusBSSScrollBar = fBSSScrollBar_DragFocusBSSScrollBar;
                  
             }
             
+			public static function BSSScrollBar_onDragFocusBSSScrollBarMouseUp( e : MouseEvent = null)
+            : void {
+                if (s_BSSScrollBar_DragFocusBSSScrollBar)
+                {
+					s_BSSScrollBar_DragFocusBSSScrollBar.stopDrag();
+					//s_BSSScrollBar_DragFocusBSSScrollBar.removeEventListener(MouseEvent.MOUSE_OUT , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
+					//s_BSSScrollBar_DragFocusBSSScrollBar.removeEventListener(MouseEvent.MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
+					//s_BSSScrollBar_DragFocusBSSScrollBar.removeEventListener(MouseEvent.MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
+                    
+					import CallbackUtil.CallbackCenter;
+					import editor.config.CALLBACK;
+					CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMoveCB);
+                    CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUpCB);
+                    
+					s_BSSScrollBar_DragFocusBSSScrollBar = null;
+                }
+            }
+			
             public  static function BSSScrollBar_onDragFocusBSSScrollBarMouseMove( e : MouseEvent)
             : void {
 				 //trace(s_BSSScrollBar_DragFocusBSSScrollBar);
                  if (s_BSSScrollBar_DragFocusBSSScrollBar)
                  {
-					 s_BSSScrollBar_DragFocusBSSScrollBar.onChange();
+					s_BSSScrollBar_DragFocusBSSScrollBar.onChange();
                     
                  }
                  else //ԉԚδ֪քԭӲѻט׃
                  {   
-                        BSSScrollBar_onDragFocusBSSScrollBarMouseUp(e);
+                    BSSScrollBar_onDragFocusBSSScrollBarMouseUp(e);
                  }
             }
 			
-            public   static function BSSScrollBar_onDragFocusBSSScrollBarMouseUp( e : MouseEvent = null)
-            : void {
-                if (s_BSSScrollBar_DragFocusBSSScrollBar)
-                {
-					s_BSSScrollBar_DragFocusBSSScrollBar.stopDrag();
-					s_BSSScrollBar_DragFocusBSSScrollBar.removeEventListener(MouseEvent.MOUSE_OUT , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
-					s_BSSScrollBar_DragFocusBSSScrollBar.removeEventListener(MouseEvent.MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
-					s_BSSScrollBar_DragFocusBSSScrollBar.removeEventListener(MouseEvent.MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
-                    //CallBackMgr.CallBackMgr_unregisterCallBack(CALLBACK.ON_MOUSE_STAGE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
-                    //CallBackMgr.CallBackMgr_unregisterCallBack(CALLBACK.ON_MOUSE_STAGE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUp);
-                    s_BSSScrollBar_DragFocusBSSScrollBar = null;
-                }
-            }
+           
 
 //////////////////////////////////
 
 //#ifdef ENABLE_SB_WHEEL
-/*
+
 
             public static function BSSScrollBar_resetWheelFocusBSSScrollBar(fBSSScrollBar_WheelFocusBSSScrollBar : BSSScrollBar)
             : void {
@@ -207,27 +228,38 @@ package   UISuit.UIComponent   {
 			
             public static function BSSScrollBar_setWheelFocusBSSScrollBar(fBSSScrollBar_WheelFocusBSSScrollBar : BSSScrollBar)
             : void {
+				import CallbackUtil.CallbackCenter;
+				import editor.config.CALLBACK;
+
                 if (fBSSScrollBar_WheelFocusBSSScrollBar)
                 {
                     if (!s_BSSScrollBar_WheelFocusBSSScrollBar) //不为空 以前添加过 还没删除
                     {
-                        //CallBackMgr.CallBackMgr_registerCallBack(CALLBACK.ON_MOUSE_STAGE_WHEEL , BSSScrollBar_onWheelFocusBSSScrollBarMouseWheel);
+                        CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL , BSSScrollBar_onWheelFocusBSSScrollBarMouseWheelCB);
                     }
                 }
                 else
                 {
                     if (s_BSSScrollBar_WheelFocusBSSScrollBar) //为空 以前就已经删除了
                     {
-                        //CallBackMgr.CallBackMgr_unregisterCallBack(CALLBACK.ON_MOUSE_STAGE_WHEEL , BSSScrollBar_onWheelFocusBSSScrollBarMouseWheel);
+                        CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL , BSSScrollBar_onWheelFocusBSSScrollBarMouseWheelCB);
                     }
                 }
                 s_BSSScrollBar_WheelFocusBSSScrollBar = fBSSScrollBar_WheelFocusBSSScrollBar;
                 
             }
+			public  static function BSSScrollBar_onWheelFocusBSSScrollBarMouseWheelCB(evtId : int, args : Object , senderInfo : Object , registerObj:Object):int
+			{
+				BSSScrollBar_onWheelFocusBSSScrollBarMouseWheel(args as MouseEvent);
+				return 0;
+			}
+			public static var s_BSSScrollBar_WheelFocusBSSScrollBar : BSSScrollBar;
+			
 
             public  function setWheelFocus  (e : FocusEvent ) : void {BSSScrollBar_setWheelFocusBSSScrollBar(this) ; }
             public  function resetWheelFocus (e : FocusEvent ) : void {BSSScrollBar_resetWheelFocusBSSScrollBar(this);}
          
+			
             public  static function BSSScrollBar_onWheelFocusBSSScrollBarMouseWheel (e:MouseEvent)	
 			:void
 			{	
@@ -239,7 +271,7 @@ package   UISuit.UIComponent   {
 
                             s_BSSScrollBar_WheelFocusBSSScrollBar.contentData = s_BSSScrollBar_WheelFocusBSSScrollBar.getContentData() + ((e.delta > 0)  ?  -s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBar_moveStep : s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBar_moveStep);
                             
-                       /* var backY : Number = s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y;
+                        var backY : Number = s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y;
                             if (e.delta > 0) 
                             {		
                                 if (s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y != s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollableMinY)
@@ -247,7 +279,7 @@ package   UISuit.UIComponent   {
                                     s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y-= s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBar_moveStep;	
                                     if (s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y < s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollableMinY)
                                         s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y = s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBar_moveStep;
-                                    s_BSSScrollBar_WheelFocusBSSScrollBar.doDefaultOperator();		
+                                    //s_BSSScrollBar_WheelFocusBSSScrollBar.doDefaultOperator();		
                                 }                              
                             }
                             else //if (e.delta < 0)
@@ -258,15 +290,15 @@ package   UISuit.UIComponent   {
                                      s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y += s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBar_moveStep;
                                       if (s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y > scrollableMaxY)
                                             s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y = scrollableMaxY;
-                                    s_BSSScrollBar_WheelFocusBSSScrollBar.doDefaultOperator();				
+                                    //s_BSSScrollBar_WheelFocusBSSScrollBar.doDefaultOperator();				
                                 }                            
                             }
                             if (backY != s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y && s_BSSScrollBar_WheelFocusBSSScrollBar.changeFunction != null)
                                 s_BSSScrollBar_WheelFocusBSSScrollBar.changeFunction(s_BSSScrollBar_WheelFocusBSSScrollBar);
-                    * /					
+                    				
                     }
 		}
-*/		
+		
 
             
 		public function BSSScrollBar(data : DisplayObjectContainer , minContent : Number = 0 , maxContent : Number = NaN , specEdgeOff : Number = 0)
@@ -582,12 +614,12 @@ package   UISuit.UIComponent   {
 			//#if USE_BG_BTN m_scrollBGButton.deactivate();
 			m_scrollBarButton.deactivate();
 			//#ifdef ENABLE_SB_WHEEL
-			//BSSScrollBar_resetWheelFocusBSSScrollBar(this);
-			//if (hasEventListener(FocusEvent.FOCUS_IN))
-			//{   
-			//	removeEventListener(FocusEvent.FOCUS_IN, setWheelFocus ); 
-			//	removeEventListener(FocusEvent.FOCUS_OUT, resetWheelFocus );
-			//}
+			BSSScrollBar_resetWheelFocusBSSScrollBar(this);
+			if (hasEventListener(FocusEvent.FOCUS_IN))
+			{   
+				removeEventListener(FocusEvent.FOCUS_IN, setWheelFocus ); 
+				removeEventListener(FocusEvent.FOCUS_OUT, resetWheelFocus );
+			}
 			//#endif
 			
 		}

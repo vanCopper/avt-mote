@@ -37,6 +37,19 @@ package editor.struct
 			
 		}
 		
+		public function toXMLString():String
+		{
+			return "" + x + ":" + y + ":" + z;
+		}
+		public function fromXMLString(s:String):void
+		{
+			var arr : Array = s.split(":")
+			x = Number(arr[0]);
+			y = Number(arr[1]);
+			z = Number(arr[2]);
+			
+		}
+		
 	}
 
 }
