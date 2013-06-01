@@ -4,6 +4,7 @@ package editor.module.head
 	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
 	import editor.config.StringPool;
+	import editor.Library;
 	import editor.module.ModuleBase;
 	import editor.struct.Texture2D;
 	import editor.struct.Vertex3D;
@@ -690,7 +691,8 @@ package editor.module.head
 			m_bmp.x =  -  (( bitmapData.width ) >> 1);
 			m_bmp.y =  - ((bitmapData.height)  >> 1);
 			
-			ModuleHeadData.s_texture = new Texture2D(bitmapData);
+			ModuleHeadData.s_texture = new Texture2D(bitmapData , _filename , "HEAD");
+			Library.getS().addTexture(ModuleHeadData.s_texture);
 			
 			m_tb.deactivateAll([m_tb.btnAR]);
 		}
@@ -743,6 +745,67 @@ package editor.module.head
 		public override function onSave(__root : XML):void
 		{
 			
+			if (ModuleHeadData.s_vertexData && ModuleHeadData.s_texture)
+			{
+				var str : String = "<ModuleHead>";
+				
+				
+				
+
+				
+				str += "<approximation>"
+					+ "<rotorX>" + ModuleHeadData.s_rotorX + "</rotorX>"
+					+ "<rotorY>" + ModuleHeadData.s_rotorY + "</rotorY>"
+					+ "<rotorR>" + ModuleHeadData.s_rotorR + "</rotorR>"
+					
+				+ "</approximation>";
+				
+				if (!ModuleHeadData.s_approximationMode)
+				{
+					str += "<exact>"
+					+ "<absRX>" + ModuleHeadData.s_absRX + "</absRX>"
+					+ "<absRY>" + ModuleHeadData.s_absRY + "</absRY>"
+					+ "<absRZ>" + ModuleHeadData.s_absRZ + "</absRX>"
+					+ "<xRotor>" + ModuleHeadData.s_xRotor.toXMLString() + "</xRotor>"
+					+ "<yRotor>" + ModuleHeadData.s_yRotor.toXMLString() + "</yRotor>"
+					+ "<zRotor>" + ModuleHeadData.s_zRotor.toXMLString() + "</zRotor>"
+					+ "</exact>";
+				}
+				
+				str += "<vectex>"
+					+ "<pointPerLine>" + ModuleHeadData.s_pointPerLine + "</pointPerLine>"
+					+ "<totalLine>" + ModuleHeadData.s_totalLine + "</totalLine>";
+					
+				str += ModuleHeadData.s_texture.toXMLString();	
+					
+				str += "<data>"
+				var first : Boolean = true;
+				for each (var _v : Vertex3D in ModuleHeadData.s_vertexData)	
+				{
+					if (first)
+					{
+						str += _v.toXMLString();
+						first = false;
+					}
+					else
+						str += "," + _v.toXMLString();
+				}
+				str += "</data></vectex>";		
+				
+		
+				str += "</ModuleHead>";
+				
+				__root.appendChild(
+					new XML(str)
+				);
+			}
+			else
+			{
+				var ModuleHeadXML : XML = <ModuleHead/>;
+				__root.appendChild(
+					ModuleHeadXML
+				);
+			}
 		}
 		public override function dispose() : void
 		{

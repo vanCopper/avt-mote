@@ -2,6 +2,7 @@ package
 {
 	import CallbackUtil.CallbackCenter;
 	import editor.config.CALLBACK;
+	import editor.Library;
 	import editor.module.head.ModuleHead;
 	import editor.ModuleBar;
 	import editor.Toolbar;
@@ -66,6 +67,19 @@ package
 			tb.btnNew.releaseFunction = onNew;
 			tb.btnOpen.releaseFunction = onOpen;
 			tb.btnSaveAs.releaseFunction = onSaveAs;
+			
+			var _lib : Library = new Library();
+			_lib.x  = 400;
+			_lib.y  = 200;
+			
+			addChild(_lib);
+			
+			initAirFunc();
+		}
+		
+		public function initAirFunc():void
+		{
+			
 		}
 		
 		private function onOpen(btn:BSSButton):void 
@@ -75,6 +89,7 @@ package
 		
 		private function onNew(btn:BSSButton):void 
 		{
+			Library.getS().onNew();
 			m_mb.onNew();
 			
 		}
@@ -82,6 +97,8 @@ package
 		{
 			var _data : XML = <avt-mote/>;
 			m_mb.onSave(_data);
+			
+			trace(_data.toXMLString());
 		}
 	}
 	

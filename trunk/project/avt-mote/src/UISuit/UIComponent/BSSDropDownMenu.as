@@ -571,7 +571,16 @@ package   UISuit.UIComponent   {
 			
 			addItem(back);
 		}
-		
+		public function getItemIndex(text : String) : int
+		{
+			var leng : int = m_scrollItemArray.length;
+			for (var i : int = 0 ;  i < leng ; i ++ )
+			{
+				if (m_scrollItemArray[i].text == text)
+					return i;
+			}
+			return -1;
+		}
 		public function addItem(text : String)
 		: void {
 			
