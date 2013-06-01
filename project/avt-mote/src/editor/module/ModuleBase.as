@@ -30,11 +30,11 @@ package editor.module
 			if (m_content && m_content.parent)
 				m_content.parent.removeChild(m_content);
 		}
-		
+		private static var s_areaArray : Array = [];
 		public function ModuleBase(_container: DisplayObjectContainer , name : String) 
 		{
 			m_container = _container;
-			m_btn = BSSButton.createSimpleBSSButton(20, 20, name , true);
+			m_btn = BSSButton.createSimpleBSSButton(20, 20, name , true, s_areaArray);
 			m_btn.statusMode = true;
 			m_content = new SpriteWH();
 			

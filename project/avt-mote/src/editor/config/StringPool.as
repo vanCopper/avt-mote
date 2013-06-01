@@ -39,6 +39,10 @@ package editor.config
 		public static var MODULE_HEAD_BROWSE_ADJUST:String = "adjust";
 		public static var MODULE_HEAD_BROWSE_RESET:String = "reset";
 		
+		
+		public static var MODULE_EYE:String = "eye";
+		
+		
 	}
 
 }
