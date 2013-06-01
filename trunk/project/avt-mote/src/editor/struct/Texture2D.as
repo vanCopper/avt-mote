@@ -37,6 +37,15 @@ package editor.struct
 				rectW = bitmapData.width;
 				rectH = bitmapData.height;
 			}
+			else
+			{
+				rectX = a_rectX;
+				rectY = a_rectY;
+				rectW = a_rectW;
+				rectH = a_rectH;
+			}
+			
+		
 		}
 		public function dispose() : void
 		{
@@ -57,7 +66,7 @@ package editor.struct
 				+ "<rectY>" + rectY + "</rectY>"
 				+ "<rectW>" + rectW + "</rectW>"
 				+ "<rectH>" + rectH + "</rectH>"
-				+ "<type>" + rectH + "</type>"
+				+ "<type>" + type + "</type>"
 				+ "</Texture2D>";
 		}
 		public function fromXMLString(xml:XML):void

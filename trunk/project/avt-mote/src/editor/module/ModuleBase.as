@@ -64,7 +64,10 @@ package editor.module
 		{
 			
 		}
-		
+		public function onOpenXML(__root : XML):void
+		{
+			
+		}
 	}
 
 }
