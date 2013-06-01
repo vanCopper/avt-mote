@@ -12,6 +12,7 @@ package editor.module.head
 	import editor.ui.EdtQuadrant;
 	import editor.ui.EdtVertex3D;
 	import editor.util.ImagePicker;
+	import editor.util.TextureLoader;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
@@ -273,7 +274,7 @@ package editor.module.head
 					_edtVectorAll.push(m_edtVectorAll[j + 2].cloneV());	
 					
 					
-					
+					/*
 					for ( ; ti < _edtVectorAll.length ; ti++ )
 					{
 						_edtVectorAll[ti - 1].priority = ti - 1;
@@ -281,30 +282,21 @@ package editor.module.head
 						
 						connect2PT(_edtVectorAll[ti] , _edtVectorAll[ti - 1] );
 
-					}
+					}*/
 				}
 				
-				for ( ti = 0 ; ti < totalPerLine ; ti++ )
-				for (var l : int = 1 ; l < totalLine ;l++ )
-				{
-					connect2PT(_edtVectorAll[(l - 1) * totalPerLine + ti ] , _edtVectorAll[(l) * totalPerLine + ti ]);
-				}
+				genConnect(totalPerLine ,  totalLine , _edtVectorAll);
+				
+				
 				
 				m_edtVectorAll = _edtVectorAll;
 				
 			}
 			
+			//gen z
 			const _angleView : int = 60;
 			
-			for (l = 0 ; l < totalLine ;l++ )
-			
-			//var stageShpae:Shape = new Shape();
-			//m_content.stage.addChild(stageShpae);
-			
-			//stageShpae.x = stageShpae.y = 300;
-			//stageShpae.graphics.lineStyle(1);
-			
-			//l = 0;
+			for (var l : int = 0 ; l < totalLine ;l++ )
 			{
 				var startPos : int = l * totalPerLine;
 				var _lengLine : Number = 0;
@@ -394,23 +386,7 @@ package editor.module.head
 			ModuleHeadData.genindicesData();
 			ModuleHeadData.genUVData();
 			
-			if (!m_quadrant1)
-			{	
-				m_quadrant1 = new EdtQuadrant(1);
-				m_3dView = new ModuleHead3DView();
-				m_quadrant1.indicate = m_3dView;
-				
-				
-			}
-			if (!m_quadrant0)
-				m_quadrant0 = new EdtQuadrant(0);	
-			if (!m_quadrant3)
-				m_quadrant3 = new EdtQuadrant(3);	
-				
-			
-			m_eqm.setQuadrant(m_quadrant0 , m_quadrant1 , m_quadrant2 , m_quadrant3);
-			
-			m_quadrant2.fullScreen = false;
+			init4Quadrant();
 			
 			m_eqm.setVertex(m_edtVectorAll);
 			
@@ -676,7 +652,6 @@ package editor.module.head
 		
 		private function onOpen(btn : BSSButton) : void {
 			new ImagePicker( onLoadImage , [new FileFilter("image (*.png)" , "*.png")]);
-			
 		}
 		
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
@@ -698,6 +673,22 @@ package editor.module.head
 		}
 		
 		
+		private function onTextureLoaded(_filename : String , texture : Texture2D):void
+		{
+			m_bmp.bitmapData = texture.bitmapData;
+			m_bmp.x =  -  ((m_bmp.bitmapData.width ) >> 1);
+			m_bmp.y =  - ((m_bmp.bitmapData.height)  >> 1);
+			ModuleHeadData.s_texture = texture;
+			
+			ModuleHeadData.s_vertexData = m_edtVectorAll;
+			ModuleHeadData.genindicesData();
+			ModuleHeadData.genUVData();
+			m_eqm.setVertex(m_edtVectorAll);
+			
+			
+			
+		}
+		
 		public override function activate() : void
 		{
 			if (m_eqm.parent)
@@ -714,9 +705,121 @@ package editor.module.head
 			super.deactivate();
 		}
 		
+		private function genConnect(pointPerLine:int, totalLine:int, _edtVectorAll:Vector.<EdtVertex3D>):void 
+		{
+			var ti : int = 0;
+			
+			ti = 0;
+			for each(var __edtP : EdtVertex3D in _edtVectorAll)
+			{
+				__edtP.priority = ti++;
+			}
+			
+			
+			for ( l = 0 ; l < totalLine ;l++ )
+			{
+				var start : int = l * pointPerLine;
+				for ( ti = 1 ; ti < pointPerLine ; ti++ )
+				{
+					connect2PT(_edtVectorAll[start + ti - 1] , _edtVectorAll[start + ti]);
+				}
+			}
+			
+			for ( ti = 0 ; ti < pointPerLine ; ti++ )
+			for (var l : int = 1 ; l < totalLine ;l++ )
+			{
+				connect2PT(_edtVectorAll[(l - 1) * pointPerLine + ti ] , _edtVectorAll[(l) * pointPerLine + ti ]);
+			}
+		}
+		
+		private function init4Quadrant():void
+		{
+			if (!m_quadrant1)
+			{	
+				m_quadrant1 = new EdtQuadrant(1);
+				m_3dView = new ModuleHead3DView();
+				m_quadrant1.indicate = m_3dView;
+			}
+			if (!m_quadrant0)
+				m_quadrant0 = new EdtQuadrant(0);	
+			if (!m_quadrant3)
+				m_quadrant3 = new EdtQuadrant(3);	
+				
+			
+			m_eqm.setQuadrant(m_quadrant0 , m_quadrant1 , m_quadrant2 , m_quadrant3);
+			
+			m_quadrant2.fullScreen = false;
+		}
+		
+		public override function onOpenXML(__root : XML):void
+		{
+			var headXML : XMLList = __root.ModuleHead;
+			
+			
+			for each (var item : XML in headXML.elements())
+			{
+				//trace(item.toXMLString());
+				if (item.name() == "approximation")
+				{
+					ModuleHeadData.s_rotorX = Number(item.rotorX.text());
+					ModuleHeadData.s_rotorY = Number(item.rotorY.text());
+					ModuleHeadData.s_rotorR = Number(item.rotorR.text());
+				}
+				else if (item.name() == "exact")
+				{
+					ModuleHeadData.s_approximationMode = false;
+					m_browser.approximationMode = false;
+					ModuleHeadData.s_absRX = Number(item.absRX.text());
+					ModuleHeadData.s_absRY = Number(item.absRY.text());
+					ModuleHeadData.s_absRZ = Number(item.absRZ.text());
+					ModuleHeadData.s_xRotor.fromXMLString(item.xRotor.text());
+					ModuleHeadData.s_yRotor.fromXMLString(item.yRotor.text());
+					ModuleHeadData.s_zRotor.fromXMLString(item.zRotor.text());
+					
+				}
+				else if (item.name() == "Texture2D")
+				{
+					new TextureLoader(item , onTextureLoaded);
+				}
+				else if (item.name() == "vectex")
+				{
+					m_edtVectorAll = new Vector.<EdtVertex3D>();
+					ModuleHeadData.s_pointPerLine = Number(item.pointPerLine.text());
+					ModuleHeadData.s_totalLine = Number(item.totalLine.text());
+					
+					var __data : Array = String(item.data.text()).split(",");
+					
+					for each (var vstr : String in __data )
+					{
+						var _ev : EdtVertex3D = new EdtVertex3D();
+						_ev.fromXMLString(vstr);
+						m_edtVectorAll.push(_ev);
+					}
+					genConnect(ModuleHeadData.s_pointPerLine , ModuleHeadData.s_totalLine , m_edtVectorAll);
+					
+				}
+			}
+						
+			
+			
+			m_tb.deactivateAll([m_tb.btnEdit , m_tb.btnView]);
+			
+			
+			
+			init4Quadrant();
+			
+			
+			m_tb.btnEdit.releaseFunction(m_tb.btnEdit);
+			m_content.stage.focus = m_content.stage;
+			
+		}
+		
+		
+		
 		public override function onNew():void
 		{
 			ModuleHeadData.clear();
+			if (m_browser) m_browser.approximationMode = true;
 			m_eqm.remainQuadrant(m_quadrant2);
 			m_tb.deactivateAll([m_tb.btnImport]);
 			m_bmpShape.graphics.clear();
@@ -765,18 +868,20 @@ package editor.module.head
 					str += "<exact>"
 					+ "<absRX>" + ModuleHeadData.s_absRX + "</absRX>"
 					+ "<absRY>" + ModuleHeadData.s_absRY + "</absRY>"
-					+ "<absRZ>" + ModuleHeadData.s_absRZ + "</absRX>"
+					+ "<absRZ>" + ModuleHeadData.s_absRZ + "</absRZ>"
 					+ "<xRotor>" + ModuleHeadData.s_xRotor.toXMLString() + "</xRotor>"
 					+ "<yRotor>" + ModuleHeadData.s_yRotor.toXMLString() + "</yRotor>"
 					+ "<zRotor>" + ModuleHeadData.s_zRotor.toXMLString() + "</zRotor>"
 					+ "</exact>";
 				}
 				
+				str += ModuleHeadData.s_texture.toXMLString();	
+				
 				str += "<vectex>"
 					+ "<pointPerLine>" + ModuleHeadData.s_pointPerLine + "</pointPerLine>"
 					+ "<totalLine>" + ModuleHeadData.s_totalLine + "</totalLine>";
 					
-				str += ModuleHeadData.s_texture.toXMLString();	
+				
 					
 				str += "<data>"
 				var first : Boolean = true;

@@ -45,6 +45,22 @@ package editor.module.head
 		private var m_xyzShape : Shape = new Shape();
 		private var btn : BSSButton;
 		
+		public function set approximationMode(v : Boolean) : void
+		{
+			if (v)
+			{
+				btn.releaseFunction = onAdjust;
+				btn.text = StringPool.MODULE_HEAD_BROWSE_ADJUST;
+				m_xyzShape.visible = false;
+			}
+			else
+			{
+				btn.releaseFunction = onReset;
+				btn.text = StringPool.MODULE_HEAD_BROWSE_RESET;
+				m_xyzShape.visible = true;
+			}
+		}
+		
 		public function ModuleHead3DBrowser() 
 		{
 			m_viewer = new ModuleHead3DView();

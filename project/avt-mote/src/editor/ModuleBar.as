@@ -47,7 +47,13 @@ package editor
 				_md.onSave(__root);
 			}
 		}
-		
+		public function onOpenXML(__root : XML):void
+		{
+			for each (var _md : ModuleBase in  m_mdList)
+			{
+				_md.onOpenXML(__root);
+			}
+		}
 		
 		private function deactivateAll(except : ModuleBase) : void
 		{
