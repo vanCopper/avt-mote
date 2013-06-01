@@ -38,7 +38,7 @@ package editor
 			{
 				_md.onNew();
 			}
-			m_mdList[0].activate();
+			//m_mdList[0].activate();
 		}
 		public function onSave(__root : XML):void
 		{
@@ -82,7 +82,7 @@ package editor
 			
 			
 			btn.y = 5;
-			btn.x = m_firstX + (lastBtn ? (lastBtn.x + lastBtn.width) : 0);
+			btn.x = (lastBtn ? (lastBtn.x + lastBtn.width + 5) : m_firstX);
 			addChild(btn);
 			
 			

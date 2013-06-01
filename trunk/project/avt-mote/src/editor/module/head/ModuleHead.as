@@ -810,7 +810,8 @@ package editor.module.head
 			
 			
 			m_tb.btnEdit.releaseFunction(m_tb.btnEdit);
-			m_content.stage.focus = m_content.stage;
+			if (m_content.stage)
+				m_content.stage.focus = m_content.stage;
 			
 		}
 		
