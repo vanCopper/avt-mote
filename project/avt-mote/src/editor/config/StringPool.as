@@ -41,7 +41,7 @@ package editor.config
 		
 		
 		public static var MODULE_EYE:String = "eye";
-		
+		public static var MODULE_EYE_IMPORT_IMAGE:String = "import images";
 		
 	}
 

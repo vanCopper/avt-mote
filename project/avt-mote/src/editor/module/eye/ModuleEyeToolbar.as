@@ -1,4 +1,4 @@
-package editor.module.head 
+package editor.module.eye 
 {
 	import editor.config.StringPool;
 	import editor.ui.SripteWithRect;
@@ -8,26 +8,27 @@ package editor.module.head
 	 * ...
 	 * @author ...
 	 */
-	public class ModuleHeadToolbar extends SripteWithRect
+	public class ModuleEyeToolbar extends SripteWithRect
 	{
 		
 		public var btnImport : BSSButton;
+		/*
 		public var btnAR : BSSButton;
 		public var btnAC : BSSButton;
 		public var btnAM : BSSButton;
 		
 		public var btnEdit : BSSButton;
 		public var btnView : BSSButton;
-		
-		public function ModuleHeadToolbar() 
+		*/
+		public function ModuleEyeToolbar() 
 		{
 			var lastBtn : DisplayObject;
-			btnImport= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_IMPORT_IMAGE , true);
+			btnImport= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_IMPORT_IMAGE , true);
 			btnImport.x = 5;
 			btnImport.y = 5 ;
 			lastBtn = addChild(btnImport) ;
 			
-			
+			/*
 			btnAR= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_ADD_ROTOR , true);
 			btnAR.x = 5 + lastBtn.x + lastBtn.width;
 			btnAR.y = 5 ;
@@ -53,24 +54,15 @@ package editor.module.head
 			btnView.x = 5 + lastBtn.x + lastBtn.width;
 			btnView.y = 5 ;
 			lastBtn = addChild(btnView) ;
+			*/
 		}
 		
 		public function deactivateAll(exceptArr : Array):void
 		{
 			btnImport.deactivate();
-			btnAR.deactivate();
-			btnAC.deactivate();
-			btnAM.deactivate();
-			btnEdit.deactivate();
-			btnView.deactivate();
 			
 			
 			btnImport.alpha = 
-			btnAR.alpha =
-			btnAC.alpha = 
-			btnAM.alpha = 
-			btnEdit.alpha = 
-			btnView.alpha = 
 			0.5;
 			
 			for each (var btn : BSSButton in exceptArr)
@@ -85,12 +77,6 @@ package editor.module.head
 		{
 			
 			if (btnImport) btnImport.dispose(); btnImport = null;
-			if (btnAR) btnAR.dispose(); btnAR = null;
-			if (btnAC) btnAC.dispose(); btnAC = null;
-			if (btnAM) btnAM.dispose(); btnAM = null;
-
-			if (btnEdit) btnEdit.dispose(); btnEdit = null;
-			if (btnView) btnView.dispose(); btnView = null;
 			
 			super.dispose();
 		}
