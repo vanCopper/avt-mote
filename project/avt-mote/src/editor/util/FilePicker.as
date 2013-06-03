@@ -22,8 +22,15 @@ package editor.util
 				s_fbOpen = new FileReference();
 				
 			s_fbOpen.addEventListener(Event.SELECT, onSelect);
+			s_fbOpen.addEventListener(Event.CANCEL, onCancel);
 			s_fbOpen.browse(filefArray);
 			
+		}
+		
+		private function onCancel(e:Event):void 
+		{
+			s_fbOpen.removeEventListener(Event.SELECT, onSelect);
+			s_fbOpen.removeEventListener(Event.CANCEL, onCancel);
 		}
 		
 		
@@ -32,7 +39,9 @@ package editor.util
 		: void 
 		{
 			var fb : FileReference = FileReference(event.currentTarget);
-			fb.removeEventListener(event.type, arguments.callee);
+			s_fbOpen.removeEventListener(Event.SELECT, onSelect);
+			s_fbOpen.removeEventListener(Event.CANCEL, onCancel);
+			
 			
 			m_filename = fb.name;
 			

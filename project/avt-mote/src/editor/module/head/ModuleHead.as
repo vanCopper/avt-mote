@@ -738,6 +738,7 @@ package editor.module.head
 			{	
 				m_quadrant1 = new EdtQuadrant(1);
 				m_3dView = new ModuleHead3DView();
+				m_3dView.scaleEnabled = false;
 				m_quadrant1.indicate = m_3dView;
 			}
 			if (!m_quadrant0)

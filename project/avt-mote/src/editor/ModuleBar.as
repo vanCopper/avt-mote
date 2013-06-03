@@ -37,7 +37,9 @@ package editor
 			for each (var _md : ModuleBase in  m_mdList)
 			{
 				_md.onNew();
+				_md.getButtonDsp().setState(BSSButton.SBST_IDLE);
 			}
+			
 			//m_mdList[0].activate();
 		}
 		public function onSave(__root : XML):void

@@ -8,6 +8,7 @@ package editor.module.head
 	import editor.ui.EdtMoveIndicate;
 	import editor.ui.EdtOperator;
 	import editor.ui.EdtQuadrant;
+	import editor.ui.EdtQuadrantMgr;
 	import editor.ui.EdtSelector;
 	import editor.ui.EdtVertex3D;
 	import editor.ui.EdtVertexInfo;
@@ -26,16 +27,23 @@ package editor.module.head
 	 * ...
 	 * @author Blueshell
 	 */
-	public class ModuleHeadEQMgr extends Sprite 
+	public class ModuleHeadEQMgr extends EdtQuadrantMgr 
 	{
-		private var m_regCallBack : Boolean;
-		private var m_moveIndicate : EdtMoveIndicate;
+		
+		public override function onVertexDataChange():void
+		{
+			ModuleHeadData.genUVData();
+		}
+		
+		
+/*		
+		
 		private var m_selectorIndicate : EdtSelector;
 		private var m_operatorIndicate : EdtOperator;
 		
 		private var m_indicate : Sprite;
 		
-		public var curEdtQuadrant : EdtQuadrant;
+		
 		public var isMovineQuadrant : Boolean;
 		
 		public var m_selecingShape : Shape;
@@ -45,86 +53,19 @@ package editor.module.head
 		private static const EDIT_MODE_MOVE : int = 1;
 		private static const EDIT_MODE_SCALE : int = 2;
 		
-		private var m_selectedEVI : Vector.<EdtVertexInfo> = new Vector.<EdtVertexInfo>();
+	
 		private var m_operatorCenter : Point = new Point ();
 		private var m_operatorOffset : Point = new Point ();
-		private var m_operatorDir : int;
+		
 		private var m_operatorMoving : Boolean;
 		
-		public var changeFunction : Function;
 		
-		public var m_edtQuadrantVector : Vector.<EdtQuadrant> = new Vector.<EdtQuadrant>(4 , true);
 		
-		private var m_autoSwitch : Boolean;
-		private var m_timeoutInv : int;
-		private var m_crossShape : Shape;
 		
-		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
-		{
-			for each( var _e : EdtQuadrant in m_edtQuadrantVector )
-				 _e.setVertex(_vertexArray);
-		}
-		public function remainQuadrant(_e0 : EdtQuadrant):void
-		{
-			if (m_edtQuadrantVector[0] && m_edtQuadrantVector[0].parent)
-				m_edtQuadrantVector[0].parent.removeChild(m_edtQuadrantVector[0]);
-			if (m_edtQuadrantVector[1] && m_edtQuadrantVector[1].parent)
-				m_edtQuadrantVector[1].parent.removeChild(m_edtQuadrantVector[1]);
-			if (m_edtQuadrantVector[2] && m_edtQuadrantVector[2].parent)
-				m_edtQuadrantVector[2].parent.removeChild(m_edtQuadrantVector[2]);
-			if (m_edtQuadrantVector[3] && m_edtQuadrantVector[3].parent)
-				m_edtQuadrantVector[3].parent.removeChild(m_edtQuadrantVector[3]);
-			
-			m_edtQuadrantVector[0] = 	
-			m_edtQuadrantVector[1] = 
-			m_edtQuadrantVector[2] = 
-			m_edtQuadrantVector[3] = null;
-			curEdtQuadrant = _e0;
-			curEdtQuadrant.state = 2;
-			
-			addChildAt(_e0 , 0);
-			_e0.fullScreen = true;
-			
-			m_operatorDir = 2;
-			m_selectedEVI = new Vector.<EdtVertexInfo>();
-			 
-			m_autoSwitch = false;
-		}
 		
-		public function setQuadrant(_e0 : EdtQuadrant , _e1 : EdtQuadrant , _e2 : EdtQuadrant , _e3 : EdtQuadrant ) : void
-		{
-			m_edtQuadrantVector[0] = _e0;
-			m_edtQuadrantVector[1] = _e1;
-			m_edtQuadrantVector[2] = _e2;
-			m_edtQuadrantVector[3] = _e3;
-			
-			if (!m_crossShape)
-			{
-				var _shp : Shape = new Shape();
-				_shp.graphics.lineStyle(1);
-				
-				_shp.graphics.moveTo(EdtDEF.QUADRANT_WIDTH , 0);
-				_shp.graphics.lineTo(EdtDEF.QUADRANT_WIDTH , EdtDEF.QUADRANT_HEIGHT * 2);
-				
-				_shp.graphics.moveTo(0 ,  EdtDEF.QUADRANT_HEIGHT);
-				_shp.graphics.lineTo(EdtDEF.QUADRANT_WIDTH * 2 , EdtDEF.QUADRANT_HEIGHT);
-				
-				m_crossShape = _shp;
-				
-			
-			}
-			
-			
-			
-			addChildAt(m_edtQuadrantVector[3] , 0);
-			addChildAt(m_edtQuadrantVector[2] , 0);
-			addChildAt(m_edtQuadrantVector[1] , 0);
-			addChildAt(m_edtQuadrantVector[0] , 0);
-									
-			addChild(m_crossShape);
-			
-			m_autoSwitch = true;
-		}
+	
+		
+		
 		
 		public function ModuleHeadEQMgr() 
 		{
@@ -180,35 +121,7 @@ package editor.module.head
 		}
 		
 		
-		public function activate() : void
-		{
-			if (!m_regCallBack)
-			{
-				m_regCallBack = true;
-				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_DOWN , onMouseDown);
-				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , onMouseUp);
-				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
-				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL , onMouseWheel);
-				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_KEY_DOWN , onKeyDown);
-			}
-			
-		}
 		
-		public function deactivate() : void
-		{
-			
-			if (m_regCallBack)
-			{
-				m_regCallBack = false;
-				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_DOWN , onMouseDown);
-				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , onMouseUp);
-				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
-				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL , onMouseWheel);
-				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_KEY_DOWN , onKeyDown);
-
-			}
-			
-		}
 		
 		
 
@@ -261,7 +174,7 @@ package editor.module.head
 			} 
 			else if (me.keyCode == 32)
 			{
-				if (m_autoSwitch)
+				if (m_has4Qurad)
 				{
 					if (mouseX < 0 || mouseX >= EdtDEF.QUADRANT_WIDTH*2 
 					|| mouseY < 0 || mouseY >= EdtDEF.QUADRANT_HEIGHT*2 
@@ -315,76 +228,7 @@ package editor.module.head
 				m_selectorIndicate.visible = true;
 			}
 		}
-		private function setFocusQuadrant( _ceq : EdtQuadrant , directSet : Boolean) : void
-		{
-			if (_ceq != curEdtQuadrant)
-			{
-				for each (var _eq : EdtQuadrant in m_edtQuadrantVector)
-				{
-					if (!_eq.isWorkOn || directSet)
-					{
-						_eq.state = -1;
-					}
-				}
-				
-				if (m_timeoutInv)
-				{
-					clearTimeout(m_timeoutInv);
-					m_timeoutInv = 0;
-				}
-				
-				_ceq.state = directSet ? 2 : 1;
-				
-				if (directSet)
-				{
-					curEdtQuadrant = _ceq;
-					if (m_operatorIndicate.visible)
-						computeOperatorIndicatePos(true);
-					return;
-				}
-				m_timeoutInv = setTimeout (
-					function():void {
-						if (m_timeoutInv)
-						{
-							clearTimeout(m_timeoutInv);
-							m_timeoutInv = 0;
-						}
-						
-						for each (_eq in m_edtQuadrantVector)
-						{
-							_eq.state = -1;
-						}
-				
-						_ceq.state = 2;
-						curEdtQuadrant = _ceq;
-						
-						if (m_operatorIndicate.visible)
-							computeOperatorIndicatePos(true);
-						
-					} , 200);
-
-			}
-		}
 		
-		private function setFocus(me : MouseEvent,directSet : Boolean) : void
-		{
-			
-			if (!curEdtQuadrant.fullScreen && m_autoSwitch)
-			{
-				if (mouseX < 0 || mouseX >= EdtDEF.QUADRANT_WIDTH*2 
-				|| mouseY < 0 || mouseY >= EdtDEF.QUADRANT_HEIGHT*2 
-				)
-					return;
-				
-				var _ptA : Point = this.globalToLocal(new Point(me.stageX , me.stageY));
-
-				var _curPos : int = int(_ptA.x / EdtDEF.QUADRANT_WIDTH) + int(_ptA.y / EdtDEF.QUADRANT_HEIGHT) * 2;
-				setFocusQuadrant(m_edtQuadrantVector[_curPos] , directSet);
-				
-				
-			}
-			
-		}
 		
 		private function onMouseMove(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
 		{
@@ -564,7 +408,7 @@ package editor.module.head
 			
 			curEdtQuadrant.renderLine(false);
 			
-			if (m_autoSwitch)
+			if (m_has4Qurad)
 			{
 				curEdtQuadrant.map2DTo3D();
 				ModuleHeadData.genUVData();
@@ -667,7 +511,7 @@ package editor.module.head
 				
 				
 				curEdtQuadrant.map2DTo3D();
-				if (m_autoSwitch) 
+				if (m_has4Qurad) 
 				{
 					ModuleHeadData.genUVData();
 					for each (var _eq : EdtQuadrant in m_edtQuadrantVector)
@@ -924,7 +768,7 @@ package editor.module.head
 			return CallbackCenter.EVENT_OK;
 		}
 		
-		public function dispose() : void
+		public override function dispose() : void
 		{
 			
 			if (m_indicate)
@@ -959,8 +803,10 @@ package editor.module.head
 			GraphicsUtil.removeAllChildren(this);
 			
 			changeFunction = null;
+			
+			super.dispose();
 		}
-		
+*/		
 	}
 
 }
