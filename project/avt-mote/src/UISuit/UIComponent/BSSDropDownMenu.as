@@ -605,22 +605,22 @@ package   UISuit.UIComponent   {
 
 			//setState(state);
 		}
-/*
+
 		public function resetItem( )
 		: void {
-		      var absInitItem_space_fromLoad : Number = Math.abs(initItem_space_fromLoad);
+		    var absInitItem_space_fromLoad : Number = Math.abs(m_itemHeight);
 		        
 			while (m_scrollItemArray.length > 1) {
 				m_scrollContainer.removeChild(m_scrollItemArray.pop());
 				m_scrollBG.height -= absInitItem_space_fromLoad;
-				if (initItem_space_fromLoad < 0)
-					m_scrollBG.y -= initItem_space_fromLoad;
+				if (m_itemHeight < 0)
+					m_scrollBG.y -= m_itemHeight;
 			}
-                    if (valueArray)
-                        valueArray.length = 1;
+			//if (valueArray)
+			//	valueArray.length = 1;
 
 			
-			setSelectedId(0);
+			selectedId = (0);
 		//	ScrollItemEffect.y = initItem_y_fromLoad;
 		//	MAIN_SPRITE.removeAllChildren (m_scrollBG);
 		//	m_scrollBG.addChild (m_scrollBG);
@@ -629,7 +629,7 @@ package   UISuit.UIComponent   {
 		//	m_scrollItemArray.length = 1;
 		//	m_scrollBG.addChild (m_scrollItemArray[0]);
 		
-			maxItem = 1;
+			//maxItem = 1;
 			setState(state);		
 		}
 
@@ -641,7 +641,8 @@ package   UISuit.UIComponent   {
 				addItem (iarr[i]);
 		}
 
-               public var valueArray : Array;
+     /*  
+	   public var valueArray : Array;
                 
 		public function setItemValueArray (iarr : Array )
 		: void {

@@ -11,10 +11,18 @@ package editor.struct
 	 */
 	public class Texture2DBitmap extends Bitmap 
 	{
-		public var texture2D : Texture2D;
-		public function Texture2DBitmap(a_texture2D : Texture2D) 
+		public var _texture2D : Texture2D;
+		public function set texture2D (a_texture2D : Texture2D) : void
 		{
-			texture2D = a_texture2D;
+			texture2D = null;
+			if (bitmapData)
+			{
+				bitmapData.dispose();
+				bitmapData = null;
+			}
+			
+			_texture2D = a_texture2D;
+			
 			var bd : BitmapData = new BitmapData(Math.abs(a_texture2D.rectW) , a_texture2D.rectH);
 			
 			if (a_texture2D.rectW >= 0)
@@ -43,7 +51,16 @@ package editor.struct
 				
 			}
 			
-			super(bd);
+			bitmapData = bd;
+		}
+		
+		public function Texture2DBitmap(a_texture2D : Texture2D) 
+		{
+			super(null);
+			texture2D = a_texture2D;
+			
+			
+			
 		}
 		
 		public function dispose():void
