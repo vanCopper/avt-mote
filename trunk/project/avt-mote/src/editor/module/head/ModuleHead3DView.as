@@ -9,6 +9,22 @@ package editor.module.head
 	public class ModuleHead3DView extends Shape
 	{
 		
+		public var scaleEnabled : Boolean = true;
+		
+		public override function set scaleX(v:Number) : void
+		{
+			if (scaleEnabled)
+				super.scaleX = v;
+				
+		}
+		
+		public override function set scaleY(v:Number) : void
+		{
+			if (scaleEnabled)
+				super.scaleY = v;
+		}
+		
+		
 		public function render(_edtVertexArray : Vector.<EdtVertexInfo>) : void
 		{
 			var __v : Vector.<Number> = new Vector.<Number>();
