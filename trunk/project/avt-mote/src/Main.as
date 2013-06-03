@@ -4,8 +4,7 @@ package
 	import editor.config.CALLBACK;
 	import editor.config.Config;
 	import editor.Library;
-	import editor.module.eye.ModuleEye;
-	import editor.module.head.ModuleHead;
+	
 	import editor.ModuleBar;
 	import editor.Toolbar;
 	import editor.util.FilePicker;
@@ -56,7 +55,9 @@ package
 			_mContainer.graphics.lineTo(800, 0);
 			
 			
+			import editor.module.head.ModuleHead;
 			m_mb.addModule(new ModuleHead(_mContainer));
+			import editor.module.eye.ModuleEye;
 			m_mb.addModule(new ModuleEye(_mContainer));
 			
 			addChild(_mContainer).y = m_mb.y + m_mb.height + 5;

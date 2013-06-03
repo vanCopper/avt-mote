@@ -32,7 +32,7 @@ package editor
 		public function Library() 
 		{
 			
-			const W : int = 200;
+			const W : int = 220;
 			const H : int = 400;
 			const S : int = 5;
 			
@@ -99,18 +99,22 @@ package editor
 			var _Texture2DBitmap : Texture2DBitmap = new Texture2DBitmap(_t) 
 			_Texture2DBitmap.width = Math.min(100, _Texture2DBitmap.width);
 			_Texture2DBitmap.scaleY = _Texture2DBitmap.scaleX;
+			
+			if (_Texture2DBitmap.width < 100)
+				_Texture2DBitmap.x += (100 - _Texture2DBitmap.width) >> 1;
+			
 			var indi : TextField = new TextField();
 			indi.text = _t.name;
 			indi.x = 105;
-			indi.width = 80;
+			indi.width = 90;
 			indi.height = 24;
 			
 			var indi2 : TextField = new TextField();
 			indi2.text = _t.type;
-			indi2.x = 105;
+			indi2.x = indi.x;
 			indi2.y = 26;
 			indi2.mouseEnabled = false;
-			indi2.width = 80;
+			indi2.width = indi.width ;
 			
 			__item.addChild(_Texture2DBitmap);
 			__item.addChild(indi);
