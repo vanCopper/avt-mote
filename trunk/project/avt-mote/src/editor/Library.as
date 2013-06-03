@@ -85,6 +85,18 @@ package editor
 			s_s = this;
 		}
 		
+		public function getList(_type : String) : Vector.<Texture2D>
+		{
+			var _ret : Vector.<Texture2D> = new Vector.<Texture2D>();
+			
+			for each(var _t : Texture2D in m_textureList)
+			{
+				if (_type == _t.type)
+					_ret.push(_t);
+			}
+			
+			return _ret;
+		}
 		private var m_textureList : Vector.<Texture2D> = new Vector.<Texture2D>();
 		public function addTexture(_t : Texture2D) : void
 		{

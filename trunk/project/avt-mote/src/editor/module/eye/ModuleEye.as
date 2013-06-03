@@ -12,7 +12,11 @@ package editor.module.eye
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.net.FileFilter;
+	import flash.text.TextField;
 	import UISuit.UIComponent.BSSButton;
+	import UISuit.UIComponent.BSSDropDownMenu;
+	
+	import UISuit.UIComponent.BSSDropDownMenuScrollable;
 	
 	/**
 	 * ...
@@ -31,6 +35,19 @@ package editor.module.eye
 		private var m_eyeWBMask : Shape;
 		private var m_eyeLip : Bitmap;
 		
+		private var m_efl : ModuleEyeFrameLib;
+		
+		private var m_eyeChoose : Sprite;
+		private var m_nameTF : TextField;
+		private var m_eyeWhiteDDM : BSSDropDownMenuScrollable;
+		private var m_eyeBallDDM : BSSDropDownMenuScrollable;
+		private var m_eyeLipDDM : BSSDropDownMenuScrollable;
+		
+		
+		public override function dispose():void
+		{
+			super.dispose();
+		}
 		
 		public function ModuleEye(_content : DisplayObjectContainer) 
 		{
@@ -64,6 +81,9 @@ package editor.module.eye
 			m_eyeContainer.addChild(m_eyeWBMask);
 			m_eyeContainer.addChild(m_eyeLip);
 			
+			
+			
+			
 			/*
 			m_bmp = new Bitmap();
 			m_bmpShape = new Shape();
@@ -81,6 +101,44 @@ package editor.module.eye
 			m_content.addChild(m_eqm).y = m_tb.y + m_tb.height; 
 			
 			m_tb.btnImport.releaseFunction = onOpen;
+			
+			m_efl  = new ModuleEyeFrameLib();
+			m_content.addChild(m_efl);
+			m_efl.x = 650;
+			m_efl.y = 180;
+			m_efl.visible = false;
+			m_efl.clickFuntion = onClick;
+			
+			m_eyeChoose = new Sprite();
+			m_nameTF = new TextField(); m_nameTF.width = 100; m_nameTF.text = "CURRENT:";
+			m_eyeWhiteDDM = BSSDropDownMenuScrollable.createSimpleBSSDropDownMenuScrollable(150 , 20 , "EYE-WHITE",false);
+			m_eyeBallDDM = BSSDropDownMenuScrollable.createSimpleBSSDropDownMenuScrollable(150 , 20 , "EYE-BALL",false);
+			m_eyeLipDDM = BSSDropDownMenuScrollable.createSimpleBSSDropDownMenuScrollable(150 , 20 , "EYE-LIP",false);
+			m_eyeWhiteDDM.setMaxHeight(400);
+			m_eyeBallDDM.setMaxHeight(400);
+			m_eyeLipDDM.setMaxHeight(400);
+			
+			
+			m_eyeChoose.addChild(m_nameTF);
+			m_eyeChoose.addChild(m_eyeLipDDM).y = 90;
+			m_eyeChoose.addChild(m_eyeBallDDM).y = 60;
+			m_eyeChoose.addChild(m_eyeWhiteDDM).y = 30;
+			
+			m_content.addChild(m_eyeChoose);
+			m_eyeChoose.x = 650;
+			m_eyeChoose.y = 50;
+			m_eyeChoose.alpha = 0.5;
+			m_eyeChoose.mouseChildren = false;
+		}
+		
+		private var currentEditMEFS : ModuleEyeFrameSprite;
+		
+		private function onClick(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String ):void 
+		{
+			m_nameTF.text = "CURRENT: "+_name;
+			m_eyeChoose.alpha = 1;
+			m_eyeChoose.mouseChildren = true;
+			currentEditMEFS = mefs;
 		}
 		
 		private function onOpen(btn : BSSButton) : void {
@@ -93,6 +151,28 @@ package editor.module.eye
 			Library.getS().addTexture(_texture);
 			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FILP" , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
 			//m_tb.deactivateAll([m_tb.btnAR]);
+			
+			m_efl.visible = true;
+			
+			var _ret : Vector.<Texture2D> = Library.getS().getList("EYE");
+			
+			for each(var _t : Texture2D in _ret)
+			{
+				var _type : String = _t.name;
+				if (m_eyeLipDDM.getItemIndex(_type) == -1)
+				{
+					m_eyeLipDDM.addItem(_type);
+					m_eyeBallDDM.addItem(_type);
+					m_eyeWhiteDDM.addItem(_type);
+					
+				}
+				
+			}
+			//m_eyeLipDDM.setSelectedString
+			
+			//m_eyeChoose.addChild(m_eyeBallDDM).y = 60;
+			//m_eyeChoose.addChild(m_eyeWhiteDDM).y = 30;
+			
 		}
 		
 		public override function activate() : void
