@@ -94,7 +94,7 @@ package editor.module.eye
 				eyeWhite = Library.getS().getTexture2D(_tname);
 				if (!eyeWhite)
 				{
-					if (s.eyeWhite.Texture2D)
+					if (s.eyeWhite.Texture2D != undefined)
 					{
 						loadStep++;
 						new TextureLoader(s.eyeWhite.Texture2D[0], onTextureLoadedEW);
@@ -105,7 +105,7 @@ package editor.module.eye
 				eyeBall = Library.getS().getTexture2D(_tname);
 				if (!eyeBall)
 				{
-					if (s.eyeBall.Texture2D)
+					if (s.eyeBall.Texture2D != undefined)
 					{	
 						loadStep++;
 						new TextureLoader(s.eyeBall.Texture2D[0] , onTextureLoadedEB);
@@ -120,7 +120,7 @@ package editor.module.eye
 				eyeLip = Library.getS().getTexture2D(_tname);
 				if (!eyeLip)
 				{
-					if (s.eyeLip.Texture2D)
+					if (s.eyeLip.Texture2D != undefined)
 					{
 						loadStep++;
 						new TextureLoader(s.eyeLip.Texture2D[0] , onTextureLoadedEL);
@@ -130,19 +130,24 @@ package editor.module.eye
 				eyeLipX = Number(_p[0]);
 				eyeLipY = Number(_p[1]);
 				
-				var __data : Array = String(s.eyeMaskData.text()).split(",");
-				for each (var vstr : String in __data )
+				var __dataString : String = String(s.eyeMaskData.text());
+				if (__dataString)
 				{
-					var _ev : EdtVertex3D = new EdtVertex3D();
-					_ev.fromXMLString(vstr);
-					eyeMaskData.push(_ev);
+					var __data : Array = __dataString.split(",");
+					for each (var vstr : String in __data )
+					{
+						var _ev : EdtVertex3D = new EdtVertex3D();
+						_ev.fromXMLString(vstr);
+						eyeMaskData.push(_ev);
+					}
+					genConnect();
 				}
-				genConnect();
+				
 				
 				if (loadStep == 0)
 				{
 					if (callback != null)
-						callback();
+						callback(this);
 					callback = null;
 				}
 				
@@ -156,7 +161,7 @@ package editor.module.eye
 			if (loadStep == 0)
 			{
 				if (callback != null)
-					callback();
+					callback(this);
 				callback = null;
 			}
 		}

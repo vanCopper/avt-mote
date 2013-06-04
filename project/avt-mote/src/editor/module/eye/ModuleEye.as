@@ -65,6 +65,7 @@ package editor.module.eye
 				m_eyeContainer.dispose();
 				m_eyeContainer = null;
 			}
+			m_moduleEyeFrameList = null;
 			super.dispose();
 		}
 		
@@ -175,7 +176,7 @@ package editor.module.eye
 			
 			
 			var _indiMask : TextField = new TextField(); 
-			_indiMask.text = "show mask"; 
+			_indiMask.text = "edit mask"; 
 			_indiMask.height = 12;
 			_indiMask.x = m_eyeMaskBtn.width + m_eyeMaskBtn.x + 20;
 			_indiMask.y =  m_eyeMaskBtn.y;
@@ -196,7 +197,7 @@ package editor.module.eye
 			sp.addChild(m_eyeMaskEdit);
 			
 			m_eyeMaskBtn.releaseFunction = onMaskAdd;
-			m_eyeMaskAddUI = new EdtAddUI(8 , 20);
+			m_eyeMaskAddUI = new EdtAddUI(5 , 20);
 			m_eyeMaskAddUI.changeFunction = onMaskAddChanged;
 			m_eyeMaskAddUI.okFunction = onMaskAddOK;
 			m_eyeMaskAddUI.visible = false;
@@ -333,8 +334,9 @@ package editor.module.eye
 			
 			
 			m_quadrant2.setVertex(_vertexArray);
-			m_eqm.useSelector = true;
-			m_eqm.useVtxEditor = true;
+			onSelectCB(m_eyeMaskEdit);
+			//m_eqm.useSelector = true;
+			//m_eqm.useVtxEditor = true;
 			
 			
 			m_eqm.changeFunction = onChangeMask;
@@ -419,6 +421,10 @@ package editor.module.eye
 			if (m_eyeContainer)
 			{
 				m_eyeContainer.maskMode = !cb.selected;
+				
+				m_eqm.useVtxEditor = 
+				m_eqm.useSelector = cb.selected;
+				
 			}
 		}
 		
@@ -455,8 +461,9 @@ package editor.module.eye
 				{
 					m_quadrant2.setVertex(m_eyeContainer.data.eyeMaskData);
 					
-					m_eqm.useSelector = true;
-					m_eqm.useVtxEditor = true;
+					//m_eqm.useSelector = true;
+					//m_eqm.useVtxEditor = true;
+					onSelectCB(m_eyeMaskEdit);
 					m_eqm.resetSelect();
 					
 					m_eqm.changeFunction = onChangeMask;
@@ -569,10 +576,23 @@ package editor.module.eye
 			m_eyeWhiteDDM.clearAllItem();
 			m_eyeBallDDM.clearAllItem();
 			m_eyeLipDDM.clearAllItem();
-			
+			m_moduleEyeFrameList = null;
 			deactivate();
 		}
 		
+		private var m_moduleEyeFrameList : Vector.<XML>;
+		private function onModuleEyeFrameInited(_mef : ModuleEyeFrame):void
+		{
+			
+			m_efl.addTexture(_mef);
+			updateDDM();
+			
+			if (m_moduleEyeFrameList.length) {
+				var mef : ModuleEyeFrame = new ModuleEyeFrame();
+				mef.fromXMLString(m_moduleEyeFrameList.shift(), onModuleEyeFrameInited);
+			}
+
+		}
 		
 		public override function onOpenXML(__root : XML):void
 		{
@@ -584,19 +604,21 @@ package editor.module.eye
 				//trace(item.toXMLString());
 				if (item.name() == "ModuleEyeFrames")
 				{
+					m_moduleEyeFrameList = new Vector.<XML>
 					for each (var itemModuleEyeFrame : XML in item.ModuleEyeFrame )
 					{	
-						//trace(itemModuleEyeFrame.toXMLString());
-						var mef : ModuleEyeFrame = new ModuleEyeFrame();
-						mef.fromXMLString(itemModuleEyeFrame,
-							function():void {
-								m_efl.addTexture(mef);
-								updateDDM();
-							}
-						);
+						m_moduleEyeFrameList.push(itemModuleEyeFrame);
+						
 						
 						//m_efl.visible = true;
 					}
+					
+					if (m_moduleEyeFrameList.length) {
+						var mef : ModuleEyeFrame = new ModuleEyeFrame();
+						mef.fromXMLString(m_moduleEyeFrameList.shift(), onModuleEyeFrameInited);
+					}
+					
+						
 				}
 			}
 						
