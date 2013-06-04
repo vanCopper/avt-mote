@@ -8,9 +8,11 @@ package editor.module.eye
 	public class ModuleEyeEQMgr  extends EdtQuadrantMgr 
 	{
 		
-		public function ModuleEyeEQMgr() 
+		public function ModuleEyeEQMgr()
 		{
-			
+			//useSelector = true;
+			//useVtxEditor = true;
+			//useFocusSwitch = true;
 		}
 		
 		public override function onVertexDataChange():void

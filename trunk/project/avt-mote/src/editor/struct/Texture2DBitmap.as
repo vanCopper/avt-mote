@@ -2,6 +2,7 @@ package editor.struct
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
@@ -9,19 +10,24 @@ package editor.struct
 	 * ...
 	 * @author Blueshell
 	 */
-	public class Texture2DBitmap extends Bitmap 
+	public class Texture2DBitmap extends Sprite 
 	{
-		public var _texture2D : Texture2D;
+		private var _texture2D : Texture2D;
+		private var _bmp : Bitmap;
+		
 		public function set texture2D (a_texture2D : Texture2D) : void
 		{
-			texture2D = null;
-			if (bitmapData)
+			_texture2D = null;
+			if (_bmp && _bmp.bitmapData)
 			{
-				bitmapData.dispose();
-				bitmapData = null;
+				_bmp.bitmapData.dispose();
+				_bmp.bitmapData = null;
 			}
 			
 			_texture2D = a_texture2D;
+			
+			if (!_texture2D)
+				return;
 			
 			var bd : BitmapData = new BitmapData(Math.abs(a_texture2D.rectW) , a_texture2D.rectH);
 			
@@ -51,12 +57,23 @@ package editor.struct
 				
 			}
 			
-			bitmapData = bd;
+			_bmp.bitmapData = bd;
+		}
+		
+		public function isTransArea():Boolean
+		{
+			var _color : uint = _bmp.bitmapData.getPixel32(_bmp.mouseX , _bmp.mouseY) ;
+			var _colorAlpha : uint = ((_color >> 24) & 0xFF);
+			return _colorAlpha < 5;
+			
 		}
 		
 		public function Texture2DBitmap(a_texture2D : Texture2D) 
 		{
-			super(null);
+			mouseChildren = false;
+			_bmp = new Bitmap();
+			addChild(_bmp);
+			
 			texture2D = a_texture2D;
 			
 			
@@ -66,11 +83,21 @@ package editor.struct
 		public function dispose():void
 		{
 			texture2D = null;
-			if (bitmapData)
+			if (_bmp )
 			{
-				bitmapData.dispose();
-				bitmapData = null;
+				if (_bmp.bitmapData)
+				{
+					_bmp.bitmapData.dispose();
+					_bmp.bitmapData = null;
+				}
+				
+				if (_bmp.parent)
+					_bmp.parent.removeChild(_bmp);
+				
+				_bmp = null;
+
 			}
+			
 		}
 	}
 

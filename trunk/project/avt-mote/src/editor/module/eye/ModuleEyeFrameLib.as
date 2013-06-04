@@ -96,10 +96,10 @@ package editor.module.eye
 			
 			__item.addChild(__frame);
 			
-			__frame.width = Math.min(100, __frame.width);
+			//__frame.width = Math.min(100, __frame.width);
 			
-			if (__frame.width < 100)
-				__frame.x += (100 - __frame.width) >> 1;
+			//if (__frame.width < 100)
+			//	__frame.x += (100 - __frame.width) >> 1;
 			
 			var indi : TextField = new TextField();
 			indi.text = "Frame" + (m_frameList.length - 1);

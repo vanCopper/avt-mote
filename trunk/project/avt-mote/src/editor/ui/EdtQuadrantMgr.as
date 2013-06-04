@@ -211,7 +211,7 @@ package editor.ui
 				{
 					if (m_viewCtrl.onMouseMove(me , curEdtQuadrant) != 0)
 					{	
-						m_vtxEditor.onSelectChanged(true , curEdtQuadrant);
+						if (m_vtxEditor) m_vtxEditor.onSelectChanged(true , curEdtQuadrant);
 						break;
 					}
 				}
@@ -254,7 +254,7 @@ package editor.ui
 					{	
 						if (ret == 2)
 						{
-							m_vtxEditor.onSelectChanged(false , curEdtQuadrant);
+							if (m_vtxEditor) m_vtxEditor.onSelectChanged(false , curEdtQuadrant);
 						}
 						
 						break;
@@ -312,7 +312,7 @@ package editor.ui
 				{
 					if (m_viewCtrl.onMouseWheel(me , curEdtQuadrant) != 0)
 					{	
-						m_vtxEditor.onSelectChanged(true , curEdtQuadrant);
+						if (m_vtxEditor) m_vtxEditor.onSelectChanged(true , curEdtQuadrant);
 						break;
 					}
 				}
@@ -387,15 +387,58 @@ package editor.ui
 			}
 		}
 		
+		
+		public function set useSelector(b : Boolean) : void
+		{
+			if (b) {
+				if (!m_selector)
+					m_selector = new EdtQuadrantSelector(m_indicate , this , onUpdatePointStatus ,m_selectedEVI);
+			} else {
+				if (m_selector)
+				{
+					m_selector.dispose();
+					m_selector = null;
+				}
+			}
+		}
+		
+		public function set useVtxEditor(b : Boolean) : void
+		{
+			if (b) {
+				if (!m_vtxEditor)
+					m_vtxEditor = new EdtQuadrantVtxEditor(m_indicate , this ,m_selectedEVI , onVertexChange );
+			} else {
+				if (m_vtxEditor)
+				{
+					m_vtxEditor.dispose();
+					m_vtxEditor = null;
+				}
+			}
+		}
+		
+		public function set useFocusSwitch(b : Boolean) : void
+		{
+			if (b) {
+				if (!m_focusSwitch)
+					m_focusSwitch = new EdtQuadrantFocusSwitch(onFocusRealSet , onFullScreenSet);
+			} else {
+				if (m_focusSwitch)
+				{
+					m_focusSwitch.dispose();
+					m_focusSwitch = null;
+				}
+			}
+		}
+		
 		public function EdtQuadrantMgr() 
 		{
 		
 			m_indicate = new  EdtQuadrantIndicate;
 			addChild(m_indicate); m_indicate.visible = false;
 			m_viewCtrl = new EdtQuadrantViewCtrl(m_indicate);
-			m_selector = new EdtQuadrantSelector(m_indicate , this , onUpdatePointStatus ,m_selectedEVI);
-			m_vtxEditor = new EdtQuadrantVtxEditor(m_indicate , this ,m_selectedEVI , onVertexChange );
-			m_focusSwitch = new EdtQuadrantFocusSwitch(onFocusRealSet , onFullScreenSet);
+			//m_selector = new EdtQuadrantSelector(m_indicate , this , onUpdatePointStatus ,m_selectedEVI);
+			//m_vtxEditor = new EdtQuadrantVtxEditor(m_indicate , this ,m_selectedEVI , onVertexChange );
+			//m_focusSwitch = new EdtQuadrantFocusSwitch(onFocusRealSet , onFullScreenSet);
 			m_visbileCtrl = new EdtQuadrantVisibleCtrl();
 			
 			m_indicate.mode = EdtQuadrantIndicate.SELECT_POINT;
