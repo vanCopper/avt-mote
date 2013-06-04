@@ -102,7 +102,7 @@ package editor.module.eye
 				
 				m_eyeContainer.refresh();
 				currentEditMEFS.refresh();
-				currentEditMEFS.fitPos(100, 100);
+				currentEditMEFS.fitPos(84 , 84 , 8 , 8);
 				
 				m_eyeContainer.eyeBall.mouseEnabled =
 				m_eyeContainer.eyeLip.mouseEnabled = true;
@@ -225,7 +225,7 @@ package editor.module.eye
 			}
 			m_eyeContainer.refresh();
 			currentEditMEFS.refresh();
-			currentEditMEFS.fitPos(100, 100);
+			currentEditMEFS.fitPos(84 , 84 , 8 , 8);
 			
 			m_hoverTextureSprite.visible = false;
 		}
@@ -238,7 +238,7 @@ package editor.module.eye
 			}
 			m_eyeContainer.refresh();
 			currentEditMEFS.refresh();
-			currentEditMEFS.fitPos(100, 100);
+			currentEditMEFS.fitPos(84 , 84 , 8 , 8);
 			
 			m_hoverTextureSprite.visible = false;
 		}
@@ -251,7 +251,7 @@ package editor.module.eye
 			}
 			m_eyeContainer.refresh();
 			currentEditMEFS.refresh();
-			currentEditMEFS.fitPos(100, 100);
+			currentEditMEFS.fitPos(84 , 84 , 8 , 8);
 			
 			m_hoverTextureSprite.visible = false;
 		}
