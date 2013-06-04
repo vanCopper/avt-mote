@@ -35,6 +35,17 @@ package editor.ui.EdtQuadrantOpt
 		{	
 			m_operatorDir = _e0.quadrant;
 		}
+		public function resetSelect():void
+		{
+			if (m_editMode == EDIT_MODE_MOVE)
+			{
+				m_editMode = 0;
+				m_indicate.mode = /*ke.altKey ? EdtQuadrantIndicate.VIEW_CONTROL : */EdtQuadrantIndicate.SELECT_POINT;
+				if (m_operatorMoving)
+					m_operatorMoving = false;
+				m_operatorIndicate.visible = false;	
+			}
+		}
 		
 		public function onSelectChanged(quadChange : Boolean , curEdtQuadrant:EdtQuadrant) : void
 		{
@@ -83,6 +94,7 @@ package editor.ui.EdtQuadrantOpt
 			
 			if (m_operatorIndicate)
 			{	
+				
 				m_operatorIndicate.dispose();
 				m_operatorIndicate = null;
 			}
@@ -226,13 +238,10 @@ package editor.ui.EdtQuadrantOpt
 		{
 			if (ke.keyCode == 27) // esc
 			{
+				
 				if (m_editMode == EDIT_MODE_MOVE)
 				{
-					m_editMode = 0;
-					m_indicate.mode = ke.altKey ? EdtQuadrantIndicate.VIEW_CONTROL : EdtQuadrantIndicate.SELECT_POINT;
-					if (m_operatorMoving)
-						m_operatorMoving = false;
-					m_operatorIndicate.visible = false;	
+					resetSelect();
 					return 1;
 				}
 			}

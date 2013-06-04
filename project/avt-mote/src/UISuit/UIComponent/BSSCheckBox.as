@@ -52,8 +52,7 @@ package   UISuit.UIComponent   {
 		: void {
 			selected = !selected;
 			
-			if (selectFunction!=null)
-				selectFunction (this);
+			
 		}
 		
 		public static function createSimpleBSSCheckBox(w : int )
@@ -142,7 +141,8 @@ package   UISuit.UIComponent   {
 			else
 				selectBtn.deactivate();
 				
-				
+			if (selectFunction!=null)
+				selectFunction (this);
 		}
 
 /*

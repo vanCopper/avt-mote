@@ -381,7 +381,8 @@ package editor.ui
 				}
 			}
 			
-			if (!onlyMoving) {
+			if (!onlyMoving) 
+			{
 				if (changeFunction != null)
 					changeFunction();
 			}
@@ -445,7 +446,12 @@ package editor.ui
 			
 		}
 		
-		
+		public function resetSelect():void
+		{
+			m_selectedEVI.length = 0;
+			if (m_vtxEditor)
+				m_vtxEditor.resetSelect();
+		}
 		
 		public function dispose() : void
 		{

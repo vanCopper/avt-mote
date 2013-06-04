@@ -5,7 +5,12 @@ package editor.module.eye
 	import editor.module.ModuleBase;
 	import editor.struct.Texture2D;
 	import editor.struct.Texture2DBitmap;
+	import editor.struct.Vertex3D;
+	import editor.ui.EdtAddUI;
 	import editor.ui.EdtQuadrant;
+	import editor.ui.EdtVertex3D;
+	import editor.ui.SpriteWH;
+	import editor.ui.SripteWithRect;
 	import editor.util.ImageListPicker;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -16,6 +21,7 @@ package editor.module.eye
 	import flash.net.FileFilter;
 	import flash.text.TextField;
 	import UISuit.UIComponent.BSSButton;
+	import UISuit.UIComponent.BSSCheckBox;
 	import UISuit.UIComponent.BSSDropDownMenu;
 	
 	import UISuit.UIComponent.BSSDropDownMenuScrollable;
@@ -40,6 +46,10 @@ package editor.module.eye
 		private var m_eyeWhiteDDM : BSSDropDownMenuScrollable;
 		private var m_eyeBallDDM : BSSDropDownMenuScrollable;
 		private var m_eyeLipDDM : BSSDropDownMenuScrollable;
+		private var m_eyeMaskBtn : BSSButton;
+		private var m_eyeMaskAddUI : EdtAddUI;
+		private var m_eyeMaskEdit: BSSCheckBox;
+		
 		private var m_hoverTexture2DBitmap : Texture2DBitmap;
 		private var m_hoverTextureSprite : Sprite;
 		
@@ -147,7 +157,7 @@ package editor.module.eye
 			m_efl  = new ModuleEyeFrameLib();
 			m_content.addChild(m_efl);
 			m_efl.x = 650;
-			m_efl.y = 180;
+			m_efl.y = 240;
 			m_efl.visible = false;
 			m_efl.clickFuntion = onClick;
 			
@@ -155,16 +165,57 @@ package editor.module.eye
 			m_nameTF = new TextField(); m_nameTF.width = 180; m_nameTF.text = "CURRENT:";
 			m_eyeWhiteDDM = BSSDropDownMenuScrollable.createSimpleBSSDropDownMenuScrollable(150 , 20 , "EYE-WHITE",false);
 			m_eyeBallDDM = BSSDropDownMenuScrollable.createSimpleBSSDropDownMenuScrollable(150 , 20 , "EYE-BALL",false);
-			m_eyeLipDDM = BSSDropDownMenuScrollable.createSimpleBSSDropDownMenuScrollable(150 , 20 , "EYE-LIP",false);
+			m_eyeLipDDM = BSSDropDownMenuScrollable.createSimpleBSSDropDownMenuScrollable(150 , 20 , "EYE-LIP", false);
+			
+			m_eyeMaskBtn = BSSButton.createSimpleBSSButton(100 , 20 , "add mask");
+			var sp : SripteWithRect = new SripteWithRect();
+			sp.addChild(m_eyeMaskBtn);
+			
+			m_eyeMaskBtn.x = m_eyeMaskBtn.y = 5;
+			
+			
+			var _indiMask : TextField = new TextField(); 
+			_indiMask.text = "show mask"; 
+			_indiMask.height = 12;
+			_indiMask.x = m_eyeMaskBtn.width + m_eyeMaskBtn.x + 20;
+			_indiMask.y =  m_eyeMaskBtn.y;
+			_indiMask.width = _indiMask.textWidth+5;
+			_indiMask.mouseEnabled = false;
+			sp.addChild(_indiMask);
+			
+			_indiMask.height = 20;
+			
+			
+			m_eyeMaskEdit = BSSCheckBox.createSimpleBSSCheckBox(16);
+			m_eyeMaskEdit.x = _indiMask.textWidth + _indiMask.x + 10;
+			m_eyeMaskEdit.y = _indiMask.y + 2.5;
+			
+			m_eyeMaskEdit.selectFunction = onSelectCB;
+			m_eyeMaskEdit.selected = true;
+			
+			sp.addChild(m_eyeMaskEdit);
+			
+			m_eyeMaskBtn.releaseFunction = onMaskAdd;
+			m_eyeMaskAddUI = new EdtAddUI(8 , 20);
+			m_eyeMaskAddUI.changeFunction = onMaskAddChanged;
+			m_eyeMaskAddUI.okFunction = onMaskAddOK;
+			m_eyeMaskAddUI.visible = false;
+			
 			m_eyeWhiteDDM.setMaxHeight(400);
 			m_eyeBallDDM.setMaxHeight(400);
 			m_eyeLipDDM.setMaxHeight(400);
 			
 			
 			m_eyeChoose.addChild(m_nameTF);
+			m_eyeChoose.addChild(m_eyeMaskAddUI);
+			m_eyeChoose.addChild(sp);
+			
 			m_eyeChoose.addChild(m_eyeLipDDM).y = 90;
 			m_eyeChoose.addChild(m_eyeBallDDM).y = 60;
 			m_eyeChoose.addChild(m_eyeWhiteDDM).y = 30;
+			sp.y = 120;
+
+			m_eyeMaskAddUI.y = 154;
 			
 			m_content.addChild(m_eyeChoose);
 			m_eyeChoose.x = 650;
@@ -195,6 +246,106 @@ package editor.module.eye
 			m_eyeContainer.eyeLip.addEventListener(MouseEvent.MOUSE_UP , onMouse);
 			
 		}
+		
+		private function onMaskClear(btn : BSSButton):void
+		{
+			btn.text = "add mask";
+			btn.releaseFunction = onMaskClear;
+			m_eyeMaskBtn.releaseFunction = onMaskAdd;
+			m_eyeMaskAddUI.visible = false;
+			m_eyeContainer.data.eyeMaskData.length = 0;
+			m_eyeContainer.clearMask();
+			m_quadrant2.setVertex(null);
+			if (currentEditMEFS) 
+				currentEditMEFS.clearMask();
+		}
+		private function onMaskAdd(btn : BSSButton):void
+		{
+			btn.text = "cln mask";
+			btn.releaseFunction = onMaskClear;
+			m_eyeMaskAddUI.visible = true;
+			onMaskAddChanged(m_eyeMaskAddUI.value);
+		}
+		
+		private function onMaskAddChanged(v:int):void
+		{
+			m_eyeContainer.data.eyeMaskData.length = 0;
+			m_quadrant2.setVertex(null);
+			m_eqm.useSelector = false;
+			m_eqm.useVtxEditor = false;
+			m_eqm.changeFunction = null;
+			
+			var _t : Texture2D = m_eyeContainer.data.eyeWhite;
+			
+			if (!_t)
+				 _t = m_eyeContainer.data.eyeBall;
+			if (!_t)
+				 _t = m_eyeContainer.data.eyeLip;	 
+			
+			var _centerX : Number = _t ? (_t.rectX + _t.rectW / 2): 50;
+			var _centerY : Number = _t ? (_t.rectY + _t.rectH / 2): 50;
+			
+			var lenR : Number = Math.abs(_t ? _t.rectW / 2 : 50);
+			
+			m_eyeContainer.data.eyeMaskData.push(new EdtVertex3D(_centerX , _centerY , 0));
+			
+			var _step : Number = Math.PI * 2 / v;
+			
+			for (var i : int = 0 ; i < v ; i++ )
+			{
+				var rn : Number = i * _step;
+				
+				m_eyeContainer.data.eyeMaskData.push(new EdtVertex3D(
+					_centerX + Math.cos(rn) * lenR ,
+					_centerY + Math.sin(rn) * lenR * 0.6 ,
+					0));
+			}
+			m_eyeContainer.data.eyeMaskData.push(m_eyeContainer.data.eyeMaskData[1]);
+			
+			m_eyeContainer.renderMask(true);
+			
+		}
+		private function onMaskAddOK(v:int):void
+		{
+			m_eyeMaskAddUI.visible = false;
+			onMaskAddChanged(v);
+			//m_eyeContainer.clearMask();
+			
+			var _vertexArray : Vector.<EdtVertex3D> = m_eyeContainer.data.eyeMaskData;
+			
+			var p : int = 1;
+			for each (var _v3d : EdtVertex3D in m_eyeContainer.data.eyeMaskData)
+			{
+				_v3d.priority = p++;
+			}
+			
+			
+			var idx : int = 2;
+			
+			while (idx < _vertexArray.length)
+			{
+				EdtVertex3D.connect2PT(_vertexArray[0] , _vertexArray[idx - 1]);
+				EdtVertex3D.connect2PT(_vertexArray[0] , _vertexArray[idx]);
+				EdtVertex3D.connect2PT(_vertexArray[idx] , _vertexArray[idx - 1]);
+				idx++;
+			}
+			
+			
+			m_quadrant2.setVertex(_vertexArray);
+			m_eqm.useSelector = true;
+			m_eqm.useVtxEditor = true;
+			
+			
+			m_eqm.changeFunction = onChangeMask;
+			if (currentEditMEFS) currentEditMEFS.renderMask(false);
+		}
+		
+		private function onChangeMask():void
+		{
+			m_eyeContainer.renderMask(false);
+			if (currentEditMEFS) currentEditMEFS.renderMask(false);
+		}
+		
 		
 		private function onHover(_DDM : BSSDropDownMenu):void
 		{
@@ -263,6 +414,12 @@ package editor.module.eye
 		}
 		
 		private var currentEditMEFS : ModuleEyeFrameSprite;
+		private function onSelectCB(cb : BSSCheckBox) : void {
+			if (m_eyeContainer)
+			{
+				m_eyeContainer.maskMode = !cb.selected;
+			}
+		}
 		
 		private function onClick(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String ):void 
 		{
@@ -291,6 +448,39 @@ package editor.module.eye
 					m_eyeLipDDM.setSelectedString(m_eyeContainer.data.eyeLip.name);
 				else
 					m_eyeLipDDM.selectedId = (0);
+					
+					
+				if (m_eyeContainer.data.eyeMaskData.length)
+				{
+					m_quadrant2.setVertex(m_eyeContainer.data.eyeMaskData);
+					
+					m_eqm.useSelector = true;
+					m_eqm.useVtxEditor = true;
+					m_eqm.resetSelect();
+					
+					m_eqm.changeFunction = onChangeMask;
+					m_eyeContainer.renderMask(false);
+					
+			
+					m_eyeMaskBtn.text = "cln mask";
+					m_eyeMaskBtn.releaseFunction = onMaskClear;
+					
+				}
+				else
+				{
+					m_quadrant2.setVertex(null);
+					m_eqm.useSelector = false;
+					m_eqm.useVtxEditor = false;
+					m_eqm.resetSelect();
+					
+					m_eqm.changeFunction = null;
+					m_eyeContainer.clearMask();
+					
+					m_eyeMaskBtn.text = "add mask";
+					m_eyeMaskBtn.releaseFunction = onMaskAdd;
+				}
+				
+			
 			}
 			else
 			{
@@ -299,6 +489,15 @@ package editor.module.eye
 				m_eyeWhiteDDM.selectedId = (0);
 				m_eyeBallDDM.selectedId = (0);
 				m_eyeLipDDM.selectedId = (0);
+				
+				m_quadrant2.setVertex(null);
+				m_eqm.useSelector = false;
+				m_eqm.useVtxEditor = false;
+				m_eqm.resetSelect();
+					
+				m_eqm.changeFunction = null;
+				m_eyeContainer.clearMask();
+				
 			}
 				
 				

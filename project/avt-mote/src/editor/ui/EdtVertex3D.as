@@ -23,6 +23,13 @@ package editor.ui
 		{
 			return new EdtVertex3D(x, y, z);
 		}
+		
+		public static function connect2PT(ev0 : EdtVertex3D , ev1 : EdtVertex3D  ) : void
+		{
+			ev0.conect.push(ev1);
+			ev1.conect.push(ev0);
+			
+		}
 	}
 
 }

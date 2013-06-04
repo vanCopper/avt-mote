@@ -19,15 +19,29 @@ package editor.ui
 		
 		public function set moveIndicate(dsp : EdtMoveIndicate) : void
 		{
+			if (m_moveIndicate)
+			{
+				if (contains(m_moveIndicate))
+					removeChild(m_moveIndicate);
+			}
+			
 			m_moveIndicate = dsp;
-			addChild(dsp);
+			if (m_moveIndicate)
+				addChild(m_moveIndicate);
 		}
 		
 		private var m_selectorIndicate : EdtSelector;
 		public function set selectorIndicate(dsp : EdtSelector) : void
 		{
+			if (m_selectorIndicate)
+			{
+				if (contains(m_selectorIndicate))
+					removeChild(m_selectorIndicate);
+			}
+			
 			m_selectorIndicate = dsp;
-			addChild(dsp);
+			if (m_selectorIndicate)
+				addChild(m_selectorIndicate);
 		}
 		
 		public function dispose():void
