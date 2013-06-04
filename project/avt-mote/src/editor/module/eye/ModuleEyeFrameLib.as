@@ -21,7 +21,7 @@ package editor.module.eye
 		private var m_btnAdd : BSSButton;
 		private var m_btnClone : BSSButton;
 		private var m_btnDelete : BSSButton;
-		
+		private var m_btnFlip : BSSButton;
 		
 		public var item : BSSItemListScrollBar;
 		public var clickFuntion : Function;
@@ -50,13 +50,15 @@ package editor.module.eye
 			m_btnAdd = BSSButton.createSimpleBSSButton(100 , 20 , "add");
 			m_btnClone = BSSButton.createSimpleBSSButton(100 , 20 , "clone");
 			m_btnDelete = BSSButton.createSimpleBSSButton(100 , 20 , "delete");
+			m_btnFlip = BSSButton.createSimpleBSSButton(100 , 20 , "flip");
 						
-			m_btnAdd.x = S; m_btnClone.x = m_btnAdd.x + m_btnAdd.width + S; m_btnDelete.x = m_btnClone.x + m_btnClone.width + S;
-			m_btnAdd.y = m_btnClone.y =  m_btnDelete.y =  20 + S;
+			m_btnAdd.x = S; m_btnClone.x = m_btnAdd.x + m_btnAdd.width + S; m_btnDelete.x = m_btnClone.x + m_btnClone.width + S; m_btnFlip.x = m_btnDelete.x +m_btnDelete.width + S;
+			m_btnAdd.y = m_btnClone.y =  m_btnDelete.y = m_btnFlip.y = 20 + S;
 			
 			_p.addChild(m_btnAdd);
 			_p.addChild(m_btnClone);
 			_p.addChild(m_btnDelete);
+			_p.addChild(m_btnFlip);
 			
 			var _sb : BSSScrollBar = BSSScrollBar.createSimpleBSSScrollBar(10, false);
 			_sb.x = W - 10 - S - S;
@@ -77,6 +79,29 @@ package editor.module.eye
 			_p.addChild(item);
 			
 			m_btnAdd.releaseFunction = onAdd;
+			m_btnDelete.releaseFunction = onDelete;
+			
+			m_btnClone.deactivate(); m_btnClone.alpha = 0.5;
+			m_btnDelete.deactivate(); m_btnDelete.alpha = 0.5;
+			m_btnFlip.deactivate(); m_btnFlip.alpha = 0.5;
+		}
+		
+		private function onDelete(btn:BSSButton):void
+		{
+			if (m_currentItemContainer)
+			{
+				if (clickFuntion != null)
+					clickFuntion(null , null , null);
+				
+				item.removeItem(m_currentItemContainer);
+					
+				m_currentItemContainer = null;
+				
+				m_btnClone.deactivate(); m_btnClone.alpha = 0.5;
+				m_btnDelete.deactivate(); m_btnDelete.alpha = 0.5;
+				m_btnFlip.deactivate(); m_btnFlip.alpha = 0.5;
+			}
+			
 		}
 		
 		private function onAdd(btn:BSSButton):void 
@@ -113,9 +138,14 @@ package editor.module.eye
 			
 			
 		}
-		
+		private var m_currentItemContainer : ItemContainer;
 		private function onClick(__item:ItemContainer):void 
 		{
+			m_currentItemContainer = __item;
+			m_btnClone.activate(); m_btnClone.alpha = 1;
+			m_btnDelete.activate(); m_btnDelete.alpha = 1;
+			m_btnFlip.activate(); m_btnFlip.alpha = 1;
+			
 			if (clickFuntion != null)
 				clickFuntion(__item , __item.getChildAt(0) as ModuleEyeFrameSprite , (__item.getChildAt(1) as TextField).text);
 			
@@ -133,7 +163,7 @@ package editor.module.eye
 
 			if (parent)
 				parent.removeChild(this);
-				
+			m_currentItemContainer = null;	
 		}
 		
 	}

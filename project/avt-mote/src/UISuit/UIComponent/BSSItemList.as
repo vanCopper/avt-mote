@@ -133,12 +133,25 @@ package   UISuit.UIComponent   {
 			}
 		}		
 		
-		public function freshItem()
+		public function refreshItem()
 		: void
 		{
 			
 		}
-
+		
+		public function removeItem(item : DisplayObject ):void
+		{
+			var idx : int = m_itemContainer.getChildIndex(item);
+			if (idx == m_itemContainer.numChildren - 1)
+				m_itemContainer.removeChild(item);
+			else {
+				var offsetY : int = m_itemContainer.getChildAt(idx + 1).y - item.y;
+				for (var i : int = idx + 1 ; i < m_itemContainer.numChildren ; i++ )
+					m_itemContainer.getChildAt(i).y -= offsetY;
+				m_itemContainer.removeChild(item);
+			}
+			refreshItem();
+		}
 		public  function  addItem(item : DisplayObject )
 		: void
 		{
