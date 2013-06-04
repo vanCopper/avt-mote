@@ -219,39 +219,45 @@ package editor.module.eye
 		private function onPressEW(_DDM : BSSDropDownMenu):void
 		{
 			if (_DDM.selectedId == 0)
-				m_eyeContainer.data.eyeWhite = null;
+			{		if (m_eyeContainer.data) m_eyeContainer.data.eyeWhite = null;}
 			else {
 				m_eyeContainer.data.eyeWhite = Library.getS().getTexture2D(_DDM.getSelectedString());
 			}
 			m_eyeContainer.refresh();
-			currentEditMEFS.refresh();
-			currentEditMEFS.fitPos(84 , 84 , 8 , 8);
+			if (currentEditMEFS) {
+				currentEditMEFS.refresh();
+				currentEditMEFS.fitPos(84 , 84 , 8 , 8);
+			}
 			
 			m_hoverTextureSprite.visible = false;
 		}
 		private function onPressEB(_DDM : BSSDropDownMenu):void
 		{
 			if (_DDM.selectedId == 0)
-				m_eyeContainer.data.eyeBall = null;
+			{	if (m_eyeContainer.data) m_eyeContainer.data.eyeBall = null;}
 			else {
 				m_eyeContainer.data.eyeBall = Library.getS().getTexture2D(_DDM.getSelectedString());
 			}
 			m_eyeContainer.refresh();
-			currentEditMEFS.refresh();
-			currentEditMEFS.fitPos(84 , 84 , 8 , 8);
+			if (currentEditMEFS) {
+				currentEditMEFS.refresh();
+				currentEditMEFS.fitPos(84 , 84 , 8 , 8);
+			}
 			
 			m_hoverTextureSprite.visible = false;
 		}
 		private function onPressEL(_DDM : BSSDropDownMenu):void
 		{
 			if (_DDM.selectedId == 0)
-				m_eyeContainer.data.eyeLip = null;
+			{		if (m_eyeContainer.data) 	m_eyeContainer.data.eyeLip = null;}
 			else {
 				m_eyeContainer.data.eyeLip = Library.getS().getTexture2D(_DDM.getSelectedString());
 			}
 			m_eyeContainer.refresh();
-			currentEditMEFS.refresh();
-			currentEditMEFS.fitPos(84 , 84 , 8 , 8);
+			if (currentEditMEFS) {
+				currentEditMEFS.refresh();
+				currentEditMEFS.fitPos(84 , 84 , 8 , 8);
+			}
 			
 			m_hoverTextureSprite.visible = false;
 		}
@@ -261,26 +267,39 @@ package editor.module.eye
 		private function onClick(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String ):void 
 		{
 			m_nameTF.text = "CURRENT: "+_name;
-			m_eyeChoose.alpha = 1;
-			m_eyeChoose.mouseChildren = true;
+			
 			currentEditMEFS = mefs;
-			m_eyeContainer.data = currentEditMEFS.data;
+			m_eyeContainer.data = currentEditMEFS ? currentEditMEFS.data : null;
 			m_eyeContainer.refresh();
 			
-			if (m_eyeContainer.data.eyeWhite)
-				m_eyeWhiteDDM.setSelectedString(m_eyeContainer.data.eyeWhite.name);
+			if (m_eyeContainer.data)
+			{
+				m_eyeChoose.alpha = 1;
+				m_eyeChoose.mouseChildren = true;
+			
+				if (m_eyeContainer.data.eyeWhite)
+					m_eyeWhiteDDM.setSelectedString(m_eyeContainer.data.eyeWhite.name);
+				else
+					m_eyeWhiteDDM.selectedId = (0);
+					
+				if (m_eyeContainer.data.eyeBall)
+					m_eyeBallDDM.setSelectedString(m_eyeContainer.data.eyeBall.name);
+				else
+					m_eyeBallDDM.selectedId = (0);
+					
+				if (m_eyeContainer.data.eyeLip)
+					m_eyeLipDDM.setSelectedString(m_eyeContainer.data.eyeLip.name);
+				else
+					m_eyeLipDDM.selectedId = (0);
+			}
 			else
+			{
+				m_eyeChoose.alpha = 0.5;
+				m_eyeChoose.mouseChildren = false;
 				m_eyeWhiteDDM.selectedId = (0);
-				
-			if (m_eyeContainer.data.eyeBall)
-				m_eyeBallDDM.setSelectedString(m_eyeContainer.data.eyeBall.name);
-			else
 				m_eyeBallDDM.selectedId = (0);
-				
-			if (m_eyeContainer.data.eyeLip)
-				m_eyeLipDDM.setSelectedString(m_eyeContainer.data.eyeLip.name);
-			else
 				m_eyeLipDDM.selectedId = (0);
+			}
 				
 				
 		}

@@ -76,6 +76,12 @@ package editor.module.eye
 					eyeLip.y = data.eyeLipY;
 				}
 			}
+			else
+			{
+				if (eyeWhite) { eyeWhite.texture2D = null; }
+				if (eyeBall) { eyeBall.texture2D = null; }
+				if (eyeLip) { eyeLip.texture2D = null; }
+			}
 			
 		}
 		

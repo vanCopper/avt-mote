@@ -106,7 +106,7 @@ package editor.ui
 				//trace("00000000000here!!");
 				var bSSItemList :BSSItemList = BSSItemList(parent.parent);
 				extraHeight = 300;
-				bSSItemList.freshItem();
+				bSSItemList.refreshItem();
 				extraHeight = 0;
 				//bSSItemList.clearAllItem();
 				//bSSItemList.addItem(this);
