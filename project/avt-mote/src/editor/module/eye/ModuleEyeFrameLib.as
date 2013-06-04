@@ -80,11 +80,33 @@ package editor.module.eye
 			
 			m_btnAdd.releaseFunction = onAdd;
 			m_btnDelete.releaseFunction = onDelete;
+			m_btnClone.releaseFunction = onClone;
+			m_btnFlip.releaseFunction = onFlip;
 			
 			m_btnClone.deactivate(); m_btnClone.alpha = 0.5;
 			m_btnDelete.deactivate(); m_btnDelete.alpha = 0.5;
 			m_btnFlip.deactivate(); m_btnFlip.alpha = 0.5;
 		}
+		
+		private function onFlip(btn:BSSButton):void
+		{
+			if (m_currentItemContainer) 
+			{
+				var _oldData : ModuleEyeFrame = (m_currentItemContainer.getChildAt(0) as ModuleEyeFrameSprite).data;
+				addTexture(_oldData.flipData() , (m_currentItemContainer.getChildAt(1) as TextField).text+"#FLIP" , true);
+			}
+		}
+		
+		private function onClone(btn:BSSButton):void
+		{
+			if (m_currentItemContainer) 
+			{
+				var _oldData : ModuleEyeFrame = (m_currentItemContainer.getChildAt(0) as ModuleEyeFrameSprite).data;
+				addTexture(_oldData.cloneData() , (m_currentItemContainer.getChildAt(1) as TextField).text+"#COPY" , true);
+			}
+		}
+		
+		
 		
 		private function onDelete(btn:BSSButton):void
 		{
@@ -94,7 +116,7 @@ package editor.module.eye
 					clickFuntion(null , null , null);
 				
 				item.removeItem(m_currentItemContainer);
-					
+				
 				m_currentItemContainer = null;
 				
 				m_btnClone.deactivate(); m_btnClone.alpha = 0.5;
@@ -110,7 +132,7 @@ package editor.module.eye
 		}
 		
 		private var m_frameList : Vector.<ModuleEyeFrame> = new Vector.<ModuleEyeFrame>();
-		public function addTexture(_t : ModuleEyeFrame) : void
+		public function addTexture(_t : ModuleEyeFrame , a_name : String = null , clickAtAdd : Boolean = false ) : void
 		{
 			m_frameList.push(_t);
 			
@@ -118,6 +140,8 @@ package editor.module.eye
 			__item.clickFuntion = onClick;
 			
 			var __frame : ModuleEyeFrameSprite = _t.createSprite();
+			__frame.refresh();
+			__frame.fitPos(84 , 84 , 8 , 8);
 			
 			__item.addChild(__frame);
 			
@@ -127,7 +151,7 @@ package editor.module.eye
 			//	__frame.x += (100 - __frame.width) >> 1;
 			
 			var indi : TextField = new TextField();
-			indi.text = "Frame" + (m_frameList.length - 1);
+			indi.text = a_name ? a_name : "Frame" + (m_frameList.length - 1);
 			indi.x = 105;
 			indi.width = 90;
 			indi.height = 24;
@@ -136,18 +160,34 @@ package editor.module.eye
 			
 			item.addItem(__item);
 			
+			if (clickAtAdd)
+				onClick(__item);
 			
 		}
 		private var m_currentItemContainer : ItemContainer;
+		//private var m_currentItemContainerFilter : Array = [new GlowFilter(0xFFFFFF00)];
+		
 		private function onClick(__item:ItemContainer):void 
 		{
+			if (m_currentItemContainer)
+			{
+				m_currentItemContainer.setNormal();
+				m_currentItemContainer = null;
+			}
+			
 			m_currentItemContainer = __item;
+			if (m_currentItemContainer)
+				m_currentItemContainer.setClick();
+			
 			m_btnClone.activate(); m_btnClone.alpha = 1;
 			m_btnDelete.activate(); m_btnDelete.alpha = 1;
 			m_btnFlip.activate(); m_btnFlip.alpha = 1;
 			
+			
+			
 			if (clickFuntion != null)
 				clickFuntion(__item , __item.getChildAt(0) as ModuleEyeFrameSprite , (__item.getChildAt(1) as TextField).text);
+			
 			
 			
 		}
@@ -178,11 +218,24 @@ class ItemContainer extends Sprite {
 	public function ItemContainer()
 	{
 		addEventListener(MouseEvent.CLICK , onClick);
-			
+		setNormal();
+		
+		buttonMode = true;
+	}
+	public function setNormal():void
+	{
+		graphics.clear();
 		graphics.lineStyle(1, 0x0000FF, 0.25);
 		graphics.beginFill(0xAAAAFF, 0.25);
 		graphics.drawRect(5, 5, 95, 95);
-		buttonMode = true;
+	}
+	
+	public function setClick():void
+	{
+		graphics.clear();
+		graphics.lineStyle(1, 0xFF8000, 0.5);
+		graphics.beginFill(0xFFFF00, 0.25);
+		graphics.drawRect(5, 5, 95, 95);
 	}
 	
 	private function onClick(e:MouseEvent):void 

@@ -135,7 +135,21 @@ package editor
 			item.addItem(__item);
 			
 		}
-		
+		public function getTexture2DFlip(_name : String):Texture2D
+		{
+			
+			_name += "#FLIP";
+			
+			_name = _name.replace("#FLIP#FLIP" , "");
+			
+			for each(var _t : Texture2D in m_textureList)
+			{
+				if (_name == _t.name)
+					return _t;
+			}
+			
+			return null;
+		}
 		public function getTexture2D(_name : String):Texture2D
 		{
 			for each(var _t : Texture2D in m_textureList)
