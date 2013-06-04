@@ -83,6 +83,11 @@ package editor.module.eye
 			m_btnClone.releaseFunction = onClone;
 			m_btnFlip.releaseFunction = onFlip;
 			
+			
+		}
+		
+		private function deactivateLibButton():void
+		{
 			m_btnClone.deactivate(); m_btnClone.alpha = 0.5;
 			m_btnDelete.deactivate(); m_btnDelete.alpha = 0.5;
 			m_btnFlip.deactivate(); m_btnFlip.alpha = 0.5;
@@ -119,9 +124,7 @@ package editor.module.eye
 				
 				m_currentItemContainer = null;
 				
-				m_btnClone.deactivate(); m_btnClone.alpha = 0.5;
-				m_btnDelete.deactivate(); m_btnDelete.alpha = 0.5;
-				m_btnFlip.deactivate(); m_btnFlip.alpha = 0.5;
+				deactivateLibButton();
 			}
 			
 		}
@@ -131,7 +134,7 @@ package editor.module.eye
 			addTexture(new ModuleEyeFrame());
 		}
 		
-		private var m_frameList : Vector.<ModuleEyeFrame> = new Vector.<ModuleEyeFrame>();
+		private var m_frameList : Vector.<ModuleEyeFrame> = ModuleEyeData.s_frameList;
 		public function addTexture(_t : ModuleEyeFrame , a_name : String = null , clickAtAdd : Boolean = false ) : void
 		{
 			m_frameList.push(_t);
@@ -167,6 +170,7 @@ package editor.module.eye
 		private var m_currentItemContainer : ItemContainer;
 		//private var m_currentItemContainerFilter : Array = [new GlowFilter(0xFFFFFF00)];
 		
+
 		private function onClick(__item:ItemContainer):void 
 		{
 			if (m_currentItemContainer)
@@ -193,7 +197,9 @@ package editor.module.eye
 		}
 		public function onNew():void
 		{
-			m_frameList = new Vector.<ModuleEyeFrame>();
+			m_frameList.length = 0;
+			if (item) item.clearAllItem();
+			deactivateLibButton();
 		}
 
 		

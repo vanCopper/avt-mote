@@ -6,11 +6,8 @@ package editor.module.eye
 	 */
 	public class ModuleEyeData 
 	{
+		public static var s_frameList : Vector.<ModuleEyeFrame> = new Vector.<ModuleEyeFrame>();
 		
-		public function ModuleEyeData() 
-		{
-			
-		}
 		
 	}
 
