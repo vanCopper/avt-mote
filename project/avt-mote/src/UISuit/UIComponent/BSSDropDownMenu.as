@@ -57,7 +57,8 @@ package   UISuit.UIComponent   {
 		
 		public var pressFunction : Function ;
 		public var selectFunction : Function ;
-
+		public var hoverFunction : Function ;
+		
 		public function dispose()
 		: void {
 			if (parent)
@@ -91,6 +92,7 @@ package   UISuit.UIComponent   {
 		
 			pressFunction =
 			selectFunction =
+			hoverFunction =
 			null;
 		}
 		
@@ -338,7 +340,18 @@ package   UISuit.UIComponent   {
 			}
 		}
 				
+		public function getHoverString( ) 
+		: String {
+			if (m_hoverId >= 0)
+				return m_scrollItemArray[m_hoverId].text ;
+			else 
+				return null;
+		}
 		
+		public function getHoverId() :  int
+		{
+			return m_hoverId;
+		}
 		private function setHoverId( hoverId :  int )
 		: void {
 			if (m_hoverId != hoverId)
@@ -361,6 +374,9 @@ package   UISuit.UIComponent   {
 				}
 
 				m_hoverId = hoverId;
+				
+				if (hoverFunction != null)
+					hoverFunction(this);
 			}
 		}
 						
@@ -703,7 +719,7 @@ package   UISuit.UIComponent   {
 			}
 		}
 
-		public function getSelectedString( ) 
+		public function getSelectedString() 
 		: String {
 			if (m_selectedId >= 0)
 				return m_scrollItemArray[m_selectedId].text ;

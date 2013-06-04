@@ -29,6 +29,12 @@ package editor.module.head
 	 */
 	public class ModuleHeadEQMgr extends EdtQuadrantMgr 
 	{
+		public function ModuleHeadEQMgr()
+		{
+			useSelector = true;
+			useVtxEditor = true;
+			useFocusSwitch = true;
+		}
 		
 		public override function onVertexDataChange():void
 		{

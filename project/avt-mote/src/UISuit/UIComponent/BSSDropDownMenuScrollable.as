@@ -251,14 +251,14 @@ package   UISuit.UIComponent   {
 		protected override function onOpenMenu( btn : BSSButton)
 		: void {
 			super.onOpenMenu(btn);
-//			if (this.m_scrollContainer.visible)
-//			{
-//				BSSScrollBar.BSSScrollBar_setWheelFocusBSSScrollBar(m_scrollBar);
-//			}
-//			else
-//			{
-//				BSSScrollBar.BSSScrollBar_resetWheelFocusBSSScrollBar(m_scrollBar);
-//			}
+			if (this.m_scrollContainer.visible)
+			{
+				BSSScrollBar.BSSScrollBar_setWheelFocusBSSScrollBar(m_scrollBar);
+			}
+			else
+			{
+				BSSScrollBar.BSSScrollBar_resetWheelFocusBSSScrollBar(m_scrollBar);
+			}
 		}
 		
 		protected override function onMouseDown( evt : MouseEvent)
