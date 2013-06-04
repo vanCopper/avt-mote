@@ -1,6 +1,8 @@
 package editor.module.eye 
 {
 	import editor.struct.Texture2DBitmap;
+	import editor.struct.Vertex3D;
+	import editor.ui.EdtVertex3D;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
@@ -38,6 +40,27 @@ package editor.module.eye
 			addChild(eyeLip);
 			
 			
+			if (data && data.eyeMaskData)
+				renderMask(false);
+				
+			maskMode = true;
+			
+		}
+		private var _maskMode : Boolean;
+		public function set maskMode(m:Boolean):void
+		{
+			_maskMode = m;
+			if (m)
+			{
+				if (eyeWBMask.width )
+					eyeWBContainer.mask = eyeWBMask;
+				else
+					eyeWBContainer.mask = null;
+			}
+			else
+			{
+				eyeWBContainer.mask = null;
+			}
 		}
 		
 		public function fitPos(w:Number , h:Number , minX : Number = 0 , minY : Number = 0):void
@@ -83,6 +106,36 @@ package editor.module.eye
 				if (eyeLip) { eyeLip.texture2D = null; }
 			}
 			
+		}
+		public function clearMask():void
+		{
+			eyeWBMask.graphics.clear();
+			eyeWBContainer.mask = null;
+		}
+		
+		public function renderMask(showLine:Boolean):void
+		{
+			eyeWBMask.graphics.clear();
+			var _eyeMaskData : Vector.<EdtVertex3D> = data.eyeMaskData;
+			var idx : int = 2;
+			
+			if (showLine)
+				eyeWBMask.graphics.lineStyle(0.5 , 0xFF00000 , 0.75);
+			
+			while (idx < _eyeMaskData.length)
+			{
+				eyeWBMask.graphics.beginFill(0xFF00000 , 0.25);	
+				eyeWBMask.graphics.moveTo(_eyeMaskData[0].x , _eyeMaskData[0].y);
+				
+				eyeWBMask.graphics.lineTo(_eyeMaskData[idx-1].x , _eyeMaskData[idx-1].y);
+				eyeWBMask.graphics.lineTo(_eyeMaskData[idx].x , _eyeMaskData[idx].y);
+				eyeWBMask.graphics.lineTo(_eyeMaskData[0].x , _eyeMaskData[0].y);
+				eyeWBMask.graphics.endFill();	
+				
+				idx++;
+			}
+			if (_maskMode && eyeWBMask.width )
+					eyeWBContainer.mask = eyeWBMask;
 		}
 		
 		public function dispose():void 

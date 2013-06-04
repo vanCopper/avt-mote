@@ -46,6 +46,9 @@ package editor.ui.EdtQuadrantOpt
 		
 		public function dispose():void 
 		{
+			if (m_indicate)
+				m_indicate.selectorIndicate = null;
+				
 			m_indicate = null;
 			m_selectorIndicate = null;
 			

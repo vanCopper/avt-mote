@@ -219,6 +219,9 @@ package editor.ui
 				m_moveOPTA = null;
 			}
 			
+			if (parent)
+				parent.removeChild(this);
+			
 			startMoveFunc = null;
 		}
 		

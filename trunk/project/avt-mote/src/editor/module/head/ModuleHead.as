@@ -195,12 +195,7 @@ package editor.module.head
 				
 			}
 		}
-		private function connect2PT(ev0 : EdtVertex3D , ev1 : EdtVertex3D  ) : void
-		{
-			ev0.conect.push(ev1);
-			ev1.conect.push(ev0);
-			
-		}
+		
 		
 		private function onMeridianOK(s : int):void
 		{
@@ -582,6 +577,7 @@ package editor.module.head
 				m_content.addChild(m_meridianAddUI);
 			
 				m_eqm.changeFunction = function () : void {
+					//if (!onlyMove)
 					onMeridianChanged(m_meridianAddUI.value);
 				}
 			}
@@ -721,14 +717,14 @@ package editor.module.head
 				var start : int = l * pointPerLine;
 				for ( ti = 1 ; ti < pointPerLine ; ti++ )
 				{
-					connect2PT(_edtVectorAll[start + ti - 1] , _edtVectorAll[start + ti]);
+					EdtVertex3D.connect2PT(_edtVectorAll[start + ti - 1] , _edtVectorAll[start + ti]);
 				}
 			}
 			
 			for ( ti = 0 ; ti < pointPerLine ; ti++ )
 			for (var l : int = 1 ; l < totalLine ;l++ )
 			{
-				connect2PT(_edtVectorAll[(l - 1) * pointPerLine + ti ] , _edtVectorAll[(l) * pointPerLine + ti ]);
+				EdtVertex3D.connect2PT(_edtVectorAll[(l - 1) * pointPerLine + ti ] , _edtVectorAll[(l) * pointPerLine + ti ]);
 			}
 		}
 		
