@@ -278,7 +278,7 @@ package   UISuit.UIComponent   {
                                 {   
                                     s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y-= s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBar_moveStep;	
                                     if (s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y < s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollableMinY)
-                                        s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y = s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBar_moveStep;
+                                        s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollBarButton.y = s_BSSScrollBar_WheelFocusBSSScrollBar.m_scrollableMinY;
                                     //s_BSSScrollBar_WheelFocusBSSScrollBar.doDefaultOperator();		
                                 }                              
                             }

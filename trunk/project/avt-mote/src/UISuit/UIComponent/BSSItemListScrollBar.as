@@ -71,12 +71,12 @@ package   UISuit.UIComponent   {
 					if (m_itemContainer.numChildren)
 					{	
 						var dsp : DisplayObject = m_itemContainer.getChildAt(m_itemContainer.numChildren - 1);
-						m_scrollBar.setContentHeight(0 , dsp.y + dsp.height + 1);
+						m_scrollBar.setContentHeight(0 , dsp.y + dsp.height + 1 , 3);
 						m_itemContainer.y = (m_scrollBar.height >= dsp.y + dsp.height + 1) ? 0 :  yBack;
 					}
 					else
 					{
-						m_scrollBar.setContentHeight(0 , 1);
+						m_scrollBar.setContentHeight(0 , 1 , 3);
 						m_itemContainer.y = 0 ;
 					}
 					
@@ -107,10 +107,10 @@ package   UISuit.UIComponent   {
 				if (heightMode)
 				{
 					var dsp : DisplayObject = m_itemContainer.getChildAt(m_itemContainer.numChildren - 1);
-					m_scrollBar.setContentHeight(0 , dsp.y + dsp.height + 1);
+					m_scrollBar.setContentHeight(0 , dsp.y + dsp.height + 1 , 3);
 				}
 				else
-					m_scrollBar.setContentHeight(0 , m_itemContainer.height);
+					m_scrollBar.setContentHeight(0 , m_itemContainer.height , 3);
 				//m_itemContainer.mask = m;
 				
 				if (m_scrollBar.getIsActive())
@@ -127,7 +127,7 @@ package   UISuit.UIComponent   {
 			super.clearAllItem(_disposeItem);
 			if (m_scrollBar)
 			{	
-				m_scrollBar.setContentHeight(0 , 0);
+				m_scrollBar.setContentHeight(0 , 0 , 3);
 				if (!alwaysShowScrollBar)
 					m_scrollBar.visible = (false);
 			}
