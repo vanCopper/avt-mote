@@ -312,7 +312,7 @@ package editor.module.eye
 		{
 			var _texture : Texture2D = new Texture2D(bitmapData , _filename , "EYE");
 			Library.getS().addTexture(_texture);
-			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FILP" , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
+			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FLIP" , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
 			//m_tb.deactivateAll([m_tb.btnAR]);
 			
 			m_efl.visible = true;
