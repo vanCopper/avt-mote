@@ -507,16 +507,9 @@ package editor.module.eye
 		private function onOpen(btn : BSSButton) : void {
 			new ImageListPicker( onLoadImage , [new FileFilter("image list(*.imglist)" , "*.imglist") , new FileFilter("image (*.png)" , "*.png")]);
 		}
-		
-		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
+		private function updateDDM():void
 		{
-			var _texture : Texture2D = new Texture2D(bitmapData , _filename , "EYE");
-			Library.getS().addTexture(_texture);
-			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FLIP" , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
-			//m_tb.deactivateAll([m_tb.btnAR]);
-			
 			m_efl.visible = true;
-			
 			var _ret : Vector.<Texture2D> = Library.getS().getList("EYE");
 			
 			for each(var _t : Texture2D in _ret)
@@ -531,6 +524,16 @@ package editor.module.eye
 				}
 				
 			}
+		}
+		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
+		{
+			var _texture : Texture2D = new Texture2D(bitmapData , _filename , "EYE");
+			Library.getS().addTexture(_texture);
+			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FLIP" , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
+			//m_tb.deactivateAll([m_tb.btnAR]);
+			
+			updateDDM();
+			
 			//m_eyeLipDDM.setSelectedString
 			
 			//m_eyeChoose.addChild(m_eyeBallDDM).y = 60;
@@ -568,6 +571,64 @@ package editor.module.eye
 			m_eyeLipDDM.clearAllItem();
 			
 			deactivate();
+		}
+		
+		
+		public override function onOpenXML(__root : XML):void
+		{
+			var eyeXML : XMLList = __root.ModuleEye;
+			
+			
+			for each (var item : XML in eyeXML.elements())
+			{
+				//trace(item.toXMLString());
+				if (item.name() == "ModuleEyeFrames")
+				{
+					for each (var itemModuleEyeFrame : XML in item.ModuleEyeFrame )
+					{	
+						//trace(itemModuleEyeFrame.toXMLString());
+						var mef : ModuleEyeFrame = new ModuleEyeFrame();
+						mef.fromXMLString(itemModuleEyeFrame,
+							function():void {
+								m_efl.addTexture(mef);
+								updateDDM();
+							}
+						);
+						
+						//m_efl.visible = true;
+					}
+				}
+			}
+						
+			//m_tb.deactivateAll([m_tb.btnImport]);
+			
+		}
+		
+		public override function onSave(__root : XML):void
+		{
+			
+			if (ModuleEyeData.s_frameList && ModuleEyeData.s_frameList.length)
+			{
+				var str : String = "<ModuleEye>";
+				str += "<ModuleEyeFrames>";
+				for each (var _mef : ModuleEyeFrame in ModuleEyeData.s_frameList)
+				{
+					str += _mef.toXMLString();
+				}
+				str += "</ModuleEyeFrames>";
+				str += "</ModuleEye>";
+				
+				__root.appendChild(
+					new XML(str)
+				);
+			}
+			else
+			{
+				var ModuleEyeXML : XML = <ModuleEye/>;
+				__root.appendChild(
+					ModuleEyeXML
+				);
+			}
 		}
 		
 		

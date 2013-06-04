@@ -4,6 +4,7 @@ package editor.module.eye
 	import editor.struct.Texture2D;
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtVertex3D;
+	import editor.util.TextureLoader;
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	/**
@@ -12,7 +13,7 @@ package editor.module.eye
 	 */
 	public class ModuleEyeFrame 
 	{
-		
+		public var name : String;
 		public var eyeWhite : Texture2D;
 		
 		
@@ -31,6 +32,148 @@ package editor.module.eye
 		public function ModuleEyeFrame() 
 		{
 			
+			
+			
+			
+		}
+		
+		
+		public function toXMLString():String
+		{
+			
+			var str : String = "<ModuleEyeFrame>";
+			str += "<name>";
+				str += name;
+			str += "</name>";
+			
+			str += "<eyeWhite>";
+				if (eyeWhite) str += eyeWhite.toXMLString();
+			str += "</eyeWhite>";
+			
+			str += "<eyeBall>";
+				if (eyeBall) str += eyeBall.toXMLString();
+				str += "<position>" + eyeBallX +":" + eyeBallY + "</position>";
+			str += "</eyeBall>";
+			
+			
+			str += "<eyeLip>";
+				if (eyeLip) str += eyeLip.toXMLString();
+				str += "<position>" + eyeLipX +":" + eyeLipY + "</position>";
+			str += "</eyeLip>";
+			
+			str += "<eyeMaskData>";
+			var first : Boolean = true;
+			for each (var _v : Vertex3D in eyeMaskData)	
+			{
+				if (first)
+				{
+					str += _v.toXMLString();
+					first = false;
+				}
+				else
+					str += "," + _v.toXMLString();
+			}
+			str += "</eyeMaskData>";
+			
+			str += "</ModuleEyeFrame>";
+			return str;
+		}
+		public var loadStep : int;
+		public var callback :Function;
+		
+		public function fromXMLString(s:XML , a_callback :Function):void
+		{
+			eyeMaskData.length = 0;
+			callback = a_callback;
+			if (s)
+			{
+				name = s.name.text();
+				
+				var _tname : String;
+				_tname = s.eyeWhite.Texture2D.name.text();
+				eyeWhite = Library.getS().getTexture2D(_tname);
+				if (!eyeWhite)
+				{
+					if (s.eyeWhite.Texture2D)
+					{
+						loadStep++;
+						new TextureLoader(s.eyeWhite.Texture2D[0], onTextureLoadedEW);
+					}
+				}
+
+				_tname = s.eyeBall.Texture2D.name.text();
+				eyeBall = Library.getS().getTexture2D(_tname);
+				if (!eyeBall)
+				{
+					if (s.eyeBall.Texture2D)
+					{	
+						loadStep++;
+						new TextureLoader(s.eyeBall.Texture2D[0] , onTextureLoadedEB);
+					}
+				}
+				var _p :Array;
+				_p = String(s.eyeBall.position.text()).split(":");
+				eyeBallX = Number(_p[0]);
+				eyeBallY = Number(_p[1]);
+				
+				_tname = s.eyeLip.Texture2D.name.text();
+				eyeLip = Library.getS().getTexture2D(_tname);
+				if (!eyeLip)
+				{
+					if (s.eyeLip.Texture2D)
+					{
+						loadStep++;
+						new TextureLoader(s.eyeLip.Texture2D[0] , onTextureLoadedEL);
+					}
+				}
+				_p = String(s.eyeLip.position.text()).split(":");
+				eyeLipX = Number(_p[0]);
+				eyeLipY = Number(_p[1]);
+				
+				var __data : Array = String(s.eyeMaskData.text()).split(",");
+				for each (var vstr : String in __data )
+				{
+					var _ev : EdtVertex3D = new EdtVertex3D();
+					_ev.fromXMLString(vstr);
+					eyeMaskData.push(_ev);
+				}
+				genConnect();
+				
+				if (loadStep == 0)
+				{
+					if (callback != null)
+						callback();
+					callback = null;
+				}
+				
+			}
+			
+		}
+		
+		private function onATextureLoaded():void
+		{
+			loadStep--;
+			if (loadStep == 0)
+			{
+				if (callback != null)
+					callback();
+				callback = null;
+			}
+		}
+		private function onTextureLoadedEW(_name : String , _texture2D : Texture2D):void 
+		{
+			eyeWhite = _texture2D;
+			onATextureLoaded();
+		}
+		private function onTextureLoadedEB(_name : String , _texture2D : Texture2D):void 
+		{
+			eyeBall = _texture2D;
+			onATextureLoaded();
+		}
+		private function onTextureLoadedEL(_name : String , _texture2D : Texture2D):void 
+		{
+			eyeLip = _texture2D;
+			onATextureLoaded();
 		}
 		public function flipData():ModuleEyeFrame
 		{
@@ -114,6 +257,8 @@ package editor.module.eye
 			eyeBall = null;
 			eyeLip = null;
 			eyeMaskData = null;
+			
+			callback = null;
 		}
 	}
 

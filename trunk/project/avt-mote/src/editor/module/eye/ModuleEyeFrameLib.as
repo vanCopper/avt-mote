@@ -2,7 +2,9 @@ package editor.module.eye
 {
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TextEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import UISuit.UIComponent.BSSButton;
@@ -97,8 +99,8 @@ package editor.module.eye
 		{
 			if (m_currentItemContainer) 
 			{
-				var _oldData : ModuleEyeFrame = (m_currentItemContainer.getChildAt(0) as ModuleEyeFrameSprite).data;
-				addTexture(_oldData.flipData() , (m_currentItemContainer.getChildAt(1) as TextField).text+"#FLIP" , true);
+				var _oldData : ModuleEyeFrame = (m_currentItemContainer.mef).data;
+				addTexture(_oldData.flipData() , (m_currentItemContainer.indi).text+"#FLIP" , true);
 			}
 		}
 		
@@ -106,8 +108,8 @@ package editor.module.eye
 		{
 			if (m_currentItemContainer) 
 			{
-				var _oldData : ModuleEyeFrame = (m_currentItemContainer.getChildAt(0) as ModuleEyeFrameSprite).data;
-				addTexture(_oldData.cloneData() , (m_currentItemContainer.getChildAt(1) as TextField).text+"#COPY" , true);
+				var _oldData : ModuleEyeFrame = (m_currentItemContainer.mef).data;
+				addTexture(_oldData.cloneData() , (m_currentItemContainer.indi).text+"#COPY" , true);
 			}
 		}
 		
@@ -117,12 +119,18 @@ package editor.module.eye
 		{
 			if (m_currentItemContainer)
 			{
+				
+				var indi : TextField =  m_currentItemContainer.indi;
+				indi.removeEventListener(Event.CHANGE , onChange);
+				
 				if (clickFuntion != null)
 					clickFuntion(null , null , null);
 				
 				item.removeItem(m_currentItemContainer);
 				
 				m_currentItemContainer = null;
+				
+				
 				
 				deactivateLibButton();
 			}
@@ -139,14 +147,12 @@ package editor.module.eye
 		{
 			m_frameList.push(_t);
 			
-			var __item : ItemContainer = new ItemContainer;
-			__item.clickFuntion = onClick;
+			
 			
 			var __frame : ModuleEyeFrameSprite = _t.createSprite();
 			__frame.refresh();
 			__frame.fitPos(84 , 84 , 8 , 8);
 			
-			__item.addChild(__frame);
 			
 			//__frame.width = Math.min(100, __frame.width);
 			
@@ -155,16 +161,27 @@ package editor.module.eye
 			
 			var indi : TextField = new TextField();
 			indi.text = a_name ? a_name : "Frame" + (m_frameList.length - 1);
+			indi.addEventListener(Event.CHANGE , onChange);
 			indi.x = 105;
 			indi.width = 90;
 			indi.height = 24;
 			indi.type = TextFieldType.INPUT;
-			__item.addChild(indi);
 			
+			var __item : ItemContainer = new ItemContainer(__frame , indi);
+			__item.clickFuntion = onClick;
 			item.addItem(__item);
+			
+			_t.name = indi.text;
 			
 			if (clickAtAdd)
 				onClick(__item);
+			
+		}
+		
+		private function onChange(e:Event):void 
+		{
+			var __item : ItemContainer = e.currentTarget.parent as  ItemContainer;
+			
 			
 		}
 		private var m_currentItemContainer : ItemContainer;
@@ -190,7 +207,7 @@ package editor.module.eye
 			
 			
 			if (clickFuntion != null)
-				clickFuntion(__item , __item.getChildAt(0) as ModuleEyeFrameSprite , (__item.getChildAt(1) as TextField).text);
+				clickFuntion(__item , __item.mef , __item.indi.text);
 			
 			
 			
@@ -216,18 +233,48 @@ package editor.module.eye
 
 }
 import flash.display.Sprite;
+import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.text.TextField;
+import editor.module.eye.*;
 
 class ItemContainer extends Sprite {
 	
 	public var clickFuntion : Function;
-	public function ItemContainer()
+	public var changeFuntion : Function;
+	
+	public var indi : TextField;
+	public var mef : ModuleEyeFrameSprite;
+	
+	
+	public function ItemContainer(a_mef : ModuleEyeFrameSprite , a_indi : TextField)
 	{
 		addEventListener(MouseEvent.CLICK , onClick);
+		mef = a_mef;
+		indi = a_indi;
+		
+		indi.addEventListener(Event.CHANGE , onChange);
+		
+		addChild(mef);
+		addChild(indi);
+		
+		
 		setNormal();
 		
 		buttonMode = true;
 	}
+	
+	private function onChange(e:Event):void 
+	{
+		mef.name = indi.text;
+		if (changeFuntion != null )
+		{
+			changeFuntion();
+		}
+	}
+	
+	
+	
 	public function setNormal():void
 	{
 		graphics.clear();
@@ -254,6 +301,11 @@ class ItemContainer extends Sprite {
 	public function dispose():void
 	{
 		removeEventListener(MouseEvent.CLICK , onClick);
+		indi.removeEventListener(Event.CHANGE , onChange);
+		
+		indi = null;
+		mef = null;
+		
 	}
 	
 }

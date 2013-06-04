@@ -25,10 +25,20 @@ package editor.util
 			{
 				m_xml = xml;
 				m_filename = xml.name.text();
+			
+				if (Library.getS().getTexture2D(m_filename))
+				{
+					if (m_callback != null)
+					{	
+						m_callback(	m_filename , Library.getS().getTexture2D(m_filename));
+						m_callback = null;
+					}
+					return;
+				}
 				
 				var ldr : Loader = new Loader();
 				ldr.contentLoaderInfo.addEventListener(Event.COMPLETE , onComplete );
-				ldr.load(new URLRequest(s_imgPath + m_filename));
+				ldr.load(new URLRequest(s_imgPath + m_filename.replace("#FLIP" , "")));
 			}
 			else
 			{
