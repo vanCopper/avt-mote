@@ -40,17 +40,21 @@ package editor.module.eye
 			
 		}
 		
-		public function fitPos(w:Number , h:Number):void
+		public function fitPos(w:Number , h:Number , minX : Number = 0 , minY : Number = 0):void
 		{
 			if (width && height)
 			{
-				width = Math.min(w, width);
+				scaleY = scaleX = 1;
 				
-				scaleY = scaleX;
+				width = Math.min(w, width);
+				height = Math.min(h, height);
+				
+				scaleY = scaleX = Math.min(scaleX , scaleY);
+				
 				var rect : Rectangle = this.getRect(this);
 				
-				x = w / 2 - (rect.right + rect.left) / 2;
-				y = h / 2 - (rect.bottom + rect.top) / 2;
+				x = minX + w / 2 - (rect.right + rect.left)*scaleX / 2;
+				y = minY + h / 2 - (rect.bottom + rect.top)*scaleY / 2;
 				
 				
 			}
