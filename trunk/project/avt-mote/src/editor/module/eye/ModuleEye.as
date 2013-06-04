@@ -253,7 +253,8 @@ package editor.module.eye
 			btn.releaseFunction = onMaskClear;
 			m_eyeMaskBtn.releaseFunction = onMaskAdd;
 			m_eyeMaskAddUI.visible = false;
-			m_eyeContainer.data.eyeMaskData.length = 0;
+			if (m_eyeContainer.data && m_eyeContainer.data.eyeMaskData)
+				m_eyeContainer.data.eyeMaskData.length = 0;
 			m_eyeContainer.clearMask();
 			m_quadrant2.setVertex(null);
 			if (currentEditMEFS) 
@@ -552,6 +553,23 @@ package editor.module.eye
 			
 			super.deactivate();
 		}
+		
+		public override function onNew():void
+		{
+			m_tb.deactivateAll([m_tb.btnImport]);
+			onClick(null, null, "");
+			m_efl.onNew();
+			m_efl.visible = false;
+			onMaskClear(m_eyeMaskBtn);
+			
+			
+			m_eyeWhiteDDM.clearAllItem();
+			m_eyeBallDDM.clearAllItem();
+			m_eyeLipDDM.clearAllItem();
+			
+			deactivate();
+		}
+		
 		
 	}
 
