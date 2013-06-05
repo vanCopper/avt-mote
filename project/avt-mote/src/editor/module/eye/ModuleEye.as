@@ -259,8 +259,32 @@ package editor.module.eye
 			m_moduleEyeBlinkEditor.visible = false;
 		}
 		
+		private function disablePage(p:int):void
+		{
+			if (p == 0)
+			{
+				m_eqm.visible =
+				 m_eyeContainer.visible =
+				 m_eyeChoose.visible = false;
+				 
+				m_eyeWhiteDDM.closeMenu();
+				m_eyeBallDDM.closeMenu();
+				m_eyeLipDDM.closeMenu();
+				 
+				 m_hoverTexture2DBitmap.visible = false;
+				 
+				 m_eqm.deactivate();
+			}
+			else if (p == 1)
+			{
+				m_moduleEyeBlinkEditor.visible = false;
+			}
+		}
+		
 		private function onAddFrame(btn : BSSButton):void
 		{
+			disablePage(1);
+			
 			m_eqm.visible =
 			m_eyeContainer.visible =
 			m_eyeChoose.visible = true;
@@ -271,22 +295,13 @@ package editor.module.eye
 			m_efl.clickFuntion = onClickToEdit;
 			m_efl.clickWhenClone = true;
 			
-			m_moduleEyeBlinkEditor.visible = false;
+			
 		}
 		
 		private function onEditBlink(btn : BSSButton):void
 		{
-			 m_eqm.visible =
-			 m_eyeContainer.visible =
-			 m_eyeChoose.visible = false;
 			 
-			m_eyeWhiteDDM.closeMenu();
-			m_eyeBallDDM.closeMenu();
-			m_eyeLipDDM.closeMenu();
-			 
-			 m_hoverTexture2DBitmap.visible = false;
-			 
-			 m_eqm.deactivate();
+			 disablePage(0);
 			 
 			 m_efl.clearSelect();
 			 m_efl.clickFuntion = onClickToSetFrame;
