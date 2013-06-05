@@ -261,6 +261,12 @@ package   UISuit.UIComponent   {
 			}
 		}
 		
+		public override function closeMenu() : void
+		{
+			super.closeMenu();
+			m_scrollBar.visible = false;
+		}
+		
 		protected override function onMouseDown( evt : MouseEvent)
 		: void {
 			var dsp : DisplayObject = (DisplayObject)(evt.target);

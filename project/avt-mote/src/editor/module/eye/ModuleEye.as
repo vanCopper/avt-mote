@@ -53,6 +53,8 @@ package editor.module.eye
 		private var m_hoverTexture2DBitmap : Texture2DBitmap;
 		private var m_hoverTextureSprite : Sprite;
 		
+		private var m_moduleEyeBlinkEditor : ModuleEyeBlinkEditor;
+		
 		
 		public override function dispose():void
 		{
@@ -250,6 +252,11 @@ package editor.module.eye
 			m_eyeContainer.eyeLip.addEventListener(MouseEvent.MOUSE_UP , onMouse);
 			
 			m_tb.deactivateAll([m_tb.btnImport]);
+			
+			m_moduleEyeBlinkEditor = new ModuleEyeBlinkEditor();
+			m_moduleEyeBlinkEditor.y = m_tb.y + m_tb.height;
+			m_content.addChild(m_moduleEyeBlinkEditor);
+			m_moduleEyeBlinkEditor.visible = false;
 		}
 		
 		private function onAddFrame(btn : BSSButton):void
@@ -258,8 +265,13 @@ package editor.module.eye
 			m_eyeContainer.visible =
 			m_eyeChoose.visible = true;
 			
-			 m_efl.clearSelect();
-			 m_efl.clickFuntion = onClickToEdit;
+			m_eqm.activate();
+			
+			m_efl.clearSelect();
+			m_efl.clickFuntion = onClickToEdit;
+			m_efl.clickWhenClone = true;
+			
+			m_moduleEyeBlinkEditor.visible = false;
 		}
 		
 		private function onEditBlink(btn : BSSButton):void
@@ -268,8 +280,20 @@ package editor.module.eye
 			 m_eyeContainer.visible =
 			 m_eyeChoose.visible = false;
 			 
+			m_eyeWhiteDDM.closeMenu();
+			m_eyeBallDDM.closeMenu();
+			m_eyeLipDDM.closeMenu();
+			 
+			 m_hoverTexture2DBitmap.visible = false;
+			 
+			 m_eqm.deactivate();
+			 
 			 m_efl.clearSelect();
-			 m_efl.clickFuntion = null;
+			 m_efl.clickFuntion = onClickToSetFrame;
+			 m_efl.clickWhenClone = false;
+			  
+			 m_moduleEyeBlinkEditor.visible = true;
+			 m_moduleEyeBlinkEditor.refresh();
 		}
 		
 		private function onMaskClear(btn : BSSButton):void
@@ -451,7 +475,10 @@ package editor.module.eye
 				
 			}
 		}
-		
+		private function onClickToSetFrame(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String):void
+		{
+			m_moduleEyeBlinkEditor.setFrame(mefs  , _name);
+		}
 		private function onClickToEdit(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String ):void 
 		{
 			m_nameTF.text = "CURRENT: "+_name;
@@ -604,6 +631,9 @@ package editor.module.eye
 			m_eyeBallDDM.clearAllItem();
 			m_eyeLipDDM.clearAllItem();
 			m_moduleEyeFrameList = null;
+			
+			onAddFrame(null);
+			
 			deactivate();
 		}
 		

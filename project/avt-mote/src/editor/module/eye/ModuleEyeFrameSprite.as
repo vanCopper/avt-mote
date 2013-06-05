@@ -44,7 +44,7 @@ package editor.module.eye
 				renderMask(false);
 				
 			maskMode = true;
-			
+			refresh();
 		}
 		private var _maskMode : Boolean;
 		public function set maskMode(m:Boolean):void
@@ -144,7 +144,9 @@ package editor.module.eye
 			if (eyeBall) { eyeBall.dispose(); eyeBall = null; }
 			if (eyeLip) { eyeLip.dispose(); eyeLip = null; }
 			
-
+			if (parent)
+				parent.removeChild(this);
+			data = null;
 		}
 		
 		

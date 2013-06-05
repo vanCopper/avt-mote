@@ -100,16 +100,17 @@ package editor.module.eye
 			if (m_currentItemContainer) 
 			{
 				var _oldData : ModuleEyeFrame = (m_currentItemContainer.mef).data;
-				addTexture(_oldData.flipData() , (m_currentItemContainer.indi).text+"#FLIP" , true);
+				addTexture(_oldData.flipData() , (m_currentItemContainer.indi).text+"#FLIP" , clickWhenClone);
 			}
 		}
+		public var clickWhenClone : Boolean = true;
 		
 		private function onClone(btn:BSSButton):void
 		{
 			if (m_currentItemContainer) 
 			{
 				var _oldData : ModuleEyeFrame = (m_currentItemContainer.mef).data;
-				addTexture(_oldData.cloneData() , (m_currentItemContainer.indi).text+"#COPY" , true);
+				addTexture(_oldData.cloneData() , (m_currentItemContainer.indi).text+"#COPY" , clickWhenClone);
 			}
 		}
 		
