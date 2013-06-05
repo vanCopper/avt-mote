@@ -307,7 +307,7 @@ package   UISuit.UIComponent   {
 		}
 		
 		
-		private function closeMenu()
+		public function closeMenu()
 		: void {
 			if (this.m_scrollContainer.visible)
 			{
