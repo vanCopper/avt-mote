@@ -97,7 +97,7 @@ package editor.module.eye
 					if (s.eyeWhite.Texture2D != undefined)
 					{
 						loadStep++;
-						new TextureLoader(s.eyeWhite.Texture2D[0], onTextureLoadedEW);
+						new TextureLoader(s.eyeWhite.Texture2D[0], onTextureLoadedEW , true);
 					}
 				}
 
@@ -108,7 +108,7 @@ package editor.module.eye
 					if (s.eyeBall.Texture2D != undefined)
 					{	
 						loadStep++;
-						new TextureLoader(s.eyeBall.Texture2D[0] , onTextureLoadedEB);
+						new TextureLoader(s.eyeBall.Texture2D[0] , onTextureLoadedEB , true);
 					}
 				}
 				var _p :Array;
@@ -123,7 +123,7 @@ package editor.module.eye
 					if (s.eyeLip.Texture2D != undefined)
 					{
 						loadStep++;
-						new TextureLoader(s.eyeLip.Texture2D[0] , onTextureLoadedEL);
+						new TextureLoader(s.eyeLip.Texture2D[0] , onTextureLoadedEL , true);
 					}
 				}
 				_p = String(s.eyeLip.position.text()).split(":");
