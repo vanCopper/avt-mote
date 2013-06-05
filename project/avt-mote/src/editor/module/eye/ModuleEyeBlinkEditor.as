@@ -108,9 +108,9 @@ package editor.module.eye
 			
 			if (_btn.getState() == BSSButton.SBST_PRESS)
 			{
-				_btn.text = _name ? "" : _name;
+				_btn.text = _name ? _name : "";
 				
-				if (mefs.data)
+				if (mefs && mefs.data)
 				{
 					if (_btn.numChildren == 5)
 					{

@@ -272,12 +272,15 @@ package editor.module.eye
 				m_eyeLipDDM.closeMenu();
 				 
 				 m_hoverTexture2DBitmap.visible = false;
-				 
+				 m_efl.clearSelect();
+				 m_efl.clickFuntion = null;
+				  
 				 m_eqm.deactivate();
 			}
 			else if (p == 1)
 			{
 				m_moduleEyeBlinkEditor.visible = false;
+				m_efl.clickFuntion = null;
 			}
 		}
 		
@@ -303,7 +306,7 @@ package editor.module.eye
 			 
 			 disablePage(0);
 			 
-			 m_efl.clearSelect();
+			
 			 m_efl.clickFuntion = onClickToSetFrame;
 			 m_efl.clickWhenClone = false;
 			  
