@@ -113,7 +113,7 @@ package
 				
 				if (_xml.name() == "avt-mote")
 				{
-					m_mb.onNew();
+					onNew(null);
 					m_mb.onOpenXML(_xml);
 				} else {
 					CONFIG::ASSERT {

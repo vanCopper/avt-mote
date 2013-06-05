@@ -100,6 +100,9 @@ package editor
 		private var m_textureList : Vector.<Texture2D> = new Vector.<Texture2D>();
 		public function addTexture(_t : Texture2D) : void
 		{
+			if (getTexture2D(_t.name))
+				return;
+			
 			m_textureList.push(_t);
 			
 			if (_t.type)
@@ -164,6 +167,7 @@ package editor
 		public function onNew():void
 		{
 			m_textureList = new Vector.<Texture2D>();
+			
 		}
 		private function onKeyDown(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
 		{

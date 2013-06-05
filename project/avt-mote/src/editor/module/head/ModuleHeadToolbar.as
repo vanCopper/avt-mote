@@ -44,15 +44,18 @@ package editor.module.head
 			btnAM.y = 5 ;
 			lastBtn = addChild(btnAM) ;
 			
-			btnEdit= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_EDIT , true);
+			var _areaArray : Array = [];
+			btnEdit= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_EDIT , true , _areaArray);
 			btnEdit.x = 5 + lastBtn.x + lastBtn.width;
 			btnEdit.y = 5 ;
 			lastBtn = addChild(btnEdit) ;
+			btnEdit.statusMode = true;
 		
-			btnView = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_VIEW , true);
+			btnView = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_VIEW , true, _areaArray);
 			btnView.x = 5 + lastBtn.x + lastBtn.width;
 			btnView.y = 5 ;
 			lastBtn = addChild(btnView) ;
+			btnView.statusMode = true;
 		}
 		
 		public function deactivateAll(exceptArr : Array):void
