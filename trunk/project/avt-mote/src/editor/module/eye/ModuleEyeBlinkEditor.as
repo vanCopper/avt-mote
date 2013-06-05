@@ -15,6 +15,7 @@ package editor.module.eye
 		private var m_lu : SimpleTL;
 		private var m_rc : SimpleTL;
 		private var m_ru : SimpleTL;
+		private var m_player : ModuleEyeBlinkPlayer;
 		
 		public function ModuleEyeBlinkEditor() 
 		{
@@ -62,6 +63,13 @@ package editor.module.eye
 			
 			
 			m_lc.x = m_lu.x = m_rc.x = m_ru.x = 80;
+			
+			m_player = new ModuleEyeBlinkPlayer();
+			addChild(m_player);
+			m_player.x = 400;
+			m_player.y = 300;
+			
+			m_player.reset();
 		}
 		
 		private function onBlinkAddOK(v:int):void
@@ -75,6 +83,8 @@ package editor.module.eye
 			m_lu.setLength(v);
 			m_rc.setLength(v);
 			m_ru.setLength(v);
+			
+			m_player.reset();
 		}
 		
 		public function dispose():void
@@ -98,7 +108,7 @@ package editor.module.eye
 			
 			if (_btn.getState() == BSSButton.SBST_PRESS)
 			{
-				_btn.text = _name;
+				_btn.text = _name ? "" : _name;
 				
 				if (mefs.data)
 				{
@@ -121,6 +131,60 @@ package editor.module.eye
 					}
 				}
 				
+				m_player.leftAnime.length = 0;
+				m_player.rightAnime.length = 0;
+				
+				for each (_btn in m_lc.btnArray)
+				{
+					if (_btn.numChildren == 5)
+					{
+						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+						 m_player.leftAnime.push(_sp.data );
+					}
+					else
+					{
+						m_player.leftAnime.push(null );
+					}
+				}
+				for each (_btn in m_lu.btnArray)
+				{
+					if (_btn.numChildren == 5)
+					{
+						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+						 m_player.leftAnime.push(_sp.data );
+					}
+					else
+					{
+						m_player.leftAnime.push(null );
+					}
+				}
+				
+				for each (_btn in m_rc.btnArray)
+				{
+					if (_btn.numChildren == 5)
+					{
+						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+						 m_player.rightAnime.push(_sp.data );
+					}
+					else
+					{
+						m_player.rightAnime.push(null );
+					}
+				}
+				for each (_btn in m_ru.btnArray)
+				{
+					if (_btn.numChildren == 5)
+					{
+						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+						 m_player.rightAnime.push(_sp.data );
+					}
+					else
+					{
+						m_player.rightAnime.push(null );
+					}
+				}
+				
+				m_player.reset();
 			}
 		}
 		
