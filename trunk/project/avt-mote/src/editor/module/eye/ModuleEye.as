@@ -154,13 +154,16 @@ package editor.module.eye
 			m_content.addChild(m_eqm).y = m_tb.y + m_tb.height; 
 			
 			m_tb.btnImport.releaseFunction = onOpen;
+			m_tb.btnAF.releaseFunction = onAddFrame;
+			m_tb.btnBlink.releaseFunction = onEditBlink;
+			
 			
 			m_efl  = new ModuleEyeFrameLib();
 			m_content.addChild(m_efl);
 			m_efl.x = 650;
 			m_efl.y = 240;
 			m_efl.visible = false;
-			m_efl.clickFuntion = onClick;
+			m_efl.clickFuntion = onClickToEdit;
 			
 			m_eyeChoose = new Sprite();
 			m_nameTF = new TextField(); m_nameTF.width = 180; m_nameTF.text = "CURRENT:";
@@ -246,6 +249,27 @@ package editor.module.eye
 			m_eyeContainer.eyeBall.addEventListener(MouseEvent.MOUSE_UP , onMouse);
 			m_eyeContainer.eyeLip.addEventListener(MouseEvent.MOUSE_UP , onMouse);
 			
+			m_tb.deactivateAll([m_tb.btnImport]);
+		}
+		
+		private function onAddFrame(btn : BSSButton):void
+		{
+			m_eqm.visible =
+			m_eyeContainer.visible =
+			m_eyeChoose.visible = true;
+			
+			 m_efl.clearSelect();
+			 m_efl.clickFuntion = onClickToEdit;
+		}
+		
+		private function onEditBlink(btn : BSSButton):void
+		{
+			 m_eqm.visible =
+			 m_eyeContainer.visible =
+			 m_eyeChoose.visible = false;
+			 
+			 m_efl.clearSelect();
+			 m_efl.clickFuntion = null;
 		}
 		
 		private function onMaskClear(btn : BSSButton):void
@@ -428,7 +452,7 @@ package editor.module.eye
 			}
 		}
 		
-		private function onClick(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String ):void 
+		private function onClickToEdit(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String ):void 
 		{
 			m_nameTF.text = "CURRENT: "+_name;
 			
@@ -517,6 +541,8 @@ package editor.module.eye
 		private function updateDDM():void
 		{
 			m_efl.visible = true;
+			m_tb.activateAll(null);
+			
 			var _ret : Vector.<Texture2D> = Library.getS().getList("EYE");
 			
 			for each(var _t : Texture2D in _ret)
@@ -538,6 +564,7 @@ package editor.module.eye
 			Library.getS().addTexture(_texture);
 			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FLIP" , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
 			//m_tb.deactivateAll([m_tb.btnAR]);
+			
 			
 			updateDDM();
 			
@@ -567,7 +594,7 @@ package editor.module.eye
 		public override function onNew():void
 		{
 			m_tb.deactivateAll([m_tb.btnImport]);
-			onClick(null, null, "");
+			onClickToEdit(null, null, "");
 			m_efl.onNew();
 			m_efl.visible = false;
 			onMaskClear(m_eyeMaskBtn);

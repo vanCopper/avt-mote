@@ -113,21 +113,27 @@ package editor.module.eye
 			}
 		}
 		
-		
+		public function clearSelect():void
+		{
+			if (m_currentItemContainer)
+			{
+				m_currentItemContainer.setNormal();
+				if (clickFuntion != null)
+					clickFuntion(null , null , null);
+				m_currentItemContainer = null;
+			}
+		}
 		
 		private function onDelete(btn:BSSButton):void
 		{
 			if (m_currentItemContainer)
 			{
 				
-				var indi : TextField =  m_currentItemContainer.indi;
-				indi.removeEventListener(Event.CHANGE , onChange);
-				
 				if (clickFuntion != null)
 					clickFuntion(null , null , null);
 				
 				item.removeItem(m_currentItemContainer);
-				
+				m_currentItemContainer.dispose();
 				m_currentItemContainer = null;
 				
 				

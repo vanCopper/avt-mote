@@ -302,7 +302,7 @@ package   UISuit.UIComponent   {
 				return st;
 		}
 
-            
+		public function getState():int { return state; }
 		
 		public function setState (st: int)
 		: void {

@@ -34,12 +34,23 @@ package editor
 		
 		public function onNew():void
 		{
+			
+			var _mdA : ModuleBase
+			
 			for each (var _md : ModuleBase in  m_mdList)
 			{
+				if (_md.getButtonDsp().getState() == BSSButton.SBST_PRESS)
+					_mdA = _md;
 				_md.onNew();
 				_md.getButtonDsp().setState(BSSButton.SBST_IDLE);
 			}
 			
+			if (_mdA)
+			{	
+				_mdA.activate();
+				_md.getButtonDsp().setState(BSSButton.SBST_PRESS);
+				
+			}
 			//m_mdList[0].activate();
 		}
 		public function onSave(__root : XML):void

@@ -28,11 +28,12 @@ package editor.util
 				m_xml = xml;
 				m_filename = xml.name.text();
 			
-				if (Library.getS().getTexture2D(m_filename))
+				var _textureLoaded : Texture2D = Library.getS().getTexture2D(m_filename);
+				if (_textureLoaded && _textureLoaded.bitmapData)
 				{
 					if (m_callback != null)
 					{	
-						m_callback(	m_filename , Library.getS().getTexture2D(m_filename));
+						m_callback(	m_filename , _textureLoaded );
 						m_callback = null;
 					}
 					return;
@@ -60,7 +61,7 @@ package editor.util
 			e.currentTarget.removeEventListener(Event.COMPLETE , onComplete );
 			var ldi : LoaderInfo = (e.currentTarget) as LoaderInfo;
 			
-			var _texture : Texture2D = new Texture2D(Bitmap(ldi.content).bitmapData , m_filename , m_xml.type.text()
+			var _texture : Texture2D = new Texture2D(Bitmap(ldi.content).bitmapData , m_filename.replace("#FLIP" , "") , m_xml.type.text()
 			, Number(m_xml.rectX.text())
 			, Number(m_xml.rectY.text())
 			, Number(m_xml.rectW.text())
@@ -68,7 +69,9 @@ package editor.util
 			);
 			Library.getS().addTexture(_texture);
 			if (m_filp)
-				Library.getS().addTexture(new Texture2D(Bitmap(ldi.content).bitmapData , m_filename+"#FLIP" ,  m_xml.type.text() , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
+				Library.getS().addTexture(new Texture2D(Bitmap(ldi.content).bitmapData , (m_filename.replace("#FLIP" , "") +"#FLIP") ,  m_xml.type.text() , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
+			
+			_texture = Library.getS().getTexture2D(m_filename);//prevent load 2 tiwce
 			if (m_callback != null)
 			{	
 				m_callback(	m_filename , _texture);
