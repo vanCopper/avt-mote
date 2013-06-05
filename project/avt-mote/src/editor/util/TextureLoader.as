@@ -17,9 +17,11 @@ package editor.util
 		private var m_callback : Function;
 		private var m_filename : String;
 		private var m_xml : XML;
+		private var m_filp : Boolean;
 		
-		public function TextureLoader(xml : XML , a_callback : Function) 
+		public function TextureLoader(xml : XML , a_callback : Function , filp : Boolean) 
 		{
+			m_filp = filp;
 			m_callback = a_callback;
 			if (xml.name() == "Texture2D")
 			{
@@ -65,7 +67,8 @@ package editor.util
 			, Number(m_xml.rectH.text())
 			);
 			Library.getS().addTexture(_texture);
-			
+			if (m_filp)
+				Library.getS().addTexture(new Texture2D(Bitmap(ldi.content).bitmapData , m_filename+"#FLIP" ,  m_xml.type.text() , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
 			if (m_callback != null)
 			{	
 				m_callback(	m_filename , _texture);

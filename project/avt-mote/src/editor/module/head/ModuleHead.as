@@ -776,7 +776,7 @@ package editor.module.head
 				}
 				else if (item.name() == "Texture2D")
 				{
-					new TextureLoader(item , onTextureLoaded);
+					new TextureLoader(item , onTextureLoaded , false);
 				}
 				else if (item.name() == "vectex")
 				{
