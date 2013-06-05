@@ -168,7 +168,7 @@ package editor.module.eye
 			
 			var indi : TextField = new TextField();
 			indi.text = a_name ? a_name : "Frame" + (m_frameList.length - 1);
-			indi.addEventListener(Event.CHANGE , onChange);
+
 			indi.x = 105;
 			indi.width = 90;
 			indi.height = 24;
@@ -185,12 +185,7 @@ package editor.module.eye
 			
 		}
 		
-		private function onChange(e:Event):void 
-		{
-			var __item : ItemContainer = e.currentTarget.parent as  ItemContainer;
-			
-			
-		}
+		
 		private var m_currentItemContainer : ItemContainer;
 		//private var m_currentItemContainerFilter : Array = [new GlowFilter(0xFFFFFF00)];
 		
@@ -273,7 +268,9 @@ class ItemContainer extends Sprite {
 	
 	private function onChange(e:Event):void 
 	{
-		mef.name = indi.text;
+		if (mef.data)
+			mef.data.name = indi.text; 
+
 		if (changeFuntion != null )
 		{
 			changeFuntion();
