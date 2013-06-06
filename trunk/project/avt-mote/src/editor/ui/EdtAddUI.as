@@ -25,6 +25,11 @@ package editor.ui
 		{
 			return int(_text.text);
 		}
+		public function set value(v : int) : void
+		{
+			_text.text = ""+v;
+			m_slider.setThumbValue(0, v);
+		}
 		
 		public function EdtAddUI(min : Number, max : Number)
 		{

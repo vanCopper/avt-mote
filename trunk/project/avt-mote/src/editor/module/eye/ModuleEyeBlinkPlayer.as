@@ -26,7 +26,7 @@ package editor.module.eye
 			addChild(curFrameSpL);
 			addChild(curFrameSpR);
 			
-			curFrameSpL.x = -150;
+			curFrameSpL.x = -100;
 			curFrameSpR.x = 50;
 			
 			addEventListener(Event.ENTER_FRAME , onUpdate);

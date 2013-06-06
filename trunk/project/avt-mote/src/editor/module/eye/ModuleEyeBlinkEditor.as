@@ -12,9 +12,9 @@ package editor.module.eye
 	{
 		private var m_eyeBlinkAddUI : EdtAddUI;
 		private var m_lc : SimpleTL;
-		private var m_lu : SimpleTL;
+		private var m_lo : SimpleTL;
 		private var m_rc : SimpleTL;
-		private var m_ru : SimpleTL;
+		private var m_ro : SimpleTL;
 		private var m_player : ModuleEyeBlinkPlayer;
 		
 		public function ModuleEyeBlinkEditor() 
@@ -25,7 +25,7 @@ package editor.module.eye
 			tf.text = "frame length";
 			addChild(tf);
 			
-			m_eyeBlinkAddUI = new EdtAddUI(1, 15);
+			m_eyeBlinkAddUI = new EdtAddUI(1, 10);
 			m_eyeBlinkAddUI.changeFunction = onBlinkAddChanged;
 			m_eyeBlinkAddUI.okFunction = onBlinkAddOK;
 			m_eyeBlinkAddUI.y = 25;
@@ -36,11 +36,11 @@ package editor.module.eye
 			
 			
 			m_lc = new SimpleTL;
-			m_lu = new SimpleTL;
+			m_lo = new SimpleTL;
 			m_rc = new SimpleTL;
-			m_ru = new SimpleTL;
+			m_ro = new SimpleTL;
 			
-			var _arr : Array = [m_lc , m_lu , m_rc , m_ru];
+			var _arr : Array = [m_lc , m_lo , m_rc , m_ro];
 			
 			for (var i : int = 0 ; i < 4 ; i++ )
 			{
@@ -52,17 +52,17 @@ package editor.module.eye
 			}
 			
 			addChild(m_lc);
-			addChild(m_lu);
+			addChild(m_lo);
 			addChild(m_rc);
-			addChild(m_ru);
+			addChild(m_ro);
 			
 			m_lc.setLength(m_eyeBlinkAddUI.value);
-			m_lu.setLength(m_eyeBlinkAddUI.value);
+			m_lo.setLength(m_eyeBlinkAddUI.value);
 			m_rc.setLength(m_eyeBlinkAddUI.value);
-			m_ru.setLength(m_eyeBlinkAddUI.value);
+			m_ro.setLength(m_eyeBlinkAddUI.value);
 			
 			
-			m_lc.x = m_lu.x = m_rc.x = m_ru.x = 80;
+			m_lc.x = m_lo.x = m_rc.x = m_ro.x = 80;
 			
 			m_player = new ModuleEyeBlinkPlayer();
 			addChild(m_player);
@@ -80,9 +80,9 @@ package editor.module.eye
 		private function onBlinkAddChanged(v:int):void
 		{
 			m_lc.setLength(v);
-			m_lu.setLength(v);
+			m_lo.setLength(v);
 			m_rc.setLength(v);
-			m_ru.setLength(v);
+			m_ro.setLength(v);
 			
 			m_player.reset();
 		}
@@ -95,7 +95,63 @@ package editor.module.eye
 				m_eyeBlinkAddUI = null;
 			}
 		}
-		
+		private function refreshPlayer():void
+		{
+			m_player.leftAnime.length = 0;
+			m_player.rightAnime.length = 0;
+			
+			for each (var _btn : BSSButton in m_lc.btnArray)
+			{
+				if (_btn.numChildren == 5)
+				{
+					var _sp : ModuleEyeFrameSprite = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+					 m_player.leftAnime.push(_sp.data );
+				}
+				else
+				{
+					m_player.leftAnime.push(null );
+				}
+			}
+			for each (_btn in m_lo.btnArray)
+			{
+				if (_btn.numChildren == 5)
+				{
+					 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+					 m_player.leftAnime.push(_sp.data );
+				}
+				else
+				{
+					m_player.leftAnime.push(null );
+				}
+			}
+			
+			for each (_btn in m_rc.btnArray)
+			{
+				if (_btn.numChildren == 5)
+				{
+					 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+					 m_player.rightAnime.push(_sp.data );
+				}
+				else
+				{
+					m_player.rightAnime.push(null );
+				}
+			}
+			for each (_btn in m_ro.btnArray)
+			{
+				if (_btn.numChildren == 5)
+				{
+					 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+					 m_player.rightAnime.push(_sp.data );
+				}
+				else
+				{
+					m_player.rightAnime.push(null );
+				}
+			}
+			
+			m_player.reset();
+		}
 		public function setFrame(mefs : ModuleEyeFrameSprite , _name : String):void
 		{
 			for each (var _btn : BSSButton in SimpleTL.s_btnArray)
@@ -131,61 +187,117 @@ package editor.module.eye
 					}
 				}
 				
-				m_player.leftAnime.length = 0;
-				m_player.rightAnime.length = 0;
-				
-				for each (_btn in m_lc.btnArray)
-				{
-					if (_btn.numChildren == 5)
-					{
-						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
-						 m_player.leftAnime.push(_sp.data );
-					}
-					else
-					{
-						m_player.leftAnime.push(null );
-					}
-				}
-				for each (_btn in m_lu.btnArray)
-				{
-					if (_btn.numChildren == 5)
-					{
-						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
-						 m_player.leftAnime.push(_sp.data );
-					}
-					else
-					{
-						m_player.leftAnime.push(null );
-					}
-				}
-				
-				for each (_btn in m_rc.btnArray)
-				{
-					if (_btn.numChildren == 5)
-					{
-						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
-						 m_player.rightAnime.push(_sp.data );
-					}
-					else
-					{
-						m_player.rightAnime.push(null );
-					}
-				}
-				for each (_btn in m_ru.btnArray)
-				{
-					if (_btn.numChildren == 5)
-					{
-						 _sp = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
-						 m_player.rightAnime.push(_sp.data );
-					}
-					else
-					{
-						m_player.rightAnime.push(null );
-					}
-				}
-				
-				m_player.reset();
+				refreshPlayer();
 			}
+		}
+		
+		private function genArrayXML(arr : Array):String
+		{
+			var strVect : Vector.<String> = new Vector.<String>();
+			for each (var _btn : BSSButton in arr)
+			{
+				if (_btn.numChildren == 5)
+				{
+					var _sp : ModuleEyeFrameSprite = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+					if (_sp)
+					{	
+						if (_sp.data)
+							strVect.push(_sp.data.name ? _sp.data.name : "");
+						else
+							strVect.push("");
+					}
+					else
+					{
+						strVect.push("");
+					}
+				}
+				else {
+					strVect.push("");
+				}
+			}
+			
+			return "<frame>" + strVect.join("</frame><frame>") + "</frame>";
+			
+		}
+		
+		
+		
+		public function fromXMLString(s:XML):void
+		{
+			m_eyeBlinkAddUI.value = int(s.EyeBlinkLength.text());
+			onBlinkAddChanged(m_eyeBlinkAddUI.value);
+			
+			
+			fromArrayXML(s.lc.frame , m_lc);
+			fromArrayXML(s.lo.frame , m_lo);
+			fromArrayXML(s.rc.frame , m_rc);
+			fromArrayXML(s.ro.frame , m_ro);
+			
+		}
+		public function loadFrame(getFunc : Function):void
+		{
+			for each (var _btn : BSSButton in SimpleTL.s_btnArray)
+			{
+				if (_btn.numChildren == 5)
+				{
+					var _sp : ModuleEyeFrameSprite = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+					if (_sp)
+						_sp.dispose();
+				}
+				
+				if (_btn.numChildren == 4 && _btn.text && getFunc != null)
+				{
+					var mef : ModuleEyeFrame = getFunc(_btn.text);
+					
+					if (mef)
+					{
+						_sp = mef.createSprite();
+						_sp.height = 28;
+						_sp.scaleX = _sp.scaleY;
+						_sp.x = _btn.width - _sp.width;
+						_sp.y = 1;
+						
+						_btn.addChild(_sp);
+					}
+				}
+			}
+			refreshPlayer();
+		}
+		
+		private function fromArrayXML(xml : XMLList , _lc : SimpleTL):void
+		{
+			var _i : int;
+			for each (var _btn : BSSButton in _lc.btnArray)
+			{
+				_btn.text = xml[_i].text();
+				 _i++;
+			}
+		}
+		
+		public function toXMLString():String
+		{
+			var str : String = "<ModuleEyeBlink>";
+			str += "<EyeBlinkLength>" + m_eyeBlinkAddUI.value + "</EyeBlinkLength>";
+			
+			str += "<lc>";
+				str += genArrayXML(m_lc.btnArray);
+			str += "</lc>";
+			
+			str += "<lo>";
+				str += genArrayXML(m_lo.btnArray);
+			str += "</lo>";
+			
+			str += "<rc>";
+				str += genArrayXML(m_rc.btnArray);
+			str += "</rc>";
+			
+			str += "<ro>";
+				str += genArrayXML(m_ro.btnArray);
+			str += "</ro>";
+			
+			str += "</ModuleEyeBlink>";
+			
+			return str;
 		}
 		
 		public function refresh():void

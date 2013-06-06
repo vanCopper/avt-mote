@@ -119,6 +119,8 @@ package   UISuit.UIComponent   {
 			{
 				 
 				m_thumbList[thumbIndex].x = (newValue - m_min ) * (m_right - m_left) / (m_max - m_min) + m_left;
+				if (changeFunction != null)
+					changeFunction(this);
 			}
 		}
 		
@@ -150,9 +152,12 @@ package   UISuit.UIComponent   {
         				var rightBound : Number = (thumbIndex + 1 < m_thumbList.length) ? m_thumbList[thumbIndex + 1].x : m_right;
         				
         				m_thumbList[thumbIndex].x = Math.max(leftBound, Math.min(newPos , rightBound));
-                        }
-                        else
-                            m_thumbList[thumbIndex].x = newPos;
+				}
+				else
+					m_thumbList[thumbIndex].x = newPos;
+				
+				if (changeFunction != null)
+					changeFunction(this);		
 			}
 		}
 

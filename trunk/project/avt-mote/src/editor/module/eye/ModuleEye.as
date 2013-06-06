@@ -659,14 +659,16 @@ package editor.module.eye
 		private function onModuleEyeFrameInited(_mef : ModuleEyeFrame):void
 		{
 			
-			m_efl.addTexture(_mef);
+			m_efl.addTexture(_mef , _mef.name);
 			updateDDM();
 			
 			if (m_moduleEyeFrameList.length) {
 				var mef : ModuleEyeFrame = new ModuleEyeFrame();
 				mef.fromXMLString(m_moduleEyeFrameList.shift(), onModuleEyeFrameInited);
 			}
-
+			else {
+				m_moduleEyeBlinkEditor.loadFrame(m_efl.getModuleEyeFrameData);
+			}
 		}
 		
 		public override function onOpenXML(__root : XML):void
@@ -691,10 +693,13 @@ package editor.module.eye
 					if (m_moduleEyeFrameList.length) {
 						var mef : ModuleEyeFrame = new ModuleEyeFrame();
 						mef.fromXMLString(m_moduleEyeFrameList.shift(), onModuleEyeFrameInited);
-					}
-					
-						
+					}	
 				}
+				else if (item.name() == "ModuleEyeBlink")
+				{
+					m_moduleEyeBlinkEditor.fromXMLString(item);
+				}
+				
 			}
 						
 			//m_tb.deactivateAll([m_tb.btnImport]);
@@ -707,12 +712,16 @@ package editor.module.eye
 			if (ModuleEyeData.s_frameList && ModuleEyeData.s_frameList.length)
 			{
 				var str : String = "<ModuleEye>";
-				str += "<ModuleEyeFrames>";
-				for each (var _mef : ModuleEyeFrame in ModuleEyeData.s_frameList)
-				{
-					str += _mef.toXMLString();
-				}
-				str += "</ModuleEyeFrames>";
+					str += "<ModuleEyeFrames>";
+					for each (var _mef : ModuleEyeFrame in ModuleEyeData.s_frameList)
+					{
+						str += _mef.toXMLString();
+					}
+					str += "</ModuleEyeFrames>";
+					
+					str += m_moduleEyeBlinkEditor.toXMLString();
+					
+				
 				str += "</ModuleEye>";
 				
 				__root.appendChild(
