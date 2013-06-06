@@ -144,13 +144,24 @@ package editor.module.eye
 			
 		}
 		
+		public function getModuleEyeFrameData(_v : String) : ModuleEyeFrame
+		{
+			for each (var mef : ModuleEyeFrame in m_frameList)
+			{
+				if (mef.name == _v)
+					return mef;
+			}
+			
+			return null;
+		}
+		
 		private function onAdd(btn:BSSButton):void 
 		{
-			addTexture(new ModuleEyeFrame());
+			addTexture(new ModuleEyeFrame() , null);
 		}
 		
 		private var m_frameList : Vector.<ModuleEyeFrame> = ModuleEyeData.s_frameList;
-		public function addTexture(_t : ModuleEyeFrame , a_name : String = null , clickAtAdd : Boolean = false ) : void
+		public function addTexture(_t : ModuleEyeFrame , a_name : String , clickAtAdd : Boolean = false ) : void
 		{
 			m_frameList.push(_t);
 			
