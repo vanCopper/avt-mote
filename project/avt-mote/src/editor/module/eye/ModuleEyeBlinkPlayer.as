@@ -85,7 +85,7 @@ package editor.module.eye
 		public function reset():void
 		{
 			curFrame = 0;
-			curLag = 0;
+			curLag = 60;
 		}
 	}
 
