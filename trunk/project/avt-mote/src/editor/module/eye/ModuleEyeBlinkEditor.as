@@ -85,6 +85,8 @@ package editor.module.eye
 			m_ro.setLength(v);
 			
 			m_player.reset();
+			
+			refreshPlayer();
 		}
 		
 		public function dispose():void
