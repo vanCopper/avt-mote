@@ -475,7 +475,7 @@ package editor.ui
 		{
 			var r:Number = (a*b)/Math.sqrt(a*a*Math.sin(angle)*Math.sin(angle) + b*b*Math.cos(angle)*Math.cos(angle) );
 			var _x:Number=ox + Math.cos(angle) * r;
-			var _y:Number=ox + Math.sin(angle) * r;
+			var _y:Number=oy + Math.sin(angle) * r;
 			return {x:_x, y:_y};
 		}
 		

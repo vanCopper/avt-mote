@@ -44,6 +44,7 @@ package editor.config
 		public static var MODULE_EYE_IMPORT_IMAGE:String = "import images";
 		public static var MODULE_EYE_ADD_FRAME:String = "add frame";
 		public static var MODULE_EYE_EDIT_BLINK:String = "edit blink";
+		public static var MODULE_EYE_EDIT_AREA:String = "edit move area";
 	}
 
 }
