@@ -116,6 +116,10 @@ package editor.module.eye
 		public function renderMask(showLine:Boolean):void
 		{
 			eyeWBMask.graphics.clear();
+			
+			if (!data)
+				return;
+				
 			var _eyeMaskData : Vector.<EdtVertex3D> = data.eyeMaskData;
 			var idx : int = 2;
 			

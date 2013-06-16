@@ -54,7 +54,7 @@ package editor.module.eye
 		private var m_hoverTextureSprite : Sprite;
 		
 		private var m_moduleEyeBlinkEditor : ModuleEyeBlinkEditor;
-		
+		private var m_moduleEyeMA : ModuleEyeMoveArea;
 		
 		public override function dispose():void
 		{
@@ -158,7 +158,7 @@ package editor.module.eye
 			m_tb.btnImport.releaseFunction = onOpen;
 			m_tb.btnAF.releaseFunction = onAddFrame;
 			m_tb.btnBlink.releaseFunction = onEditBlink;
-			
+			m_tb.btnMove.releaseFunction = onEditMove;
 			
 			m_efl  = new ModuleEyeFrameLib();
 			m_content.addChild(m_efl);
@@ -257,6 +257,11 @@ package editor.module.eye
 			m_moduleEyeBlinkEditor.y = m_tb.y + m_tb.height;
 			m_content.addChild(m_moduleEyeBlinkEditor);
 			m_moduleEyeBlinkEditor.visible = false;
+			
+			m_moduleEyeMA = new ModuleEyeMoveArea();
+			m_moduleEyeMA.y = m_tb.y + m_tb.height;
+			m_content.addChild(m_moduleEyeMA);
+			m_moduleEyeMA.visible = false;
 		}
 		
 		private function disablePage(p:int):void
@@ -282,11 +287,18 @@ package editor.module.eye
 				m_moduleEyeBlinkEditor.visible = false;
 				m_efl.clickFuntion = null;
 			}
+			else if (p == 2)
+			{
+				m_moduleEyeMA.visible = false;
+				m_moduleEyeMA.deactivate();
+				m_efl.clickFuntion = null;
+			}
 		}
 		
 		private function onAddFrame(btn : BSSButton):void
 		{
 			disablePage(1);
+			disablePage(2);
 			
 			m_eqm.visible =
 			m_eyeContainer.visible =
@@ -305,7 +317,7 @@ package editor.module.eye
 		{
 			 
 			 disablePage(0);
-			 
+			 disablePage(2);
 			
 			 m_efl.clickFuntion = onClickToSetFrame;
 			 m_efl.clickWhenClone = false;
@@ -313,6 +325,19 @@ package editor.module.eye
 			 m_moduleEyeBlinkEditor.visible = true;
 			 m_moduleEyeBlinkEditor.refresh();
 		}
+		
+		private function onEditMove(btn : BSSButton):void
+		{
+			 
+			 disablePage(0);
+			 disablePage(1);
+			
+			 m_moduleEyeMA.visible = true;
+			 m_moduleEyeMA.activate();
+			 m_efl.clickFuntion = onClickToSetTemplate;
+			 m_efl.clickWhenClone = false;
+		}
+		
 		
 		private function onMaskClear(btn : BSSButton):void
 		{
@@ -493,6 +518,11 @@ package editor.module.eye
 				
 			}
 		}
+		
+		private function onClickToSetTemplate(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String):void
+		{
+			m_moduleEyeMA.setTemplate(mefs  , _name);
+		}
 		private function onClickToSetFrame(__item : Sprite , mefs : ModuleEyeFrameSprite , _name : String):void
 		{
 			m_moduleEyeBlinkEditor.setFrame(mefs  , _name);
@@ -651,6 +681,8 @@ package editor.module.eye
 			m_moduleEyeFrameList = null;
 			
 			onAddFrame(null);
+			
+			m_moduleEyeMA.reset();
 			
 			deactivate();
 		}
