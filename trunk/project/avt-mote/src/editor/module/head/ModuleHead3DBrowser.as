@@ -45,6 +45,11 @@ package editor.module.head
 		private var m_xyzShape : Shape = new Shape();
 		private var btn : BSSButton;
 		
+		public function set disableEdit (v : Boolean) : void
+		{
+			btn.visible = !v;
+		}
+		
 		public function set approximationMode(v : Boolean) : void
 		{
 			if (v)
@@ -422,11 +427,18 @@ package editor.module.head
 		
 		public function activate() : void
 		{
+			m_controler.activate();
 			m_controler.rotation = ModuleHeadData.s_rotorR * 180 / Math.PI;
 			ModuleHeadData.genVertexRelativeData();
 			render(m_roX,m_roY,m_roZ);
 		
 		}
+		
+		public function deactivate() : void
+		{
+			m_controler.deactivate();
+		}
+		
 		
 		public function dispose() : void 
 		{
