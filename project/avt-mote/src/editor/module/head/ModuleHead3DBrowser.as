@@ -431,6 +431,29 @@ package editor.module.head
 			return md;
 		}
 		
+		
+		public function getVertexMatrixed():Vector.<Vertex3D>
+		{
+			var md : Matrix4x4 = getMatrix(m_roX, m_roY, m_roZ);
+			var __v : Vector.<Vertex3D> = new Vector.<Vertex3D>();
+		
+			//md = mY;
+			
+			for each( var ev : Vertex3D in ModuleHeadData.s_vertexRelativeData)
+			{
+				var _v : Vertex3D = new Vertex3D();
+				
+				_v.x = (md.Xx * ev.x + md.Xy * ev.y + md.Xz * ev.z) ;
+				_v.y = (md.Yx * ev.x + md.Yy * ev.y + md.Yz * ev.z) ;
+				_v.z = (md.Zx * ev.x + md.Zy * ev.y + md.Zz * ev.z) ;
+				
+				__v.push(_v);
+				
+			}
+			
+			return __v;
+		}
+		
 		public function getInvertMatrix():Matrix4x4
 		{
 			var md : Matrix4x4 = getMatrix(m_roX, m_roY, m_roZ);
@@ -442,6 +465,9 @@ package editor.module.head
 		{
 			m_controler.activate();
 			m_controler.rotation = ModuleHeadData.s_rotorR * 180 / Math.PI;
+			
+			
+			
 			ModuleHeadData.genVertexRelativeData();
 			render(m_roX,m_roY,m_roZ);
 		

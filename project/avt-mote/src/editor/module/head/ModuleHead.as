@@ -601,7 +601,7 @@ package editor.module.head
 					(m_roterVector[2].y - m_roterVector[0].y)
 					,(m_roterVector[2].x - m_roterVector[0].x)
 				);
-				ModuleHeadData.s_rotorX = m_headRoot.x ;
+				ModuleHeadData.s_rotorX = m_headRoot.x;
 				ModuleHeadData.s_rotorY = m_headRoot.y;
 			
 				

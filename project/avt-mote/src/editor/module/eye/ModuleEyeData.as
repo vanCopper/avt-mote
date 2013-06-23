@@ -1,5 +1,6 @@
 package editor.module.eye 
 {
+	import editor.struct.Plane3D;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -23,12 +24,19 @@ package editor.module.eye
 		public static var s_frameL : ModuleEyeFrame;
 		public static var s_frameR : ModuleEyeFrame;
 		
+		public static var s_eyeLPlane : Plane3D = new Plane3D();
+		public static var s_eyeRPlane : Plane3D = new Plane3D();
+		
 		
 		public static function reset():void
 		{
 			s_frameL = null;
 			s_frameR = null;
 			s_frameList.length = 0;
+			
+			
+			s_eyeLPlane.reset();
+			s_eyeRPlane.reset();
 		}
 		
 	}
