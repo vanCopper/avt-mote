@@ -75,6 +75,9 @@ package editor.module.head
 			addChild(m_controler);
 			addChild(m_textCnt);
 			
+			m_viewer.x = EdtDEF.QUADRANT_WIDTH;
+			m_viewer.y = EdtDEF.QUADRANT_HEIGHT;
+			
 			m_controler.x = m_controler.y = 600;
 			
 			
@@ -315,68 +318,20 @@ package editor.module.head
 			m_tfZRR.text = getDataText(zValue);
 			
 			
-			var md : Matrix4x4;
-			var mX : Matrix4x4 = new Matrix4x4();
-			var mY : Matrix4x4 = new Matrix4x4();
-			var mZ : Matrix4x4 = new Matrix4x4();
-			var mXY : Matrix4x4;
-			
-			var v : Vertex3D = new Vertex3D();
-			var vX : Vertex3D = new Vertex3D();
-			var vY : Vertex3D = new Vertex3D();
-			var vZ : Vertex3D = new Vertex3D();
+			var md : Matrix4x4 = getMatrix(xValue , yValue , zValue);
+		
 				
 			if (ModuleHeadData.s_approximationMode)
 			{
-				v = new Vertex3D();
-				v.y = Math.sin(ModuleHeadData.s_rotorR);
-				v.x = Math.cos(ModuleHeadData.s_rotorR);
-				
-				vX.x = v.x;
-				vX.y = v.y;
-				
-				//trace(vX.x , vX.y)
-				
-				Matrix4x4.rotateArbitraryAxis(mX ,  vX  , xValue);
-				//Matrix4x4.rotateArbitraryAxis(mXT , vX  , -xValue);
-				
-				mX.effectPoint3D(v.y , -v.x , 0 , vY);
-				Matrix4x4.rotateArbitraryAxis(mY , vY  , yValue);
-				
-				mXY = Matrix4x4.contact(mX , mY); 
-				
-				mXY.effectPoint3D(0 , 0 , 1 ,vZ);
-				Matrix4x4.rotateArbitraryAxis(mZ , vZ  , -zValue);
-				
-				
-				md = Matrix4x4.contact(mXY , mZ);
+			
 			}
 			else {
-				vX = ModuleHeadData.s_yRotor;
-				
-				
-				Matrix4x4.rotateArbitraryAxis(mX , vX  , xValue);
-				
-				
-				mX.effectPoint3D(ModuleHeadData.s_xRotor.x , ModuleHeadData.s_xRotor.y , ModuleHeadData.s_xRotor.z , vY);
-				Matrix4x4.rotateArbitraryAxis(mY , vY  , yValue);
-				mXY = Matrix4x4.contact(mX , mY); 
-				
-				
-				mXY.effectPoint3D(ModuleHeadData.s_zRotor.x , ModuleHeadData.s_zRotor.y , ModuleHeadData.s_zRotor.z , vZ);
-				Matrix4x4.rotateArbitraryAxis(mZ , vZ  , zValue);
-				md = Matrix4x4.contact(mXY , mZ);
-				
 				
 				m_tfXRO.text = getDataText(xValue + ModuleHeadData.s_absRX);
 				m_tfYRO.text = getDataText(yValue + ModuleHeadData.s_absRY);
 				m_tfZRO.text = getDataText(zValue + ModuleHeadData.s_absRZ);
 			
 				var _yRotor : Vertex3D = ModuleHeadData.s_yRotor.clone();
-				//_yRotor.x = -_yRotor.x;
-				//_yRotor.y = -_yRotor.y;
-				//_yRotor.z = -_yRotor.x;
-				
 				var _xRotor : Vertex3D = ModuleHeadData.s_xRotor.clone();
 				var _zRotor : Vertex3D = ModuleHeadData.s_zRotor.clone();
 				
@@ -415,14 +370,72 @@ package editor.module.head
 				_vx = (md.Xx * ev.x + md.Xy * ev.y + md.Xz * ev.z) ;
 				_vy = (md.Yx * ev.x + md.Yy * ev.y + md.Yz * ev.z) ;
 				
-				__v.push(_vx + EdtDEF.QUADRANT_WIDTH );
-				__v.push(_vy + EdtDEF.QUADRANT_HEIGHT );
+				__v.push(_vx  );
+				__v.push(_vy  );
 				
 			}
 
 			{
 				ModuleHeadData.drawTriangles(m_viewer.graphics , __v);
 			}
+		}
+		
+		private function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4
+		{
+			var md : Matrix4x4;
+			var mX : Matrix4x4 = new Matrix4x4();
+			var mY : Matrix4x4 = new Matrix4x4();
+			var mZ : Matrix4x4 = new Matrix4x4();
+			var mXY : Matrix4x4;
+			
+			var v : Vertex3D = new Vertex3D();
+			var vX : Vertex3D = new Vertex3D();
+			var vY : Vertex3D = new Vertex3D();
+			var vZ : Vertex3D = new Vertex3D();
+				
+			if (ModuleHeadData.s_approximationMode)
+			{
+				v = new Vertex3D();
+				v.y = Math.sin(ModuleHeadData.s_rotorR);
+				v.x = Math.cos(ModuleHeadData.s_rotorR);
+				
+				vX.x = v.x;
+				vX.y = v.y;
+			
+				Matrix4x4.rotateArbitraryAxis(mX ,  vX  , xValue);
+				
+				mX.effectPoint3D(v.y , -v.x , 0 , vY);
+				Matrix4x4.rotateArbitraryAxis(mY , vY  , yValue);
+				
+				mXY = Matrix4x4.contact(mX , mY); 
+				mXY.effectPoint3D(0 , 0 , 1 ,vZ);
+				Matrix4x4.rotateArbitraryAxis(mZ , vZ  , -zValue);
+				
+				
+				md = Matrix4x4.contact(mXY , mZ);
+			}
+			else {
+				vX = ModuleHeadData.s_yRotor;
+				Matrix4x4.rotateArbitraryAxis(mX , vX  , xValue);
+				
+				mX.effectPoint3D(ModuleHeadData.s_xRotor.x , ModuleHeadData.s_xRotor.y , ModuleHeadData.s_xRotor.z , vY);
+				Matrix4x4.rotateArbitraryAxis(mY , vY  , yValue);
+				mXY = Matrix4x4.contact(mX , mY); 
+				
+				mXY.effectPoint3D(ModuleHeadData.s_zRotor.x , ModuleHeadData.s_zRotor.y , ModuleHeadData.s_zRotor.z , vZ);
+				Matrix4x4.rotateArbitraryAxis(mZ , vZ  , zValue);
+				md = Matrix4x4.contact(mXY , mZ);
+				
+			}
+			
+			return md;
+		}
+		
+		public function getInvertMatrix():Matrix4x4
+		{
+			var md : Matrix4x4 = getMatrix(m_roX, m_roY, m_roZ);
+			md.invert();
+			return md;
 		}
 		
 		public function activate() : void

@@ -545,6 +545,9 @@ package editor.module.eye
 			var l : String = s.left.text();
 			var r : String = s.right.text();
 			var arr : Array;
+			
+			setData();
+			
 			if (l && l.length)
 			{
 				arr = l.split(",");

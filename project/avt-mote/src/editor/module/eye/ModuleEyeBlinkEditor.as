@@ -186,6 +186,13 @@ package editor.module.eye
 						_sp.y = 1;
 						
 						_btn.addChild(_sp);
+						
+						if (_btn == m_lc.btnArray[0])
+							ModuleEyeData.s_frameL = mefs.data;
+						else if (_btn == m_rc.btnArray[0])
+							ModuleEyeData.s_frameR = mefs.data;
+						
+						
 					}
 				}
 				
@@ -260,9 +267,17 @@ package editor.module.eye
 						_sp.y = 1;
 						
 						_btn.addChild(_sp);
+						
+						if (_btn == m_lc.btnArray[0])
+							ModuleEyeData.s_frameL = mef;
+						else if (_btn == m_rc.btnArray[0])
+							ModuleEyeData.s_frameR = mef;
+						
 					}
 				}
 			}
+			
+			
 			refreshPlayer();
 		}
 		
