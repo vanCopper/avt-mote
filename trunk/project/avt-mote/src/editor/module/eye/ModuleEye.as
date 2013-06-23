@@ -164,7 +164,6 @@ package editor.module.eye
 			
 			
 			m_efl  = new ModuleEyeFrameLib();
-			m_content.addChild(m_efl);
 			m_efl.x = 650;
 			m_efl.y = 240;
 			m_efl.visible = false;
@@ -271,6 +270,9 @@ package editor.module.eye
 			m_content.addChild(m_moduleEyeLocate);
 			m_moduleEyeLocate.visible = false;
 			
+			
+			
+			m_content.addChild(m_efl);
 		}
 		
 		private function disablePage(p:int):void
@@ -719,6 +721,8 @@ package editor.module.eye
 			onAddFrame(null);
 			
 			m_moduleEyeMA.reset();
+			
+			ModuleEyeData.reset();
 			
 			deactivate();
 		}

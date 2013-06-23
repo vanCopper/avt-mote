@@ -1,5 +1,6 @@
 package editor.struct 
 {
+	import adobe.utils.CustomActions;
 	import flash.geom.Vector3D;
 	/**
 	 * ...
@@ -150,9 +151,139 @@ package editor.struct
 			pOut.Ty = 0;
 			pOut.Tz = 0;
 			pOut.Tw = 1;
-}
-
+		}
 		
+		
+		public function invert():void
+		{
+			var a : Vector.<Number> = Vector.<Number>([
+				Xx 
+				,Xy 
+				,Xz 
+				,Xw 
+				
+				,Yx 
+				,Yy 
+				,Yz 
+				,Yw 
+				
+				
+				,Zx 
+				,Zy 
+				,Zz 
+				,Zw 
+				
+				
+				,Tx 
+				,Ty 
+				,Tz 
+				,Tw 
+			]);
+			
+			const n : int = 4;
+			var _is : Vector.<int> = new Vector.<int>(4, true);
+			var _js : Vector.<int> = new Vector.<int>(4, true);
+		
+			var i : int;
+			var j : int;
+			var k : int;
+			var l : int;
+			var u : int;
+			var v : int;
+			
+			
+			var  d : Number;
+			var  p : Number;
+			
+			for (k=0; k <= n-1; k++)
+			{ 
+				d=0.0;
+				for (i=k; i <= n-1; i++)
+				for (j=k; j <= n-1; j++)
+				{ 
+					l= i * n +j; p= Math.abs(a[l]);
+					if (p>d) { d=p; _is[k]=i; _js[k]=j;}
+				}
+				if (d+1.0==1.0)
+				{ 
+					//free(_is); free(js); printf("err**not inv\n");
+					ASSERT(false , "err**not inv");
+					return/*(0)*/;
+				}
+				if (_is[k]!=k)
+					for (j = 0; j<= n-1; j++)
+					{ 
+						u=k* n+j; v=_is[k]*n+j;
+						p=a[u]; a[u]=a[v]; a[v]=p;
+					}
+
+				if (_js[k]!=k)
+					for (i=0; i<=n-1; i++)
+					{
+						u=i*n+k; v=i*n+_js[k];
+						p=a[u]; a[u]=a[v]; a[v]=p;
+					}
+
+				l=k*n+k;
+				a[l]=1.0/a[l];
+				for (j=0; j<=n-1; j++)
+					if (j!=k)
+					{ u=k*n+j; a[u]=a[u]*a[l];}
+					for (i=0; i<=n-1; i++)
+						if (i!=k)
+							for (j=0; j<=n-1; j++)
+								if (j!=k)
+								{ 
+									u=i*n+j;
+									a[u]=a[u]-a[i*n+k]*a[k*n+j];
+								}
+					for (i=0; i<=n-1; i++)
+						if (i!=k)
+						{ u=i*n+k; a[u]=-a[u]*a[l];}
+			}
+
+			for (k=n-1; k>=0; k--)
+			{ 
+				if (_js[k]!=k)
+				for (j=0; j<=n-1; j++)
+				{ 
+					u=k*n+j; v=_js[k]*n+j;
+					p=a[u]; a[u]=a[v]; a[v]=p;
+				}
+				if (_is[k]!=k)
+					for (i=0; i<=n-1; i++)
+					{ 
+						u=i*n+k; v=i*n+_is[k];
+						p=a[u]; a[u]=a[v]; a[v]=p;
+					}
+			}
+			
+			
+			Xx = a[0];
+			Xy = a[1];
+			Xz = a[2];
+			Xw = a[3];
+				
+			Yx = a[4];
+			Yy = a[5];
+			Yz = a[6];
+			Yw = a[7];
+				
+				
+			Zx = a[8];
+			Zy = a[9];
+			Zz = a[10];
+			Zw = a[11];
+				
+				
+			Tx = a[12];
+			Ty = a[13];
+			Tz = a[14];
+			Tw = a[15];
+		}
+
+			
+			
 	}
 
 }
