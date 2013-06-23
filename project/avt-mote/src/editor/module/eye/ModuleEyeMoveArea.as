@@ -125,6 +125,7 @@ package editor.module.eye
 		public function reset():void
 		{
 			ModuleEyeData.s_eaL = NaN;
+			ModuleEyeData.s_eaR = NaN;
 			
 			m_lastLModuleEyeFrame = null;
 			m_lastRModuleEyeFrame = null;
@@ -374,6 +375,7 @@ package editor.module.eye
 			m_lastLModuleEyeFrame = null;
 			m_lastRModuleEyeFrame = null;
 			
+			deactivate();
 			
 			GraphicsUtil.removeAllChildrenWithDispose(this);
 		}
@@ -507,6 +509,77 @@ package editor.module.eye
 			setData();
 			
 		}
+		
+		public function toXMLString():String
+		{
+			var str : String = "<ModuleEyeMoveArea>";
+				str += "<left>";
+					if (!isNaN(ModuleEyeData.s_eaL))
+						str += ModuleEyeData.s_eaL + "," +
+							   ModuleEyeData.s_ebL + "," +
+							   ModuleEyeData.s_erL + "," +
+							   ModuleEyeData.s_eCenterLX + "," +
+							   ModuleEyeData.s_eCenterLY
+				str += "</left>";
+			
+				str += "<right>";
+					if (!isNaN(ModuleEyeData.s_eaR))
+						str += ModuleEyeData.s_eaR + "," +
+							   ModuleEyeData.s_ebR + "," +
+							   ModuleEyeData.s_erR + "," +
+							   ModuleEyeData.s_eCenterRX + "," +
+							   ModuleEyeData.s_eCenterRY
+				str += "</right>";
+			
+			
+			str += "</ModuleEyeMoveArea>";
+			
+			return str;
+			
+		}
+		
+		
+		
+		public function fromXMLString(s:XML):void
+		{
+			var l : String = s.left.text();
+			var r : String = s.right.text();
+			var arr : Array;
+			if (l && l.length)
+			{
+				arr = l.split(",");
+				
+				ModuleEyeData.s_eaL = Number(arr[0]);
+				ModuleEyeData.s_ebL = Number(arr[1]);
+				ModuleEyeData.s_erL = Number(arr[2]);
+				ModuleEyeData.s_eCenterLX = Number(arr[3]);
+				ModuleEyeData.s_eCenterLY = Number(arr[4]);
+			}
+			
+			if (r && r.length)
+			{
+				arr = r.split(",");
+				
+				ModuleEyeData.s_eaR = Number(arr[0]);
+				ModuleEyeData.s_ebR = Number(arr[1]);
+				ModuleEyeData.s_erR = Number(arr[2]);
+				ModuleEyeData.s_eCenterRX = Number(arr[3]);
+				ModuleEyeData.s_eCenterRY = Number(arr[4]);
+			}
+			
+			/*
+			m_eyeBlinkAddUI.value = int(s.EyeBlinkLength.text());
+			onBlinkAddChanged(m_eyeBlinkAddUI.value);
+			
+			
+			fromArrayXML(s.lc.frame , m_lc);
+			fromArrayXML(s.lo.frame , m_lo);
+			fromArrayXML(s.rc.frame , m_rc);
+			fromArrayXML(s.ro.frame , m_ro);
+			*/
+		}
+		
+		
 		
 	}
 

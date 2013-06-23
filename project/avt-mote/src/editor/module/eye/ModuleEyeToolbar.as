@@ -16,6 +16,8 @@ package editor.module.eye
 		public var btnAF : BSSButton;
 		public var btnBlink : BSSButton;
 		public var btnMove : BSSButton;
+		public var btnLocate : BSSButton;
+		
 		
 		/*public var btnAC : BSSButton;
 		public var btnAM : BSSButton;
@@ -53,6 +55,11 @@ package editor.module.eye
 			lastBtn = addChild(btnMove) ;
 			btnMove.statusMode = true;
 			
+			btnLocate= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_LOCATE , true, _areaArray);
+			btnLocate.x = 5 + lastBtn.x + lastBtn.width;
+			btnLocate.y = 5 ;
+			lastBtn = addChild(btnLocate) ;
+			btnLocate.statusMode = true;
 			
 			/*
 			btnAR= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_ADD_ROTOR , true);
@@ -84,7 +91,7 @@ package editor.module.eye
 		}
 		public function activateAll(exceptArr : Array):void
 		{
-			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove];
+			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove ,btnLocate];
 			
 			
 			for each (var btn : BSSButton in _arr)
@@ -99,7 +106,7 @@ package editor.module.eye
 		}
 		public function deactivateAll(exceptArr : Array):void
 		{
-			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove];
+			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove ,btnLocate];
 			
 			for each (var btn : BSSButton in _arr)
 			{

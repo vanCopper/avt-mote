@@ -1,5 +1,6 @@
 package editor.ui
 {
+	
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -56,15 +57,72 @@ package editor.ui
 			
 			drawCircle();
 				
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
+			//this.addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 		
+		}
+		private var m_active : Boolean;
+		
+		import CallbackUtil.CallbackCenter;
+		import editor.config.CALLBACK;
+
+		private function callbackFunc(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		{
+			if (m_active)
+			{
+				if (evtId == CALLBACK.AS3_ON_STAGE_MOUSE_DOWN)
+				{
+					onDownHandler(args as MouseEvent);
+				}
+				else if (evtId == CALLBACK.AS3_ON_STAGE_MOUSE_MOVE)
+				{
+					onMoveHandler(args as MouseEvent);
+				}
+				else if (evtId == CALLBACK.AS3_ON_STAGE_MOUSE_UP)
+				{
+					onUpHandler(args as MouseEvent);
+				}
+			}
+			
+			
+			return CallbackCenter.EVENT_OK;
+		}
+		
+		public function activate():void
+		{
+			if (!m_active)
+			{
+				
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_DOWN , callbackFunc);
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , callbackFunc);
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , callbackFunc);
+				
+				m_active = true;
+			}
+			clearStatus();
+		}
+		
+		public function deactivate():void
+		{
+			if (m_active)
+			{
+				
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_DOWN , callbackFunc);
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , callbackFunc);
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , callbackFunc);
+				
+				m_active = false;
+			}
 		}
 		
 		protected function onAddToStage(event:Event):void
 		{
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, onDownHandler);
-			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMoveHandler);
+			//this.removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
+			//stage.addEventListener(MouseEvent.MOUSE_DOWN, onDownHandler);
+			//stage.addEventListener(MouseEvent.MOUSE_MOVE, onMoveHandler);
+			//stage.addEventListener(MouseEvent.MOUSE_UP, onUpHandler);
+
+			
+			
 			clearStatus();
 		}		
 		
@@ -75,12 +133,13 @@ package editor.ui
 			zShape = null;
 			sectorShape = null;
 		
-			if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+			/*if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
 				stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMoveHandler);
 			if (stage.hasEventListener(MouseEvent.MOUSE_UP))	
 				stage.removeEventListener(MouseEvent.MOUSE_UP, onUpHandler);
 			if (stage.hasEventListener(MouseEvent.MOUSE_DOWN))	
-				stage.removeEventListener(MouseEvent.MOUSE_DOWN, onDownHandler);	
+				stage.removeEventListener(MouseEvent.MOUSE_DOWN, onDownHandler);
+			*/
 			
 		}
 		private function getAxisValue() : Number
@@ -232,7 +291,7 @@ package editor.ui
 			if(getDistance(0,0,mouseX,mouseY)>radius+10)return;
 			
 			isDown = true;
-			stage.addEventListener(MouseEvent.MOUSE_UP, onUpHandler);
+
 			clearStatus();
 			
 			endAngle = startAngle = getAngleByPoint(0,0, mouseX, mouseY);
@@ -282,7 +341,6 @@ package editor.ui
 			if(isDown)
 			{
 				isDown = false;
-				stage.removeEventListener(MouseEvent.MOUSE_UP, onUpHandler);
 				
 				sectorShape.graphics.clear();
 				

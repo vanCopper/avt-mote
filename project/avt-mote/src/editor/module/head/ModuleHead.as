@@ -99,7 +99,10 @@ package editor.module.head
 			m_tb.btnEdit.releaseFunction = function(btn:BSSButton)
 			:void {
 				if (m_browser.parent)
+				{	
 					m_browser.parent.removeChild(m_browser);
+					m_browser.deactivate();
+				}
 				if (!m_eqm.parent)
 					m_content.addChild(m_eqm);
 				m_eqm.activate();
@@ -919,8 +922,6 @@ package editor.module.head
 			}
 			if (m_browser)
 			{
-				if (!m_browser.parent)
-					m_content.addChild(m_browser); //TODO may not in stage
 				m_browser.dispose(); 
 				m_browser = null;
 			}
