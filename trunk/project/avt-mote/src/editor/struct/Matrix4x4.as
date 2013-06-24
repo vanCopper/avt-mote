@@ -33,28 +33,29 @@ package editor.struct
 		
 		public function identity():void
 		{
-			Xx = 0;
+			Xx = 1;
 			Xy = 0;
 			Xz = 0;
 			Xw = 0;
 			
 			Yx = 0;
-			Yy = 0;
+			Yy = 1;
 			Yz = 0;
 			Yw = 0;
 			
 			
 			Zx = 0;
 			Zy = 0;
-			Zz = 0;
+			Zz = 1;
 			Zw = 0;
 			
 			
 			Tx = 0;
 			Ty = 0;
 			Tz = 0;
-			Tw = 0;
+			Tw = 1;
 		}
+		
 		public function Matrix4x4() 
 		{
 			

@@ -233,7 +233,7 @@ package editor.module.head
 					_roterVectorL.length = 0;
 					_roterVectorR.length = 0;
 						
-					_edtVectorAll.push(m_edtVectorAll[j].cloneV());
+					_edtVectorAll.push(m_edtVectorAll[j].cloneEdtVertex3D());
 					for (var i : int = 0 ; i < s ; i++ )
 					{
 						var rate : Number = (1 + i) / sp;
@@ -269,7 +269,7 @@ package editor.module.head
 					_roterVectorR.reverse();	
 					for each (ev in _roterVectorR)
 						_edtVectorAll.push(ev);
-					_edtVectorAll.push(m_edtVectorAll[j + 2].cloneV());	
+					_edtVectorAll.push(m_edtVectorAll[j + 2].cloneEdtVertex3D());	
 					
 					
 					/*

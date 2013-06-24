@@ -1,6 +1,8 @@
 package editor.module.eye 
 {
 	import editor.Library;
+	import editor.struct.Matrix4x4;
+	import editor.struct.Plane3D;
 	import editor.struct.Texture2D;
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtVertex3D;
@@ -28,6 +30,7 @@ package editor.module.eye
 		
 		
 		public var eyeMaskData : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+		public var eyeVertex3D :  Vector.<Vertex3D>;
 		
 		public function ModuleEyeFrame() 
 		{
@@ -37,6 +40,104 @@ package editor.module.eye
 			
 		}
 		
+		
+		private function dealEyeVertexL(v : Vector.<Vertex3D>):void
+		{
+			dealVertex3D(v , ModuleEyeData.s_eyeLScale , ModuleEyeData.s_eyeLPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeLLocateX , ModuleEyeData.s_eyeLLocateY);
+		}
+		private function dealEyeVertexR(v : Vector.<Vertex3D>):void
+		{
+			dealVertex3D(v , ModuleEyeData.s_eyeRScale , ModuleEyeData.s_eyeRPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeRLocateX , ModuleEyeData.s_eyeRLocateY);
+		}
+		
+		private function dealVertex3D( v : Vector.<Vertex3D> , sacle : Number , plane : Plane3D , md : Matrix4x4 , _xOff : Number  , _yOff : Number ) : void
+		{
+			for each(var vtx : Vertex3D in v )
+			{
+				vtx.x *= sacle;
+				vtx.y *= sacle;
+				vtx.x += _xOff;
+				vtx.y += _yOff;
+				
+				vtx.z = plane.confitZ(vtx.x , vtx.y)
+				
+				md.effectPoint3D(vtx.x, vtx.y , vtx.z , vtx);
+			}
+		}
+		
+		public function genEyeVertex3D(l : Boolean):void
+		{
+			eyeVertex3D = new Vector.<Vertex3D>();
+			var v : Vector.<Vertex3D>;
+			v = genEyeWhiteVertex3D();
+			var v3d : Vertex3D;
+			for each ( v3d in v)	eyeVertex3D.push(v3d);
+			
+			v = genEyeBallVertex3D();
+			for each ( v3d in v)	eyeVertex3D.push(v3d);
+			
+			v = genEyeLipVertex3D();
+			for each ( v3d in v)	eyeVertex3D.push(v3d);
+			
+			v = genEyeMaskVertex3D();
+			for each ( v3d in v)	eyeVertex3D.push(v3d);
+			
+			if(l)
+				dealEyeVertexL(eyeVertex3D);
+			else
+				dealEyeVertexR(eyeVertex3D);
+		}
+		
+		private function genEyeMaskVertex3D():Vector.<Vertex3D>
+		{
+			var v : Vector.<Vertex3D> = new Vector.<Vertex3D>();
+			
+			for each (var ev :EdtVertex3D in eyeMaskData)
+				v.push(ev.cloneVertex3D());
+			return v;
+		}
+		private function genEyeWhiteVertex3D():Vector.<Vertex3D>
+		{
+			if (!eyeWhite)
+				return null;
+				
+			var t : Texture2D = eyeWhite;
+			
+			return Vector.<Vertex3D>([
+				new Vertex3D(t.rectX , t.rectY, 0)
+				,new Vertex3D(t.rectX + t.rectW , t.rectY, 0)
+				,new Vertex3D(t.rectX , t.rectY + t.rectH, 0)
+				,new Vertex3D(t.rectX + t.rectW , t.rectY + t.rectH, 0)
+			]);
+		}
+		private function genEyeBallVertex3D():Vector.<Vertex3D>
+		{
+			if (!eyeBall)
+				return null;
+				
+			var t : Texture2D = eyeBall;
+			
+			return Vector.<Vertex3D>([
+				new Vertex3D(eyeBallX + t.rectX , eyeBallY + t.rectY, 0)
+				,new Vertex3D(eyeBallX + t.rectX + t.rectW , eyeBallY + t.rectY, 0)
+				,new Vertex3D(eyeBallX + t.rectX , t.rectY + eyeBallY + t.rectH, 0)
+				,new Vertex3D(eyeBallX + t.rectX + t.rectW , eyeBallY + t.rectY + t.rectH, 0)
+			]);
+		}
+		private function genEyeLipVertex3D():Vector.<Vertex3D>
+		{
+			if (!eyeLip)
+				return null;
+				
+			var t : Texture2D = eyeLip;
+			
+			return Vector.<Vertex3D>([
+				new Vertex3D(eyeLipX + t.rectX , eyeLipY + t.rectY, 0)
+				,new Vertex3D(eyeLipX + t.rectX + t.rectW , eyeLipY + t.rectY, 0)
+				,new Vertex3D(eyeLipX + t.rectX , t.rectY + eyeLipY + t.rectH, 0)
+				,new Vertex3D(eyeLipX + t.rectX + t.rectW , eyeLipY + t.rectY + t.rectH, 0)
+			]);
+		}
 		
 		public function toXMLString():String
 		{
@@ -200,7 +301,7 @@ package editor.module.eye
 			{
 				for each (var _ev3d : EdtVertex3D in eyeMaskData)
 				{	
-					var _ev3dC : EdtVertex3D = _ev3d.cloneV();
+					var _ev3dC : EdtVertex3D = _ev3d.cloneEdtVertex3D();
 					
 					_ev3dC.x = Math.abs(eyeWhite.rectW) - _ev3dC.x; 
 					
@@ -246,7 +347,7 @@ package editor.module.eye
 			
 			n.eyeMaskData = new Vector.<EdtVertex3D>(); 
 			for each (var _ev3d : EdtVertex3D in eyeMaskData)
-				n.eyeMaskData.push(_ev3d.cloneV());
+				n.eyeMaskData.push(_ev3d.cloneEdtVertex3D());
 			
 			n.genConnect();
 			
@@ -262,6 +363,7 @@ package editor.module.eye
 			eyeBall = null;
 			eyeLip = null;
 			eyeMaskData = null;
+			eyeVertex3D = null;
 			
 			callback = null;
 		}

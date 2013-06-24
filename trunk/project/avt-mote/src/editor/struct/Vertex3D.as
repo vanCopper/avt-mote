@@ -23,6 +23,11 @@ package editor.struct
 			z = _z;
 		}
 		
+		public function cloneVertex3D():Vertex3D
+		{
+			return new Vertex3D(x, y, z);
+		}
+		
 		public function normalize():void
 		{
 			var _len : Number = Math.sqrt(x * x + y * y + z * z);
@@ -36,7 +41,12 @@ package editor.struct
 			
 			
 		}
-		
+		public function toString():String
+		{
+			return "x = " + x + ";" + 
+			" y = " + y + ";" + 
+			" z = " + z + ";" ;
+		}
 		public function toXMLString():String
 		{
 			return "" + x + ":" + y + ":" + z;
