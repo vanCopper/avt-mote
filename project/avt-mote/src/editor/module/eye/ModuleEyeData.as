@@ -1,5 +1,6 @@
 package editor.module.eye 
 {
+	import editor.struct.Matrix4x4;
 	import editor.struct.Plane3D;
 	/**
 	 * ...
@@ -26,7 +27,15 @@ package editor.module.eye
 		
 		public static var s_eyeLPlane : Plane3D = new Plane3D();
 		public static var s_eyeRPlane : Plane3D = new Plane3D();
+		public static var s_eyeMatrix : Matrix4x4;
+		public static var s_eyeLScale : Number;
+		public static var s_eyeRScale : Number;
 		
+		public static var s_eyeLLocateX:Number;
+		public static var s_eyeLLocateY:Number;
+		
+		public static var s_eyeRLocateX:Number;
+		public static var s_eyeRLocateY:Number;
 		
 		public static function reset():void
 		{

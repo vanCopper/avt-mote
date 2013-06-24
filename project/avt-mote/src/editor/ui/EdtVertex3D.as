@@ -19,10 +19,13 @@ package editor.ui
 		{
 			super(_x, _y, _z);
 		}
-		public function cloneV():EdtVertex3D
+		
+		public function cloneEdtVertex3D():EdtVertex3D
 		{
 			return new EdtVertex3D(x, y, z);
 		}
+		
+		
 		
 		public static function connect2PT(ev0 : EdtVertex3D , ev1 : EdtVertex3D  ) : void
 		{

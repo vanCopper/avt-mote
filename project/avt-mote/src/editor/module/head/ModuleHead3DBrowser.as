@@ -44,6 +44,7 @@ package editor.module.head
 		private var m_textCnt : Sprite = new Sprite();
 		private var m_xyzShape : Shape = new Shape();
 		private var btn : BSSButton;
+		public var renderCallBack : Function;
 		
 		public function set disableEdit (v : Boolean) : void
 		{
@@ -378,6 +379,9 @@ package editor.module.head
 			{
 				ModuleHeadData.drawTriangles(m_viewer.graphics , __v);
 			}
+			
+			if (renderCallBack != null)
+				renderCallBack(this , __v , md);
 		}
 		
 		private function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4
@@ -454,6 +458,13 @@ package editor.module.head
 			return __v;
 		}
 		
+		
+		public function getCurMatrix():Matrix4x4
+		{
+			var md : Matrix4x4 = getMatrix(m_roX, m_roY, m_roZ);
+			return md;
+		}
+		
 		public function getInvertMatrix():Matrix4x4
 		{
 			var md : Matrix4x4 = getMatrix(m_roX, m_roY, m_roZ);
@@ -514,6 +525,8 @@ package editor.module.head
 			m_tfZRR = null;
 					
 			m_textCnt = null;
+			
+			renderCallBack = null;
 		}
 	}
 
