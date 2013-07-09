@@ -32,6 +32,8 @@ package editor.module.eye
 	{
 		private var m_leftEyeData : ModuleEyeFrame;
 		private var m_rightEyeData : ModuleEyeFrame;
+		private var m_leftEyeDataBase : ModuleEyeFrame;
+		private var m_rightEyeDataBase : ModuleEyeFrame;
 
 		private var m_eyeView : Sprite;
 		private var m_headView : ModuleHead3DView;
@@ -39,6 +41,13 @@ package editor.module.eye
 		private var m_regCallBack : Boolean;
 		private var m_xR:Number = 0;
 		private var m_yR:Number = 0;
+		private var m_needRedraw : Boolean;
+		
+		
+		private const m_maxLag : int = 120;
+		private const m_minLag : int = 60;
+		private var m_curFrame : int;
+		private var m_curLag : int;
 		
 		
 		public function ModuleEyeView() 
@@ -120,20 +129,14 @@ package editor.module.eye
 		public function refresh():void
 		{
 			
-			m_leftEyeData = ModuleEyeData.s_frameL;
-			m_rightEyeData = ModuleEyeData.s_frameR;
-			
+			m_leftEyeDataBase = ModuleEyeData.s_frameL;
+			m_rightEyeDataBase = ModuleEyeData.s_frameR;
+			m_curFrame = 0;
 			
 			drawHeadVertex();
 		}
-
-		
-		private function onMouseMove(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		private function onMouseMoveD():void
 		{
-			var me : MouseEvent = args as MouseEvent;
-			
-			//trace(mouseX - EdtDEF.QUADRANT_WIDTH , mouseY - EdtDEF.QUADRANT_HEIGHT)
-			
 			var mXOff : Number = (mouseX - EdtDEF.QUADRANT_WIDTH);
 			var mYOff : Number = (mouseY - EdtDEF.QUADRANT_HEIGHT);
 			
@@ -142,8 +145,8 @@ package editor.module.eye
 			
 			m_currentMatrix = ModuleHead3DBrowser.getMatrix(m_xR, m_yR, - ModuleHeadData.s_absRZ);
 			
-			m_leftEyeData = ModuleEyeData.s_frameL.cloneData();
-			m_rightEyeData = ModuleEyeData.s_frameR.cloneData();
+			m_leftEyeData = m_leftEyeDataBase.cloneData();
+			m_rightEyeData = m_rightEyeDataBase.cloneData();
 
 			m_leftEyeData.genEyeVertex3D(true);
 			m_rightEyeData.genEyeVertex3D(false);
@@ -241,8 +244,18 @@ package editor.module.eye
 				
 			}
 			
-			drawHeadVertex();
+			m_needRedraw = true;
 			
+		}
+		private function onMouseDown(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		{
+			m_curLag = 0;
+			return 0;
+		}
+		private function onMouseMove(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		{
+			onMouseMoveD();			
+			onMouseMoveD();			
 			return 0;
 		}
 		
@@ -255,6 +268,7 @@ package editor.module.eye
 			{
 				m_regCallBack = true;
 				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_DOWN , onMouseDown);
 			}
 			
 			refresh();
@@ -268,12 +282,52 @@ package editor.module.eye
 			{
 				m_regCallBack = false;
 				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_DOWN , onMouseDown);
+
 			}
 		}
 		
 		private function onUpdate(e:Event):void 
 		{
-		
+			
+			if (ModuleEyeData.s_leftAnime.length != 0)
+			{
+				if (m_curLag > 0)
+				{
+					m_curLag--;
+				}
+				else {
+					if (m_curFrame == ModuleEyeData.s_leftAnime.length / 2)
+					m_curFrame++;//闭眼有2帧
+						
+					if (m_curFrame >= ModuleEyeData.s_leftAnime.length)
+					{
+						m_curLag = (Math.random() * (m_maxLag - m_minLag)) + m_minLag;
+						m_curFrame = 0;
+					}
+					else 
+					{
+						
+						
+						m_leftEyeDataBase = (ModuleEyeData.s_leftAnime[m_curFrame]);
+						m_rightEyeDataBase = (ModuleEyeData.s_rightAnime[m_curFrame]);
+						
+						m_curFrame++;
+						
+						onMouseMoveD();
+					}
+				}
+				
+				
+			}
+			
+			
+			
+			if (m_needRedraw)
+			{
+				m_needRedraw = false;
+				drawHeadVertex();
+			}
 		}
 		
 		public function dispose():void

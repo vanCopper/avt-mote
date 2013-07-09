@@ -17,6 +17,11 @@ package editor.module.eye
 		private var m_ro : SimpleTL;
 		private var m_player : ModuleEyeBlinkPlayer;
 		
+		
+
+		
+		
+		
 		public function ModuleEyeBlinkEditor() 
 		{
 			
