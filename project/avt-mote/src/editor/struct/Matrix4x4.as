@@ -100,6 +100,62 @@ package editor.struct
 			return swapMatrix3D;
 			
 		}
+		
+		public function fromXMLString(s:String):void
+		{
+			var arr : Array = s.split(":");
+			var a : Array = [];
+			for each (var str : String in arr)
+				a.push(Number(str));
+				
+			Xx = a[0];
+			Xy = a[1];
+			Xz = a[2];
+			Xw = a[3];
+				
+			Yx = a[4];
+			Yy = a[5];
+			Yz = a[6];
+			Yw = a[7];
+				
+				
+			Zx = a[8];
+			Zy = a[9];
+			Zz = a[10];
+			Zw = a[11];
+				
+				
+			Tx = a[12];
+			Ty = a[13];
+			Tz = a[14];
+			Tw = a[15];
+		}
+		
+		public function toXMLString():String
+		{
+			return Xx + ":" + 
+			Xy + ":" + 
+			Xz + ":" + 
+			 Xw + ":" + 
+			
+			Yx + ":" + 
+			Yy + ":" + 
+			Yz + ":" + 
+			Yw + ":" + 
+			
+			
+			Zx + ":" + 
+			Zy + ":" + 
+			Zz + ":" + 
+			Zw + ":" + 
+			
+			
+			Tx + ":" + 
+			Ty + ":" + 
+			Tz + ":" + 
+			Tw ;
+		}
+		
 		public function toString():String
 		{
 			return "Xx = " + Xx + "\n" + 

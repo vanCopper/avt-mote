@@ -171,6 +171,8 @@ package editor.module.eye
 			var wl : Number;
 			var hl : Number;
 			
+			
+			
 			wl = Math.abs(m_leftEye.data.eyeWhite.rectW) * m_leftEye.scaleX;
 			hl = Math.abs(m_leftEye.data.eyeWhite.rectH) * m_leftEye.scaleY;
 			
@@ -216,7 +218,7 @@ package editor.module.eye
 			ModuleEyeData.s_eyeRLocateX =  m_rightEye.x;
 			ModuleEyeData.s_eyeRLocateY =  m_rightEye.y;
 
-			
+			ModuleEyeData.s_eyeLocated = true;
 			
 			/*
 			md.effectPoint3D(v0L.x  , v0L.y , v0L.z , v0L);
@@ -420,6 +422,7 @@ package editor.module.eye
 			m_headView.graphics.clear();
 			GraphicsUtil.removeAllChildren(m_eyeView);
 			
+			ModuleEyeData.s_eyeLocated = false;
 		}
 		public function refresh():void
 		{
@@ -439,7 +442,13 @@ package editor.module.eye
 			m_rightEye.renderMask(false);
 			m_rightEye.refresh();
 			
-			
+			if (ModuleEyeData.s_eyeLocated)
+			{
+				m_leftEye.data.genEyeVertex3D(true);
+				m_rightEye.data.genEyeVertex3D(false);
+				
+				drawEye(m_eyeView , m_browser.getCurMatrix());
+			}
 		}
 
 		
@@ -450,6 +459,7 @@ package editor.module.eye
 				addEventListener(Event.ENTER_FRAME , onUpdate);
 			m_browser.activate();
 			refresh();
+			
 			
 			
 			
@@ -484,8 +494,41 @@ package editor.module.eye
 		public function toXMLString():String
 		{
 			var str : String = "<ModuleEyeLocate>";
-						
-			
+			if (ModuleEyeData.s_eyeLocated)
+			{
+				str += "<eyeMatrix>";
+				str += ModuleEyeData.s_eyeMatrix.toXMLString();
+				str += "</eyeMatrix>";
+				
+				str += "<left>";
+					str += "<Plane>";
+					str += ModuleEyeData.s_eyeLPlane.toXMLString();
+					str += "</Plane>";
+					
+					str += "<Scale>";
+					str += ModuleEyeData.s_eyeLScale;
+					str += "</Scale>";
+					
+					str += "<Locate>";
+					str += ModuleEyeData.s_eyeLLocateX + ":" + ModuleEyeData.s_eyeLLocateY ;
+					str += "</Locate>";
+				str += "</left>";
+				
+				str += "<right>";
+					str += "<Plane>";
+					str += ModuleEyeData.s_eyeRPlane.toXMLString();
+					str += "</Plane>";
+					
+					str += "<Scale>";
+					str += ModuleEyeData.s_eyeRScale;
+					str += "</Scale>";
+					
+					str += "<Locate>";
+					str += ModuleEyeData.s_eyeRLocateX + ":" + ModuleEyeData.s_eyeRLocateY ;
+					str += "</Locate>";
+				str += "</right>";
+			}
+	
 			str += "</ModuleEyeLocate>";
 			
 			return str;
@@ -496,6 +539,35 @@ package editor.module.eye
 		
 		public function fromXMLString(s:XML):void
 		{
+			
+			var mStr : String = s.eyeMatrix.text();
+			if (mStr)
+			{
+				ModuleEyeData.s_eyeLocated = true;
+				ModuleEyeData.s_eyeMatrix = new Matrix4x4();
+				ModuleEyeData.s_eyeMatrix.fromXMLString(mStr);
+				
+				
+				ModuleEyeData.s_eyeLPlane.fromXMLString(s.left.Plane.text());
+				ModuleEyeData.s_eyeLScale = Number(s.left.Scale.text());
+				
+				var arr : Array;
+				arr = s.left.Locate.text().split(":");
+				ModuleEyeData.s_eyeLLocateX = Number(arr[0]);
+				ModuleEyeData.s_eyeLLocateY = Number(arr[1]);
+				
+				
+				ModuleEyeData.s_eyeRPlane.fromXMLString(s.right.Plane.text());
+				ModuleEyeData.s_eyeRScale = Number(s.right.Scale.text());
+				
+				arr = s.right.Locate.text().split(":");
+				ModuleEyeData.s_eyeRLocateX = Number(arr[0]);
+				ModuleEyeData.s_eyeRLocateY = Number(arr[1]);
+				
+				
+				
+			}
+			
 			
 		}
 		
