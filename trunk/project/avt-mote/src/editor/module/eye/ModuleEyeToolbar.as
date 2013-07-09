@@ -17,7 +17,7 @@ package editor.module.eye
 		public var btnBlink : BSSButton;
 		public var btnMove : BSSButton;
 		public var btnLocate : BSSButton;
-		
+		public var btnView : BSSButton;
 		
 		/*public var btnAC : BSSButton;
 		public var btnAM : BSSButton;
@@ -30,36 +30,42 @@ package editor.module.eye
 		public function ModuleEyeToolbar() 
 		{
 			var lastBtn : DisplayObject;
-			btnImport= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_IMPORT_IMAGE , true);
+			btnImport = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_IMPORT_IMAGE , true);
 			btnImport.x = 5;
 			btnImport.y = 5 ;
 			lastBtn = addChild(btnImport) ;
 			
 			var _areaArray : Array = [];
-			btnAF= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_ADD_FRAME , true , _areaArray);
+			btnAF = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_ADD_FRAME , true , _areaArray);
 			btnAF.x = 5 + lastBtn.x + lastBtn.width;
 			btnAF.y = 5 ;
 			lastBtn = addChild(btnAF) ;
 			btnAF.statusMode = true;
 			
-			btnBlink= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_EDIT_BLINK , true, _areaArray);
+			btnBlink = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_EDIT_BLINK , true, _areaArray);
 			btnBlink.x = 5 + lastBtn.x + lastBtn.width;
 			btnBlink.y = 5 ;
 			lastBtn = addChild(btnBlink) ;
 			btnBlink.statusMode = true;
 			
 			
-			btnMove= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_EDIT_AREA , true, _areaArray);
+			btnMove = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_EDIT_AREA , true, _areaArray);
 			btnMove.x = 5 + lastBtn.x + lastBtn.width;
 			btnMove.y = 5 ;
 			lastBtn = addChild(btnMove) ;
 			btnMove.statusMode = true;
 			
-			btnLocate= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_LOCATE , true, _areaArray);
+			btnLocate = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_LOCATE , true, _areaArray);
 			btnLocate.x = 5 + lastBtn.x + lastBtn.width;
 			btnLocate.y = 5 ;
 			lastBtn = addChild(btnLocate) ;
 			btnLocate.statusMode = true;
+			
+			btnView = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_VIEW , true, _areaArray);
+			btnView.x = 5 + lastBtn.x + lastBtn.width;
+			btnView.y = 5 ;
+			lastBtn = addChild(btnView) ;
+			btnView.statusMode = true;
 			
 			/*
 			btnAR= BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HEAD_ADD_ROTOR , true);
@@ -91,7 +97,7 @@ package editor.module.eye
 		}
 		public function activateAll(exceptArr : Array):void
 		{
-			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove ,btnLocate];
+			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove ,btnLocate , btnView];
 			
 			
 			for each (var btn : BSSButton in _arr)
@@ -106,7 +112,7 @@ package editor.module.eye
 		}
 		public function deactivateAll(exceptArr : Array):void
 		{
-			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove ,btnLocate];
+			var _arr : Array =  [btnImport , btnAF , btnBlink , btnMove ,btnLocate , btnView];
 			
 			for each (var btn : BSSButton in _arr)
 			{

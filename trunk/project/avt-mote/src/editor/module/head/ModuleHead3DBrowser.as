@@ -384,7 +384,7 @@ package editor.module.head
 				renderCallBack(this , __v , md);
 		}
 		
-		private function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4
+		public static function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4
 		{
 			var md : Matrix4x4;
 			var mX : Matrix4x4 = new Matrix4x4();

@@ -46,6 +46,7 @@ package editor.config
 		public static var MODULE_EYE_EDIT_BLINK:String = "edit blink";
 		public static var MODULE_EYE_EDIT_AREA:String = "edit move area";
 		public static var MODULE_EYE_LOCATE:String = "locate";
+		public static var MODULE_EYE_VIEW:String = "view";
 	}
 
 }

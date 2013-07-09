@@ -130,7 +130,7 @@ package editor.module.eye
 			ModuleHeadData.drawTriangles(m_headView.graphics , __v);
 			if (m_leftEye && m_leftEye.data && m_leftEye.data.eyeVertex3D )
 			{
-				drawEye(m_eyeView , md);
+				ModuleEyeFunc.drawEye(m_eyeView , md ,  m_leftEye.data ,  m_rightEye.data);
 			}
 		}
 		private function fitZ3Point(v : Vertex3D , _v : Vector.<Vertex3D>):void
@@ -251,115 +251,15 @@ package editor.module.eye
 			m_rightEye.data.genEyeVertex3D(false);
 			
 			
-			drawEye(m_eyeView , m_browser.getCurMatrix());
+			ModuleEyeFunc.drawEye(m_eyeView , m_browser.getCurMatrix() , m_leftEye.data , m_rightEye.data );
 			
 			
 		}
 		
 	
-		private function drawEyeMaskArray(g:Graphics , _eyeMaskData : Vector.<Vertex3D> , start : int = 0):void
-		{
-			var idx : int = start + 2;
-			
 		
-			
-			while (idx < _eyeMaskData.length)
-			{
-				g.beginFill(0xFF00000 , 0.25);	
-				g.moveTo(_eyeMaskData[0].x , _eyeMaskData[0].y);
-				
-				g.lineTo(_eyeMaskData[idx-1].x , _eyeMaskData[idx-1].y);
-				g.lineTo(_eyeMaskData[idx].x , _eyeMaskData[idx].y);
-				g.lineTo(_eyeMaskData[0].x , _eyeMaskData[0].y);
-				g.endFill();	
-				
-				idx++;
-			}
-		}
-		private function drawEyeArray(g:Graphics , v : Vector.<Vertex3D> , bitmapData : BitmapData ,start : Number = NaN, end : Number = NaN):void
-		{
-			const indices : Vector.<int> = Vector.<int>([0, 1, 2, 2, 1, 3]);
-			const uvtData :  Vector.<Number> =  Vector.<Number>([0, 0, 1, 0, 0, 1, 1, 1]);
-			var vertices : Vector.<Number> = new Vector.<Number>();
-			
-			
-			if (isNaN(start))
-			{
-				for each(var vtx : Vertex3D in v)
-				{
-					vertices.push(vtx.x);
-					vertices.push(vtx.y);
-				}
-			} else {
-				for (var _i : int = start ; _i < end ; _i++ )
-				{
-					vtx = v[_i];
-					vertices.push(vtx.x);
-					vertices.push(vtx.y);
-				}
-			}
-			
-			
-			g.beginBitmapFill(bitmapData,null,false,true);
-			g.drawTriangles(
-				vertices,
-				indices , 
-				uvtData
-			);
-			g.endFill();
-		}
 		
-		private function drawEye(sp:Sprite , md : Matrix4x4) : void
-		{
-			
-			
-			GraphicsUtil.removeAllChildren(sp);
-			
-			var shp : Shape = new Shape();
-			var shpLip : Shape = new Shape();
-			var shpMask : Shape = new Shape();
-			
-			sp.addChild(shp);
-			sp.addChild(shpMask);
-			sp.addChild(shpLip);
-			shp.mask = shpMask;
-			
-			var v : Vector.<Vertex3D> ;
-			
-			;
-			var vtx : Vertex3D;
-			var vtxD : Vertex3D;
-			
-			v = new Vector.<Vertex3D>();
-			for each (vtx in m_leftEye.data.eyeVertex3D) {
-				vtxD = vtx.cloneVertex3D();
-				vtxD.x = (md.Xx * vtx.x + md.Xy * vtx.y + md.Xz * vtx.z) ;
-				vtxD.y = (md.Yx * vtx.x + md.Yy * vtx.y + md.Yz * vtx.z) ;
-				v.push(vtxD);
-			}
-			
-			
-			
-			drawEyeArray(shp.graphics , v , m_leftEye.data.eyeWhite.bitmapData , 0  , 4);
-			drawEyeArray(shp.graphics , v, m_leftEye.data.eyeBall.bitmapData, 4  , 8);
-			drawEyeArray(shpLip.graphics , v, m_leftEye.data.eyeLip.bitmapData, 8  , 12);
-			drawEyeMaskArray(shpMask.graphics , v , 12);
-			
-			
-			v = new Vector.<Vertex3D>();
-			for each (vtx in m_rightEye.data.eyeVertex3D) {
-				vtxD = vtx.cloneVertex3D();
-				vtxD.x = (md.Xx * vtx.x + md.Xy * vtx.y + md.Xz * vtx.z) ;
-				vtxD.y = (md.Yx * vtx.x + md.Yy * vtx.y + md.Yz * vtx.z) ;
-				v.push(vtxD);
-			}
-			
-			drawEyeArray(shp.graphics , v , m_rightEye.data.eyeWhite.bitmapData , 0  , 4);
-			drawEyeArray(shp.graphics , v, m_rightEye.data.eyeBall.bitmapData, 4  , 8);
-			drawEyeArray(shpLip.graphics , v, m_rightEye.data.eyeLip.bitmapData, 8  , 12);
-			drawEyeMaskArray(shpMask.graphics , v , 12);
-			
-		}
+	
 		
 		
 		private function onWheel(e:MouseEvent):void 
@@ -447,7 +347,7 @@ package editor.module.eye
 				m_leftEye.data.genEyeVertex3D(true);
 				m_rightEye.data.genEyeVertex3D(false);
 				
-				drawEye(m_eyeView , m_browser.getCurMatrix());
+				ModuleEyeFunc.drawEye(m_eyeView , m_browser.getCurMatrix()  , m_leftEye.data , m_rightEye.data );
 			}
 		}
 

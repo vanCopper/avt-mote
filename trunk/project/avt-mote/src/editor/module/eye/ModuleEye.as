@@ -56,6 +56,7 @@ package editor.module.eye
 		private var m_moduleEyeBlinkEditor : ModuleEyeBlinkEditor;
 		private var m_moduleEyeMA : ModuleEyeMoveArea;
 		private var m_moduleEyeLocate : ModuleEyeLocate;
+		private var m_moduleEyeView : ModuleEyeView;
 		
 		public override function dispose():void
 		{
@@ -161,6 +162,7 @@ package editor.module.eye
 			m_tb.btnBlink.releaseFunction = onEditBlink;
 			m_tb.btnMove.releaseFunction = onEditMove;
 			m_tb.btnLocate.releaseFunction = onEditLocate;
+			m_tb.btnView.releaseFunction = onEditView;
 			
 			
 			m_efl  = new ModuleEyeFrameLib();
@@ -270,6 +272,10 @@ package editor.module.eye
 			m_content.addChild(m_moduleEyeLocate);
 			m_moduleEyeLocate.visible = false;
 			
+			m_moduleEyeView = new ModuleEyeView();
+			m_moduleEyeView.y = m_tb.y + m_tb.height;
+			m_content.addChild(m_moduleEyeView);
+			m_moduleEyeView.visible = false;
 			
 			
 			m_content.addChild(m_efl);
@@ -310,6 +316,13 @@ package editor.module.eye
 				m_moduleEyeLocate.deactivate();
 				m_efl.clickFuntion = null;
 			}
+			else if (p == 4)
+			{
+				m_moduleEyeView.visible = false;
+				m_moduleEyeView.deactivate();
+				m_efl.clickFuntion = null;
+			}
+			
 		}
 		
 		private function onAddFrame(btn : BSSButton):void
@@ -317,6 +330,7 @@ package editor.module.eye
 			disablePage(1);
 			disablePage(2);
 			disablePage(3);
+			disablePage(4);
 			
 			m_eqm.visible =
 			m_eyeContainer.visible =
@@ -337,7 +351,8 @@ package editor.module.eye
 			 disablePage(0);
 			 disablePage(2);
 			 disablePage(3);
-			
+			 disablePage(4);
+			 
 			 m_efl.clickFuntion = onClickToSetFrame;
 			 m_efl.clickWhenClone = false;
 			  
@@ -351,7 +366,8 @@ package editor.module.eye
 			 disablePage(0);
 			 disablePage(1);
 			 disablePage(3);
-			
+			 disablePage(4);
+			 
 			 m_moduleEyeMA.visible = true;
 			 m_moduleEyeMA.activate();
 			 m_efl.clickFuntion = onClickToSetTemplate;
@@ -364,11 +380,26 @@ package editor.module.eye
 			 disablePage(0);
 			 disablePage(1);
 			 disablePage(2);
-			
+			 disablePage(4);
+			 
 			m_moduleEyeLocate.visible = true;
 			 m_moduleEyeLocate.activate();
 			 m_efl.clickFuntion = null;
 			 m_efl.clickWhenClone = false;
+		}
+		
+		
+		private function onEditView(btn : BSSButton):void
+		{
+		 
+			disablePage(0);
+			disablePage(1);
+			disablePage(2);
+			disablePage(3);
+
+			m_moduleEyeView.visible = true;
+			m_moduleEyeView.activate();
+			
 		}
 		
 		
@@ -721,6 +752,7 @@ package editor.module.eye
 			onAddFrame(null);
 			
 			m_moduleEyeMA.reset();
+			m_moduleEyeView.reset();
 			
 			ModuleEyeData.reset();
 			
