@@ -6,6 +6,7 @@ package editor.module.eye
 	import flash.display.Graphics;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.geom.Point;
 	import UISuit.UIUtils.GraphicsUtil;
 	/**
 	 * ...
@@ -117,6 +118,44 @@ package editor.module.eye
 			
 		}
 		
+		public static function getXYOfArea(_radain : Number , _left : Boolean , _rate : Number) : Point
+		{
+			var ret : Point = new Point;
+						
+			
+			var _er : Number;
+			var _ea : Number;
+			var _eb : Number;
+			
+			if (_left)
+			{
+				_er = ModuleEyeData.s_erL ;
+				_ea = ModuleEyeData.s_eaL ;
+				_eb = ModuleEyeData.s_ebL ;
+				
+			}
+			else {
+				_er = ModuleEyeData.s_erR ;
+				_ea = ModuleEyeData.s_eaR ;
+				_eb = ModuleEyeData.s_ebR ;
+			}
+			
+			
+			var _rOff : Number = _radain - _er;
+			var _a : Number = _ea / 2;
+			var _b : Number = _eb / 2;
+			
+			var _as : Number = _a * Math.sin(_rOff);
+			var _bc : Number = _b * Math.cos(_rOff);
+			
+			
+			var r:Number = (_a*_b)/Math.sqrt(_as*_as + _bc*_bc);
+			ret.x =  Math.cos(_radain) * r * _rate;
+			ret.y =  Math.sin(_radain) * r * _rate;
+			
+			return ret;
+			
+		}
 		
 	}
 

@@ -1,11 +1,14 @@
 package editor.module.eye 
 {
+	import CallbackUtil.CallbackCenter;
+	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
 	import editor.module.head.ModuleHead3DBrowser;
 	import editor.module.head.ModuleHead3DView;
 	import editor.module.head.ModuleHeadData;
 	import editor.struct.Matrix4x4;
 	import editor.struct.Plane3D;
+	import editor.struct.Texture2D;
 	import editor.struct.Texture2DBitmap;
 	import editor.struct.Vertex3D;
 	import flash.display.BitmapData;
@@ -33,6 +36,10 @@ package editor.module.eye
 		private var m_eyeView : Sprite;
 		private var m_headView : ModuleHead3DView;
 		private var m_currentMatrix : Matrix4x4 = new Matrix4x4();
+		private var m_regCallBack : Boolean;
+		private var m_xR:Number = 0;
+		private var m_yR:Number = 0;
+		
 		
 		public function ModuleEyeView() 
 		{
@@ -60,8 +67,8 @@ package editor.module.eye
 		private function drawHeadVertex():void
 		{
 			
-			var md : Matrix4x4 = ModuleHead3DBrowser.getMatrix(0, 0, 0);
-			m_currentMatrix = md;
+			var md : Matrix4x4 = m_currentMatrix; 
+			
 		
 			var __v : Vector.<Number> = new Vector.<Number>();
 			var _vx : Number;
@@ -81,8 +88,6 @@ package editor.module.eye
 				__v.push(_vy  );
 				
 			}
-
-			
 			
 			onRenderChange(__v , md );
 			
@@ -123,11 +128,135 @@ package editor.module.eye
 		}
 
 		
+		private function onMouseMove(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
+		{
+			var me : MouseEvent = args as MouseEvent;
+			
+			//trace(mouseX - EdtDEF.QUADRANT_WIDTH , mouseY - EdtDEF.QUADRANT_HEIGHT)
+			
+			var mXOff : Number = (mouseX - EdtDEF.QUADRANT_WIDTH);
+			var mYOff : Number = (mouseY - EdtDEF.QUADRANT_HEIGHT);
+			
+			m_xR = - mXOff / EdtDEF.QUADRANT_WIDTH * 0.2;
+			m_yR =  mYOff / EdtDEF.QUADRANT_HEIGHT  * 0.2;
+			
+			m_currentMatrix = ModuleHead3DBrowser.getMatrix(m_xR, m_yR, - ModuleHeadData.s_absRZ);
+			
+			m_leftEyeData = ModuleEyeData.s_frameL.cloneData();
+			m_rightEyeData = ModuleEyeData.s_frameR.cloneData();
+
+			m_leftEyeData.genEyeVertex3D(true);
+			m_rightEyeData.genEyeVertex3D(false);
+			
+			
+			var md : Matrix4x4 = m_currentMatrix; 
+			
+			var lCenter : Vertex3D = new Vertex3D();
+			lCenter.x = (m_leftEyeData.eyeVertex3D[0].x + m_leftEyeData.eyeVertex3D[1].x +
+						 m_leftEyeData.eyeVertex3D[2].x + m_leftEyeData.eyeVertex3D[3].x
+						) / 4;
+			
+			lCenter.y = (m_leftEyeData.eyeVertex3D[0].y + m_leftEyeData.eyeVertex3D[1].y +
+						 m_leftEyeData.eyeVertex3D[2].y + m_leftEyeData.eyeVertex3D[3].y
+						) / 4;
+			
+			lCenter.z = (m_leftEyeData.eyeVertex3D[0].z + m_leftEyeData.eyeVertex3D[1].z +
+						 m_leftEyeData.eyeVertex3D[2].z + m_leftEyeData.eyeVertex3D[3].z
+						) / 4;
+			
+			
+			
+			var _vx : Number;
+			var _vy : Number;
+			
+			
+			{
+				_vx = (md.Xx * lCenter.x + md.Xy * lCenter.y + md.Xz * lCenter.z) ;
+				_vy = (md.Yx * lCenter.x + md.Yy * lCenter.y + md.Yz * lCenter.z) ;
+			}
+			
+			//trace(_vx , _vy , mXOff , mYOff);
+			
+			var _lRadian : Number = Math.atan2(mYOff - _vy , mXOff - _vx );
+			var _lRate : Number = Math.sqrt((mYOff - _vy)*(mYOff - _vy) + (mXOff - _vx )*(mXOff - _vx ));
+			_lRate /= EdtDEF.QUADRANT_WIDTH * 1.5;
+			if (_lRate > 1) _lRate = 1;
+			
+			var rCenter : Vertex3D = new Vertex3D();
+			rCenter.x = (m_rightEyeData.eyeVertex3D[0].x + m_rightEyeData.eyeVertex3D[1].x +
+						 m_rightEyeData.eyeVertex3D[2].x + m_rightEyeData.eyeVertex3D[3].x
+						) / 4;
+			
+			rCenter.y = (m_rightEyeData.eyeVertex3D[0].y + m_rightEyeData.eyeVertex3D[1].y +
+						 m_rightEyeData.eyeVertex3D[2].y + m_rightEyeData.eyeVertex3D[3].y
+						) / 4;
+			
+			rCenter.z = (m_rightEyeData.eyeVertex3D[0].z + m_rightEyeData.eyeVertex3D[1].z +
+						 m_rightEyeData.eyeVertex3D[2].z + m_rightEyeData.eyeVertex3D[3].z
+						) / 4;
+			
+			{
+				_vx = (md.Xx * rCenter.x + md.Xy * rCenter.y + md.Xz * rCenter.z) ;
+				_vy = (md.Yx * rCenter.x + md.Yy * rCenter.y + md.Yz * rCenter.z) ;
+			}
+			
+			var _rRadian : Number = Math.atan2(mYOff - _vy , mXOff - _vx );
+			var _rRate : Number = Math.sqrt((mYOff - _vy)*(mYOff - _vy) + (mXOff - _vx )*(mXOff - _vx ));
+			_rRate /= EdtDEF.QUADRANT_WIDTH * 1.5;
+			if (_rRate > 1) _rRate = 1;
+			
+			var _er : Number;
+			var _ea : Number;
+			var _eb : Number;
+			
+			
+			_er = ModuleEyeData.s_erL ;
+			_ea = ModuleEyeData.s_eaL ;
+			_eb = ModuleEyeData.s_ebL ;
+				
+			
+			
+			if (!isNaN(_ea))
+			{
+				
+				var pt : Point = ModuleEyeFunc.getXYOfArea(_lRadian,true,_lRate);
+			
+				m_leftEyeData.eyeBallX += pt.x ; 
+				m_leftEyeData.eyeBallY += pt.y ; 
+				m_leftEyeData.genEyeVertex3D(true);
+				
+			}
+			
+			_er = ModuleEyeData.s_erR ;
+			_ea = ModuleEyeData.s_eaR ;
+			_eb = ModuleEyeData.s_ebR ;
+			
+			
+			if (!isNaN(_ea))
+			{
+				pt = ModuleEyeFunc.getXYOfArea(_rRadian,true,_rRate);
+				m_rightEyeData.eyeBallX += pt.x ; 
+				m_rightEyeData.eyeBallY += pt.y ; 
+				m_rightEyeData.genEyeVertex3D(false);
+				
+			}
+			
+			drawHeadVertex();
+			
+			return 0;
+		}
 		
 		public function activate():void
 		{
 			if (!hasEventListener(Event.ENTER_FRAME))
 				addEventListener(Event.ENTER_FRAME , onUpdate);
+			
+			if (!m_regCallBack)
+			{
+				m_regCallBack = true;
+				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
+			}
+			
 			refresh();
 		}
 		
@@ -135,6 +264,11 @@ package editor.module.eye
 		{
 			if (hasEventListener(Event.ENTER_FRAME))
 				removeEventListener(Event.ENTER_FRAME , onUpdate);
+			if (m_regCallBack)
+			{
+				m_regCallBack = false;
+				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
+			}
 		}
 		
 		private function onUpdate(e:Event):void 
