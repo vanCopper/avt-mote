@@ -833,7 +833,7 @@ package editor.module.eye
 					str += "</ModuleEyeFrames>";
 					
 					str += m_moduleEyeBlinkEditor.toXMLString();
-					
+					str += m_moduleEyeMA.toXMLString();
 					str += m_moduleEyeLocate.toXMLString();
 					
 					

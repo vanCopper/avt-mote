@@ -245,72 +245,10 @@ package editor.module.eye
 		
 		private function getXYOfArea(_r : Number) : Point
 		{
-			var ret : Point = new Point;
+			var ret : Point = ModuleEyeFunc.getXYOfArea(_r , m_curLeft , 1);
 						
-			
-			var _er : Number;
-			var _ea : Number;
-			var _eb : Number;
-			
-			if (m_curLeft)
-			{
-				_er = ModuleEyeData.s_erL ;
-				_ea = ModuleEyeData.s_eaL ;
-				_eb = ModuleEyeData.s_ebL ;
-				
-			}
-			else {
-				_er = ModuleEyeData.s_erR ;
-				_ea = ModuleEyeData.s_eaR ;
-				_eb = ModuleEyeData.s_ebR ;
-			}
-			
-			
-			var _rOff : Number = _r - _er;
-			var _a : Number = _ea / 2;
-			var _b : Number = _eb / 2;
-			
-			var _as : Number = _a * Math.sin(_rOff);
-			var _bc : Number = _b * Math.cos(_rOff);
-			
-			
-			var r:Number = (_a*_b)/Math.sqrt(_as*_as + _bc*_bc);
-			ret.x =  Math.cos(_r) * r;
-			ret.y =  Math.sin(_r) * r;
-			
-			//ret.x = Math.cos( _r ) * _re ;
-			//ret.y = Math.sin( _r ) * _re;
-				
-		//	trace(_a  , ret.x);
-		//	trace(_b  , ret.y);
-			
-			
-			/*
-			var _c : Number = Math.sqrt(Math.abs(_a * _a - _b * _b));
-			var _e : Number;
-			var _baBigger : Number = (_a > _b) ? _a : _b;
-			
-
-			_e = _c /_baBigger;
-				
-			var _p : Number = _baBigger * _baBigger / _c - _c;
-			
-			
-			
-			if (_a > _b) {
-				var _lo : Number = _e * _p / (1 - _e * Math.cos(_rOff));
-				ret.x = /*m_circleShape.x +* / Math.cos( _r ) * _lo /*+ _c* /;
-				ret.y = /*m_circleShape.y +* / Math.sin( _r ) * _lo;
-			} else {
-				_lo = _e * _p / (1 - _e * Math.cos(_rOff + Math.PI / 2));
-				
-				ret.x = /*m_circleShape.x +* / Math.cos( _r ) * _lo ;
-				ret.y = /*m_circleShape.y +* / Math.sin( _r ) * _lo /*- _c* / ;
-			}*/
-			
 			ret.x += m_circleShape.x;
 			ret.y += m_circleShape.y;
-			
 			
 			return ret;
 		}
