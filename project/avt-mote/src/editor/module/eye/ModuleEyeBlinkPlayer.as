@@ -15,9 +15,16 @@ package editor.module.eye
 		private var curLag : int;
 		private var curFrameSpL : ModuleEyeFrameSprite;
 		private var curFrameSpR : ModuleEyeFrameSprite;
-		public var leftAnime : Vector.<ModuleEyeFrame> = new Vector.<ModuleEyeFrame>;
-		public var rightAnime : Vector.<ModuleEyeFrame> = new Vector.<ModuleEyeFrame>;
 		
+		public function get leftAnime(): Vector.<ModuleEyeFrame>
+		{
+			return ModuleEyeData.s_leftAnime;
+		}
+		
+		public function get rightAnime(): Vector.<ModuleEyeFrame>
+		{
+			return ModuleEyeData.s_rightAnime;
+		}
 		
 		public function ModuleEyeBlinkPlayer() 
 		{

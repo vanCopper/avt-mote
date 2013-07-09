@@ -38,6 +38,10 @@ package editor.module.eye
 		public static var s_eyeRLocateX:Number;
 		public static var s_eyeRLocateY:Number;
 		
+		
+		public static var s_leftAnime : Vector.<ModuleEyeFrame> = new Vector.<ModuleEyeFrame>;
+		public static var s_rightAnime : Vector.<ModuleEyeFrame> = new Vector.<ModuleEyeFrame>;
+		
 		public static function reset():void
 		{
 			s_frameL = null;

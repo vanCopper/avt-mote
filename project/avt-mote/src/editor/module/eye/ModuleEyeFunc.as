@@ -24,11 +24,11 @@ package editor.module.eye
 			while (idx < _eyeMaskData.length)
 			{
 				g.beginFill(0xFF00000 , 0.25);	
-				g.moveTo(_eyeMaskData[0].x , _eyeMaskData[0].y);
+				g.moveTo(_eyeMaskData[start].x , _eyeMaskData[start].y);
 				
 				g.lineTo(_eyeMaskData[idx-1].x , _eyeMaskData[idx-1].y);
 				g.lineTo(_eyeMaskData[idx].x , _eyeMaskData[idx].y);
-				g.lineTo(_eyeMaskData[0].x , _eyeMaskData[0].y);
+				g.lineTo(_eyeMaskData[start].x , _eyeMaskData[start].y);
 				g.endFill();	
 				
 				idx++;
@@ -96,11 +96,24 @@ package editor.module.eye
 				vtxD.y = (md.Yx * vtx.x + md.Yy * vtx.y + md.Yz * vtx.z) ;
 				v.push(vtxD);
 			}
+			var start : int = 0;
 			
-			drawEyeArray(shp.graphics , v , _leftEyeData.eyeWhite.bitmapData , 0  , 4);
-			drawEyeArray(shp.graphics , v, _leftEyeData.eyeBall.bitmapData, 4  , 8);
-			drawEyeArray(shpLip.graphics , v, _leftEyeData.eyeLip.bitmapData, 8  , 12);
-			drawEyeMaskArray(shpMask.graphics , v , 12);
+			if (_leftEyeData.eyeWhite)
+			{	
+				drawEyeArray(shp.graphics , v , _leftEyeData.eyeWhite.bitmapData , start  , start + 4);
+				start += 4;
+			}
+			if (_leftEyeData.eyeBall)
+			{	
+				drawEyeArray(shp.graphics , v, _leftEyeData.eyeBall.bitmapData, start  , start + 4);
+				start += 4;
+			}
+			if (_leftEyeData.eyeLip)
+			{
+				drawEyeArray(shpLip.graphics , v, _leftEyeData.eyeLip.bitmapData, start  , start + 4);
+				start += 4;
+			}
+			drawEyeMaskArray(shpMask.graphics , v , start);
 			
 			
 			v = new Vector.<Vertex3D>();
@@ -111,10 +124,24 @@ package editor.module.eye
 				v.push(vtxD);
 			}
 			
-			drawEyeArray(shp.graphics , v , _rightEyeData.eyeWhite.bitmapData , 0  , 4);
-			drawEyeArray(shp.graphics , v, _rightEyeData.eyeBall.bitmapData, 4  , 8);
-			drawEyeArray(shpLip.graphics , v, _rightEyeData.eyeLip.bitmapData, 8  , 12);
-			drawEyeMaskArray(shpMask.graphics , v , 12);
+			start = 0;
+			if (_rightEyeData.eyeWhite)
+			{
+				drawEyeArray(shp.graphics , v , _rightEyeData.eyeWhite.bitmapData , start  , start + 4);
+				start += 4;
+			}
+			if (_rightEyeData.eyeBall)
+			{
+				drawEyeArray(shp.graphics , v, _rightEyeData.eyeBall.bitmapData, start  , start + 4);
+				start += 4;
+			}
+			if (_rightEyeData.eyeLip)
+			{
+				drawEyeArray(shpLip.graphics , v, _rightEyeData.eyeLip.bitmapData, start  , start + 4);
+				start += 4;
+			}
+			
+			drawEyeMaskArray(shpMask.graphics , v , start);
 			
 		}
 		
