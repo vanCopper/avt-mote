@@ -25,6 +25,7 @@ package editor.module.eye
 		public static var s_frameL : ModuleEyeFrame;
 		public static var s_frameR : ModuleEyeFrame;
 		
+		public static var s_eyeLocated : Boolean = false;
 		public static var s_eyeLPlane : Plane3D = new Plane3D();
 		public static var s_eyeRPlane : Plane3D = new Plane3D();
 		public static var s_eyeMatrix : Matrix4x4;

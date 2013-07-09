@@ -775,7 +775,10 @@ package editor.module.eye
 				{
 					m_moduleEyeMA.fromXMLString(item);
 				}
-				
+				else if (item.name() == "ModuleEyeLocate")
+				{
+					m_moduleEyeLocate.fromXMLString(item);
+				}
 				
 				
 			}
@@ -799,7 +802,8 @@ package editor.module.eye
 					
 					str += m_moduleEyeBlinkEditor.toXMLString();
 					
-					str += m_moduleEyeMA.toXMLString();
+					str += m_moduleEyeLocate.toXMLString();
+					
 					
 				
 				str += "</ModuleEye>";

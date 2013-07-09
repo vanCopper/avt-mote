@@ -16,7 +16,19 @@ package editor.struct
 		{
 			
 		}
+		public function fromXMLString(s:String):void
+		{
+			var arr : Array = s.split(":")
+			a = Number(arr[0]);
+			b = Number(arr[1]);
+			c = Number(arr[2]);
+			d = Number(arr[3]);
+		}
 		
+		public function toXMLString():String
+		{
+			return a + ":" + b + ":" + c + ":" + d;
+		}
 		public function reset():void
 		{
 			a = b = c = d = 0;
