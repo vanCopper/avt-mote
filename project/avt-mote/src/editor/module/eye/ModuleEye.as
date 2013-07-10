@@ -335,6 +335,7 @@ package editor.module.eye
 			m_eqm.visible =
 			m_eyeContainer.visible =
 			m_eyeChoose.visible = true;
+			m_hoverTexture2DBitmap.visible = true;
 			
 			m_eqm.activate();
 			
@@ -521,7 +522,7 @@ package editor.module.eye
 				m_hoverTextureSprite.graphics.beginFill(0xFFFFFF , 0.5);
 				m_hoverTextureSprite.graphics.drawRect(0, 0, m_hoverTexture2DBitmap.width+10, m_hoverTexture2DBitmap.height+10);
 				m_hoverTextureSprite.x = _DDM.parent.x - m_hoverTexture2DBitmap.width - 15;
-				
+			
 			}
 		}
 		
@@ -731,14 +732,17 @@ package editor.module.eye
 			disablePage(1);
 			disablePage(2);
 			disablePage(3);
+			disablePage(4);
 			
 			super.deactivate();
 		}
 		
 		public override function onNew():void
 		{
+			
 			m_tb.deactivateAll([m_tb.btnImport]);
 			onClickToEdit(null, null, "");
+			
 			m_efl.onNew();
 			m_efl.visible = false;
 			onMaskClear(m_eyeMaskBtn);

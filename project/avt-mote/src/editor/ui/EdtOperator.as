@@ -29,7 +29,7 @@ package editor.ui
 			const leng : int = 52;
 			const leng2 : int = 35;
 			const w : int = 5;
-			const w2 : int = 0.75;
+			const w2 : Number = 0.75;
 			
 			//_opt.graphics.lineStyle(1);
 			_graphics.clear();
