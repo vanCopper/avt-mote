@@ -137,6 +137,9 @@ package editor.module.eye
 		}
 		private function onMouseMoveD():void
 		{
+			if (!m_leftEyeDataBase || !m_rightEyeDataBase)
+				return;
+				
 			var mXOff : Number = (mouseX - EdtDEF.QUADRANT_WIDTH);
 			var mYOff : Number = (mouseY - EdtDEF.QUADRANT_HEIGHT);
 			
