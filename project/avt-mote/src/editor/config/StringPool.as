@@ -47,6 +47,11 @@ package editor.config
 		public static var MODULE_EYE_EDIT_AREA:String = "edit move area";
 		public static var MODULE_EYE_LOCATE:String = "locate";
 		public static var MODULE_EYE_VIEW:String = "view";
+		
+		
+		public static var MODULE_HAIR:String = "hair";
+		public static var MODULE_HAIR_IMPORT_IMAGE:String = "import images";
+		public static var MODULE_HAIR_ADD_FRAME:String = "add frame";
 	}
 
 }
