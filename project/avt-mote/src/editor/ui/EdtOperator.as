@@ -5,6 +5,7 @@ package editor.ui
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.filters.GlowFilter;
 	import flash.geom.ColorTransform;
 	/**
 	 * ...
@@ -23,7 +24,54 @@ package editor.ui
 		//private var movingFunc : Function;
 		//private var endMoveFunc : Function;
 		private var m_curMode : String;
+		private var m_curOptMode : int = -1;
 		
+		private function drawInsert(_graphics : Graphics , drawArrow : Boolean) : void
+		{
+			const r : int = 10;
+			const leng : int = 52;
+			
+			_graphics.clear();
+			
+			if (drawArrow)
+			{
+				_graphics.beginFill(0xFFFFFF , 0.0);
+				_graphics.drawRect(0 - r / 2, -leng - r / 2, r ,leng + r / 2);
+				_graphics.endFill();
+			} else {
+				
+			}
+			
+			_graphics.lineStyle(1.5);
+			_graphics.moveTo( 0 , 0);
+			_graphics.lineTo( 0 , -leng);
+				
+			
+		}
+		
+		private function drawScale(_graphics : Graphics , drawArrow : Boolean) : void
+		{
+
+			const r : int = 10;
+			const leng : int = 52;
+			
+			_graphics.clear();
+			
+			_graphics.lineStyle(1.5);
+			_graphics.moveTo( 0 , 0);
+			_graphics.lineTo( 0 , -leng);
+				
+			if (drawArrow)
+			{
+				_graphics.beginFill(0xFFFFFF);
+				_graphics.drawRect(0 - r / 2, -leng - r / 2, r , r);
+			
+			} else {
+				
+			}
+			
+			
+		}
 		private function drawArrow(_graphics : Graphics , drawArrow : Boolean) : void
 		{
 			const leng : int = 52;
@@ -64,19 +112,27 @@ package editor.ui
 		private static const Y_CF : ColorTransform = new ColorTransform ( 0, 0, 0, 1, 0, 255, 0, 0);
 		private static const Z_CF : ColorTransform = new ColorTransform ( 0, 0, 0, 1, 0, 0, 255, 0);
 		
-		public function setMode(_str : String) : void
+		public function setMode(_str : String , optMode : int) : void
 		{
-			if (m_curMode == _str)
+			if (m_curMode == _str && m_curOptMode == optMode)
 				return;
 				
 			var _redraw : Boolean;
-			if (m_curMode == "PERSP" || _str == "PERSP")	
+			if (m_curMode == "PERSP" || _str == "PERSP" || m_curOptMode != optMode)	
 				_redraw = true;
 				
 			m_curMode = _str;
+			m_curOptMode = optMode;
 			
-			
-			
+			var drawFunc : Function;
+			if (m_curOptMode == 1)
+				drawFunc =  drawArrow;
+			else if (m_curOptMode == 2)
+				drawFunc =  drawScale;
+			else if (m_curOptMode == 5)
+			{
+				drawFunc =  drawInsert;
+			}	
 			mouseChildren = mouseEnabled = true;
 			if (_str == "XY")
 			{
@@ -85,8 +141,8 @@ package editor.ui
 				scaleY = -1;
 				if (_redraw)
 				{
-					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
-					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
+					drawFunc(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
+					drawFunc(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
 				}
 			}
 			else if (_str == "XZ")
@@ -96,8 +152,8 @@ package editor.ui
 				scaleY = 1;
 				if (_redraw)
 				{
-					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
-					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
+					drawFunc(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
+					drawFunc(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
 				}
 			}
 			else if (_str == "ZY")
@@ -107,8 +163,8 @@ package editor.ui
 				scaleY = -1;
 				if (_redraw)
 				{
-					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
-					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
+					drawFunc(Shape(m_moveOPTR.getChildAt(0)).graphics , true);
+					drawFunc(Shape(m_moveOPTU.getChildAt(0)).graphics , true);
 				}
 			}
 			else if (_str == "PERSP")
@@ -118,13 +174,14 @@ package editor.ui
 				scaleY = -1;
 				if (_redraw)
 				{
-					drawArrow(Shape(m_moveOPTR.getChildAt(0)).graphics , false);
-					drawArrow(Shape(m_moveOPTU.getChildAt(0)).graphics , false);
+					drawFunc(Shape(m_moveOPTR.getChildAt(0)).graphics , false);
+					drawFunc(Shape(m_moveOPTU.getChildAt(0)).graphics , false);
 				}
 				
 				mouseChildren = mouseEnabled = false;
 			}
 		}
+	
 		
 		public function EdtOperator() 
 		{
@@ -140,7 +197,7 @@ package editor.ui
 			m_moveOPTA.graphics.beginFill(0xFFFFFF, 0.5);
 			m_moveOPTA.graphics.drawRect( -8, -8, 16, 16);
 			
-			setMode("XY");
+			setMode("XY" , 1);
 			//this.x = 760;
 			//this.y = 4;
 			
@@ -161,23 +218,33 @@ package editor.ui
 			m_moveOPTR.addEventListener(MouseEvent.MOUSE_DOWN , onMouse);
 			m_moveOPTA.addEventListener(MouseEvent.MOUSE_DOWN , onMouse);
 		}
-		
+		private static const s_filterArray : Array = [new GlowFilter(0xFFFFFF, 0.3, 3, 3, 5)];
 		private function onMouse(e:MouseEvent):void 
 		{
 			
 			m_moveOPTU.alpha = 0.5;
 			m_moveOPTR.alpha = 0.5;
 			m_moveOPTA.alpha = 0.5;
+			m_moveOPTU.filters =
+			m_moveOPTR.filters =
+			m_moveOPTA.filters = [];
+			
 			
 			if (e.type != MouseEvent.MOUSE_OUT)
 			{
 				e.currentTarget.alpha = 1;
 				m_moveOPTA.alpha = 1;
 				
+				e.currentTarget.filters =
+				m_moveOPTA.filters = s_filterArray;
+				
 				if (m_moveOPTA == e.currentTarget)
 				{
 					m_moveOPTU.alpha = 
 					m_moveOPTR.alpha = 1;
+					
+					m_moveOPTU.filters = 
+					m_moveOPTR.filters = s_filterArray;
 				}
 				
 				if (e.type == MouseEvent.MOUSE_DOWN && startMoveFunc != null)
