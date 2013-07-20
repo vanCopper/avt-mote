@@ -38,6 +38,8 @@ package editor.module.hair
 		private var m_efl : ModuleHairFrameLib;
 		
 		private var m_meshEditor : ModuleHairMeshEditor;
+		private var m_hairLocate : ModuleHairLocate;
+		
 		private var m_hairContainer : ModuleHairFrameSprite;
 		
 		public override function dispose():void
@@ -89,6 +91,7 @@ package editor.module.hair
 			
 			m_tb.btnImport.releaseFunction = onOpen;
 			m_tb.btnAF.releaseFunction = onAddFrame;
+			m_tb.btnLocate.releaseFunction = onEditLocate;
 			m_tb.deactivateAll([m_tb.btnImport]);
 			
 			m_efl  = new ModuleHairFrameLib();
@@ -105,6 +108,11 @@ package editor.module.hair
 			m_meshEditor.visible = false;
 			m_meshEditor.okFunction = onSetMesh;
 			
+			
+			m_hairLocate = new ModuleHairLocate();
+			m_content.addChild(m_hairLocate);
+			m_hairLocate.visible = false;
+			
 		}
 		
 		
@@ -115,10 +123,14 @@ package editor.module.hair
 			{
 				m_meshEditor.visible = false;
 				m_efl.clickFuntion = null;
-
+				m_eqm.visible = false;
+				m_efl.clickFuntion = null;
 			}
 			else if (p == 1)
 			{
+				m_hairLocate.deactivate();
+				m_hairLocate.visible = false;
+				m_efl.clickFuntion = null;
 			}
 			else if (p == 2)
 			{
@@ -137,8 +149,10 @@ package editor.module.hair
 		
 		private function onAddFrame(btn : BSSButton):void
 		{
+			disablePage(1);
 			m_meshEditor.visible = true;
 			m_efl.clickFuntion = onClickToEdit;
+			m_eqm.visible = true;
 			
 		}
 		private function onSetMesh(_data:ModuleHairFrame):void 
@@ -147,6 +161,8 @@ package editor.module.hair
 		}
 		private function onClickToEdit(__item : Sprite , mefs : ModuleHairFrameSprite , _name : String ):void 
 		{
+			
+			
 			m_hairContainer.data = mefs.data;
 			m_hairContainer.refresh();
 			
@@ -169,7 +185,9 @@ package editor.module.hair
 		
 		private function onEditLocate(btn : BSSButton):void
 		{
-			 
+			 disablePage(0);
+			 m_hairLocate.visible = true;
+			 m_hairLocate.activate();
 		}
 		
 		
@@ -230,6 +248,8 @@ package editor.module.hair
 			
 			onAddFrame(null);
 			deactivate();
+			
+			m_quadrant2.setVertex(null);
 		}
 		
 	

@@ -256,6 +256,10 @@ package editor.ui
 						{
 							if (m_vtxEditor) m_vtxEditor.onSelectChanged(false , curEdtQuadrant);
 						}
+						else
+						{
+							if (m_vtxEditor) m_vtxEditor.onSelectNothing(false , curEdtQuadrant);
+						}
 						
 						break;
 					}
@@ -290,7 +294,10 @@ package editor.ui
 				if (m_selector)
 				{
 					if (m_selector.onMouseDown(me , curEdtQuadrant) != 0)
+					{	
+						
 						break;
+					}
 				}
 				
 				

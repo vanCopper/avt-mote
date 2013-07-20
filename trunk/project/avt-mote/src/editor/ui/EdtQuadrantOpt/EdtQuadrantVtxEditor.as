@@ -49,12 +49,19 @@ package editor.ui.EdtQuadrantOpt
 				m_operatorIndicate.visible = false;	
 			}
 		}
-		
+		public function onSelectNothing(quadChange : Boolean , curEdtQuadrant:EdtQuadrant) : void
+		{
+			if (m_editMode != EDIT_MODE_INSERT)
+				m_operatorIndicate.alpha = 0.5;
+		}
 		public function onSelectChanged(quadChange : Boolean , curEdtQuadrant:EdtQuadrant) : void
 		{
 			if (m_editMode)
 			{
-				computeOperatorIndicatePos(quadChange , curEdtQuadrant);
+				if (m_editMode != EDIT_MODE_INSERT)
+					computeOperatorIndicatePos(quadChange , curEdtQuadrant);
+				else
+					m_operatorIndicate.alpha = 1;
 			}
 		}
 		
@@ -75,6 +82,9 @@ package editor.ui.EdtQuadrantOpt
 		
 		private function onStartMove(me : MouseEvent , m : int):void 
 		{
+			if (!m_selectedEVI.length)
+				return;
+			
 			m_operatorOffset.x = -me.stageX + m_operatorIndicate.x;
 			m_operatorOffset.y = -me.stageY + m_operatorIndicate.y;
 			
@@ -93,6 +103,8 @@ package editor.ui.EdtQuadrantOpt
 		
 		private function onStartInsert(me : MouseEvent , m : int):void 
 		{
+			
+			
 			m_operatorOffset.x = -me.stageX + m_operatorIndicate.x;
 			m_operatorOffset.y = -me.stageY + m_operatorIndicate.y;
 			m_operatorDir = m;
@@ -104,6 +116,9 @@ package editor.ui.EdtQuadrantOpt
 		
 		private function onStartScale(me : MouseEvent , m : int):void 
 		{
+			if (!m_selectedEVI.length)
+				return;
+				
 			m_operatorOffset.x = -me.stageX + m_operatorIndicate.x;
 			m_operatorOffset.y = -me.stageY + m_operatorIndicate.y;
 			
@@ -116,6 +131,27 @@ package editor.ui.EdtQuadrantOpt
 			m_operatorCenter.y = m_operatorIndicate.y;
 			
 			
+		}
+		
+		private function onStartRotation(me : MouseEvent , m : int):void 
+		{
+			if (!m_selectedEVI.length)
+				return;
+				
+			m_operatorOffset.x = -me.stageX + m_operatorIndicate.x;
+			m_operatorOffset.y = -me.stageY + m_operatorIndicate.y;
+			
+			
+			m_operatorDir = m;
+			m_operatorDoing = true;
+			m_indicate.mode = EdtQuadrantIndicate.NONE;
+			
+			m_operatorCenter.x = m_operatorIndicate.x;
+			m_operatorCenter.y = m_operatorIndicate.y;
+			
+			//trace(m_operatorIndicate.mouseY , m_operatorIndicate.mouseX );
+			m_operatorIndicate.startRadian = Math.atan2(m_operatorIndicate.mouseY , m_operatorIndicate.mouseX );
+			//trace(m_operatorIndicate.startRadian);
 		}
 		
 		public function dispose(): void
@@ -144,6 +180,33 @@ package editor.ui.EdtQuadrantOpt
 			}
 			return 0;
 		}
+		private function setVertexPosRotation(curEdtQuadrant : EdtQuadrant , offRadian : Number) : void
+		{
+			var __pt : Point = new Point();
+			for each (var __ptv : EdtVertexInfo in m_selectedEVI)
+			{
+				var offX : Number = __ptv.point.x -  m_operatorCenter.x;
+				var offY : Number = __ptv.point.y -  m_operatorCenter.y;
+				
+				var length : Number = Math.sqrt(offX * offX + offY * offY);
+				var oldR : Number = Math.atan2(offY , offX);
+				var newR : Number = oldR - offRadian;
+				__pt.x = m_operatorCenter.x + Math.cos(newR) * length;
+				__pt.y = m_operatorCenter.y + Math.sin(newR) * length;
+			
+				//trace(__ptv.dot.x , __ptv.dot.y , __ptv.dot.transform.colorTransform);
+				curEdtQuadrant.converMappedPointToDot(__pt , __ptv.dot);
+				//trace(__ptv.dot.x , __ptv.dot.y);
+			}
+			
+			
+			curEdtQuadrant.renderLine(false);
+			
+			if (m_changeFunction != null)
+				m_changeFunction(true , curEdtQuadrant);
+			
+		}
+		
 		
 		private function setVertexPosScale(curEdtQuadrant : EdtQuadrant , optPosScale : Point) : void
 		{
@@ -207,6 +270,9 @@ package editor.ui.EdtQuadrantOpt
 			
 			if (m_operatorDoing)
 			{
+				if (!m_selectedEVI.length && m_editMode != EDIT_MODE_INSERT)
+					return 1;
+					
 				var optPos : Point = new Point();
 				optPos.x = m_operatorOffset.x + me.stageX;
 				optPos.y = m_operatorOffset.y + me.stageY;
@@ -252,6 +318,11 @@ package editor.ui.EdtQuadrantOpt
 					setVertexPosScale(curEdtQuadrant , optPosScale);
 				}
 				else if (m_editMode == EDIT_MODE_ROTATION) {
+					var newR : Number = Math.atan2(m_operatorIndicate.mouseY , m_operatorIndicate.mouseX );
+					m_operatorIndicate.drawRotationUpdate(newR);
+					
+					setVertexPosRotation(curEdtQuadrant , newR - m_operatorIndicate.startRadian);
+					 
 				} 
 				else if (m_editMode == EDIT_MODE_INSERT) {
 					if (m_operatorDir != -1)
@@ -278,7 +349,7 @@ package editor.ui.EdtQuadrantOpt
 				}
 				else if (m_editMode == EDIT_MODE_ROTATION)
 				{
-					//donothing for simple deal
+					m_operatorIndicate.drawRotationUpdate(m_operatorIndicate.startRadian); //just clean
 				}
 				else if (m_editMode == EDIT_MODE_INSERT)
 				{
@@ -414,6 +485,28 @@ package editor.ui.EdtQuadrantOpt
 			else if (ke.keyCode == 69) // e
 			{
 				
+				if (m_editMode == EDIT_MODE_ROTATION)
+				{
+					m_editMode = 0;
+					m_indicate.mode = ke.altKey ? EdtQuadrantIndicate.VIEW_CONTROL : EdtQuadrantIndicate.SELECT_POINT;
+					if (m_operatorDoing)
+						m_operatorDoing = false;
+					m_operatorIndicate.visible = false;	
+				}
+				else if (m_editMode != EDIT_MODE_INSERT)
+				{
+					m_editMode = EDIT_MODE_ROTATION;
+					if (m_selectedEVI.length)
+					{
+						if (_oldEditMode == 0)
+							computeOperatorIndicatePos(true, curEdtQuadrant);
+						else
+							setOperatorIndicate(curEdtQuadrant);
+					}
+					setStartMoveFunc();
+				}
+				return 1;
+				
 			}
 			else if (ke.keyCode == 45) // insert
 			{
@@ -424,12 +517,14 @@ package editor.ui.EdtQuadrantOpt
 					m_editMode = EDIT_MODE_INSERT;
 					setStartMoveFunc();
 					setOperatorIndicate(curEdtQuadrant);
+					m_operatorIndicate.alpha = 1;
 				}
 				else if (m_editMode == EDIT_MODE_INSERT)
 				{
 					m_editMode = m_editModeInsertBack;
 					setStartMoveFunc();
 					setOperatorIndicate(curEdtQuadrant);
+					m_operatorIndicate.alpha = m_selectedEVI.length ? 1 : 0.5;
 				}
 				
 				
@@ -448,7 +543,7 @@ package editor.ui.EdtQuadrantOpt
 			}
 			else if (m_editMode == EDIT_MODE_ROTATION)
 			{
-				
+				m_operatorIndicate.startMoveFunc = onStartRotation;
 			}
 			else if (m_editMode == EDIT_MODE_INSERT)
 			{
@@ -504,7 +599,14 @@ package editor.ui.EdtQuadrantOpt
 				}
 			}
 			
-			
+			if (!m_selectedEVI.length)
+			{	
+				m_operatorIndicate.alpha = 0.5;
+				setOperatorIndicate(curEdtQuadrant);
+				return;
+			}
+			else
+				m_operatorIndicate.alpha = 1 ;
 			
 			for each (var __ptv : EdtVertexInfo in m_selectedEVI)
 			{
