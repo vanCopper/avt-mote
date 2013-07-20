@@ -183,11 +183,19 @@ package editor.module.hair
 
 		}
 		
+		private function onClickToLocate(__item : Sprite , mefs : ModuleHairFrameSprite , _name : String ):void 
+		{
+			
+			m_hairLocate.setCurrentData(mefs.data);
+			
+		}
+		
 		private function onEditLocate(btn : BSSButton):void
 		{
 			 disablePage(0);
 			 m_hairLocate.visible = true;
 			 m_hairLocate.activate();
+			 m_efl.clickFuntion = onClickToLocate;
 		}
 		
 		

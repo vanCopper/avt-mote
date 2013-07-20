@@ -7,6 +7,11 @@ package editor.module.hair
 	public class ModuleHairData 
 	{
 		public static var s_frameList : Vector.<ModuleHairFrame> = new Vector.<ModuleHairFrame>();
+		
+		
+		
+		
+		
 
 	}
 
