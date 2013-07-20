@@ -101,39 +101,14 @@ package editor.module.hair
 					}
 				}
 				
-				genConnect(hNum , vNum , m_data.vertexData);
+				m_data.genConnect(hNum , vNum , m_data.vertexData);
 				
 				if (okFunction != null)
 					okFunction(m_data);
 			}
 		}
 		
-		private function genConnect(pointPerLine:int, totalLine:int, _edtVectorAll:Vector.<EdtVertex3D>):void 
-		{
-			var ti : int = 0;
-			
-			ti = 0;
-			for each(var __edtP : EdtVertex3D in _edtVectorAll)
-			{
-				__edtP.priority = ti++;
-			}
-			
-			
-			for ( l = 0 ; l < totalLine ;l++ )
-			{
-				var start : int = l * pointPerLine;
-				for ( ti = 1 ; ti < pointPerLine ; ti++ )
-				{
-					EdtVertex3D.connect2PT(_edtVectorAll[start + ti - 1] , _edtVectorAll[start + ti]);
-				}
-			}
-			
-			for ( ti = 0 ; ti < pointPerLine ; ti++ )
-			for (var l : int = 1 ; l < totalLine ;l++ )
-			{
-				EdtVertex3D.connect2PT(_edtVectorAll[(l - 1) * pointPerLine + ti ] , _edtVectorAll[(l) * pointPerLine + ti ]);
-			}
-		}
+		
 		
 		private function onReset(btn:BSSButton):void 
 		{

@@ -1,8 +1,11 @@
 package editor.module.hair 
 {
+	import editor.Library;
 	import editor.struct.Texture2D;
+	import editor.struct.Vertex3D;
 	import editor.ui.EdtVertex3D;
 	import editor.ui.EdtVertexInfo;
+	import editor.util.TextureLoader;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -15,6 +18,10 @@ package editor.module.hair
 		public var vertexPerLine : int = 0 ;
 		public var uvData : Vector.<Number>;
 		public var indices : Vector.<int>;
+		
+		public var offsetX : Number = 0;
+		public var offsetY : Number = 0;
+		
 		
 		public function genIndicesData():void
 		{
@@ -66,8 +73,8 @@ package editor.module.hair
 				
 			for each( var ev : EdtVertex3D in vertexData)
 			{
-				__v.push(ev.x);
-				__v.push(ev.y);
+				__v.push(ev.x + offsetX);
+				__v.push(ev.y + offsetY);
 			}
 			return __v;
 		}
@@ -75,7 +82,8 @@ package editor.module.hair
 		public function ModuleHairFrame(_texture : Texture2D) 
 		{
 			texture = _texture;
-			name = texture.name;
+			if (texture)
+				name = texture.name;
 		}
 		
 		public function dispose():void 
@@ -88,6 +96,143 @@ package editor.module.hair
 		{
 			return new ModuleHairFrameSprite(this);
 		}
+		
+		
+		
+		
+		
+		
+		public function toXMLString():String
+		{
+			
+			var str : String = "<ModuleHairFrame>";
+			str += "<name>";
+				str += name;
+			str += "</name>";
+			
+			if (texture) str += texture.toXMLString();
+			
+			
+			str += "<vertexPerLine>";
+			str += "" + vertexPerLine;
+			str += "</vertexPerLine>";
+			
+			str += "<vertexData>";
+				var first : Boolean = true;
+				for each (var _v : Vertex3D in vertexData)	
+				{
+					if (first)
+					{
+						str += _v.to2DXMLString();
+						first = false;
+					}
+					else
+						str += "," + _v.to2DXMLString();
+				}
+			str += "</vertexData>";
+			
+			str += "</ModuleHairFrame>";
+			return str;
+		}
+		
+		public var loadStep : int;
+		public var callback :Function;
+		
+		public function genConnect(pointPerLine:int, totalLine:int, _edtVectorAll:Vector.<EdtVertex3D>):void 
+		{
+			var ti : int = 0;
+			
+			ti = 0;
+			for each(var __edtP : EdtVertex3D in _edtVectorAll)
+			{
+				__edtP.priority = ti++;
+			}
+			
+			
+			for ( l = 0 ; l < totalLine ;l++ )
+			{
+				var start : int = l * pointPerLine;
+				for ( ti = 1 ; ti < pointPerLine ; ti++ )
+				{
+					EdtVertex3D.connect2PT(_edtVectorAll[start + ti - 1] , _edtVectorAll[start + ti]);
+				}
+			}
+			
+			for ( ti = 0 ; ti < pointPerLine ; ti++ )
+			for (var l : int = 1 ; l < totalLine ;l++ )
+			{
+				EdtVertex3D.connect2PT(_edtVectorAll[(l - 1) * pointPerLine + ti ] , _edtVectorAll[(l) * pointPerLine + ti ]);
+			}
+		}
+		
+		private function onATextureLoaded():void
+		{
+			loadStep--;
+			if (loadStep == 0)
+			{
+				if (callback != null)
+					callback(this);
+				callback = null;
+			}
+		}
+		private function onTextureLoaded(_name : String , _texture2D : Texture2D):void 
+		{
+			texture = _texture2D;
+			onATextureLoaded();
+		}
+		
+		public function fromXMLString(s:XML , a_callback :Function):void
+		{
+			
+			vertexData.length = 0;
+			callback = a_callback;
+			if (s)
+			{
+				name = s.name.text();
+				
+				var _tname : String;
+				_tname = s.Texture2D.name.text();
+				texture = Library.getS().getTexture2D(_tname);
+				if (!texture) {
+					if (s.Texture2D != undefined)
+					{
+						loadStep++;
+						new TextureLoader(s.Texture2D[0], onTextureLoaded , false);
+					}
+				}
+				
+				vertexPerLine  = int(s.vertexPerLine.text());
+				
+				var __dataString : String = String(s.vertexData.text());
+				if (__dataString)
+				{
+					var __data : Array = __dataString.split(",");
+					for each (var vstr : String in __data )
+					{
+						var _ev : EdtVertex3D = new EdtVertex3D();
+						_ev.from2DXMLString(vstr);
+						vertexData.push(_ev);
+					}
+					genConnect(vertexPerLine , vertexData.length / vertexPerLine , vertexData);
+				}
+				
+				
+				if (loadStep == 0)
+				{
+					if (callback != null)
+						callback(this);
+					callback = null;
+				}
+				
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
 	}
 
 }

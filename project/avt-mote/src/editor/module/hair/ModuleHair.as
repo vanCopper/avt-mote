@@ -258,73 +258,70 @@ package editor.module.hair
 			deactivate();
 			
 			m_quadrant2.setVertex(null);
+			
+			m_moduleHairFrameList = null;
+		}
+		private var m_moduleHairFrameList : Vector.<XML>;
+	
+		private function onModuleHairFrameInited(_mef : ModuleHairFrame):void
+		{
+			
+			m_efl.addTexture(_mef , _mef.name);
+			m_efl.visible = true;
+			m_tb.activateAll(null);
+			
+			if (m_moduleHairFrameList.length) {
+				var mef : ModuleHairFrame = new ModuleHairFrame(null);
+				mef.fromXMLString(m_moduleHairFrameList.shift(), onModuleHairFrameInited);
+			}
+			else {
+				m_moduleHairFrameList = null;
+			}
 		}
 		
-	
 		public override function onOpenXML(__root : XML):void
 		{
-			/*
-			var eyeXML : XMLList = __root.ModuleEye;
+			
+			var eyeXML : XMLList = __root.ModuleHair;
 			
 			for each (var item : XML in eyeXML.elements())
 			{
 				//trace(item.toXMLString());
-				if (item.name() == "ModuleEyeFrames")
+				if (item.name() == "ModuleHairFrames")
 				{
-					m_moduleEyeFrameList = new Vector.<XML>
-					for each (var itemModuleEyeFrame : XML in item.ModuleEyeFrame )
+					m_moduleHairFrameList = new Vector.<XML>
+					for each (var itemModuleEyeFrame : XML in item.ModuleHairFrame )
 					{	
-						m_moduleEyeFrameList.push(itemModuleEyeFrame);
-						
-						
-						//m_efl.visible = true;
+						m_moduleHairFrameList.push(itemModuleEyeFrame);
 					}
 					
-					if (m_moduleEyeFrameList.length) {
-						var mef : ModuleEyeFrame = new ModuleEyeFrame();
-						mef.fromXMLString(m_moduleEyeFrameList.shift(), onModuleEyeFrameInited);
+					if (m_moduleHairFrameList.length) {
+						var mef : ModuleHairFrame = new ModuleHairFrame(null);
+						mef.fromXMLString(m_moduleHairFrameList.shift(), onModuleHairFrameInited);
 					}	
 				}
-				else if (item.name() == "ModuleEyeBlink")
-				{
-					m_moduleEyeBlinkEditor.fromXMLString(item);
-				}
-				else if (item.name() == "ModuleEyeMoveArea")
-				{
-					m_moduleEyeMA.fromXMLString(item);
-				}
-				else if (item.name() == "ModuleEyeLocate")
-				{
-					m_moduleEyeLocate.fromXMLString(item);
-				}
-				
 				
 			}
-						
-			//m_tb.deactivateAll([m_tb.btnImport]);
-			*/
 		}
 		
 		public override function onSave(__root : XML):void
 		{
-			/*
-			if (ModuleEyeData.s_frameList && ModuleEyeData.s_frameList.length)
+			
+			if (ModuleHairData.s_frameList && ModuleHairData.s_frameList.length)
 			{
-				var str : String = "<ModuleEye>";
-					str += "<ModuleEyeFrames>";
-					for each (var _mef : ModuleEyeFrame in ModuleEyeData.s_frameList)
+				var str : String = "<ModuleHair>";
+					str += "<ModuleHairFrames>";
+					for each (var _mef : ModuleHairFrame in ModuleHairData.s_frameList)
 					{
 						str += _mef.toXMLString();
 					}
-					str += "</ModuleEyeFrames>";
+					str += "</ModuleHairFrames>";
 					
-					str += m_moduleEyeBlinkEditor.toXMLString();
-					str += m_moduleEyeMA.toXMLString();
-					str += m_moduleEyeLocate.toXMLString();
+					//str += m_moduleEyeBlinkEditor.toXMLString();
+					//str += m_moduleEyeMA.toXMLString();
+					//str += m_moduleEyeLocate.toXMLString();
 					
-					
-				
-				str += "</ModuleEye>";
+				str += "</ModuleHair>";
 				
 				__root.appendChild(
 					new XML(str)
@@ -332,11 +329,11 @@ package editor.module.hair
 			}
 			else
 			{
-				var ModuleEyeXML : XML = <ModuleEye/>;
+				var ModuleEyeXML : XML = <ModuleHair/>;
 				__root.appendChild(
 					ModuleEyeXML
 				);
-			}*/
+			}
 		}
 		
 		
