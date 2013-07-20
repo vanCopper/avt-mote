@@ -37,6 +37,8 @@ package editor.module.hair
 		private var m_quadrant2 : EdtQuadrant;
 		private var m_efl : ModuleHairFrameLib;
 		
+		private var m_meshEditor : ModuleHairMeshEditor;
+		private var m_hairContainer : ModuleHairFrameSprite;
 		
 		public override function dispose():void
 		{
@@ -69,13 +71,15 @@ package editor.module.hair
 			m_content.addChild(m_tb).y = 25;
 			
 			m_quadrant2 = new EdtQuadrant(2);
+			m_quadrant2._xQ = -100;
+			m_quadrant2._yQ = -100;
 			
 			
 			m_eqm = new ModuleHairEQMgr();
 			m_eqm.addChildAt(m_quadrant2 , 0);
 			
-			
-			//m_quadrant2.indicate = m_hairContainer;
+			m_hairContainer = new ModuleHairFrameSprite(null);
+			m_quadrant2.indicate = m_hairContainer;
 			
 			m_quadrant2.fullScreen = (true);
 			m_quadrant2.state = 2;
@@ -85,24 +89,33 @@ package editor.module.hair
 			
 			m_tb.btnImport.releaseFunction = onOpen;
 			m_tb.btnAF.releaseFunction = onAddFrame;
-			
+			m_tb.deactivateAll([m_tb.btnImport]);
 			
 			m_efl  = new ModuleHairFrameLib();
 			m_efl.x = 650;
 			m_efl.y = 240;
 			m_efl.visible = false;
-			m_efl.clickFuntion = onClickToEdit;
+			m_efl.clickFuntion = null;
 			
 			
 			m_content.addChild(m_efl);
 			
+			m_meshEditor = new ModuleHairMeshEditor();
+			m_content.addChild(m_meshEditor);
+			m_meshEditor.visible = false;
+			m_meshEditor.okFunction = onSetMesh;
+			
 		}
+		
+		
 		
 		private function disablePage(p:int):void
 		{
 			if (p == 0)
 			{
-				
+				m_meshEditor.visible = false;
+				m_efl.clickFuntion = null;
+
 			}
 			else if (p == 1)
 			{
@@ -124,7 +137,22 @@ package editor.module.hair
 		
 		private function onAddFrame(btn : BSSButton):void
 		{
+			m_meshEditor.visible = true;
+			m_efl.clickFuntion = onClickToEdit;
 			
+		}
+		private function onSetMesh(_data:ModuleHairFrame):void 
+		{
+			m_quadrant2.setVertex(_data.vertexData);
+		}
+		private function onClickToEdit(__item : Sprite , mefs : ModuleHairFrameSprite , _name : String ):void 
+		{
+			m_hairContainer.data = mefs.data;
+			m_hairContainer.refresh();
+			
+			//m_quadrant2.setVertex
+			
+			m_meshEditor.setCurrentData(m_hairContainer.data);
 			
 		}
 		
@@ -149,45 +177,21 @@ package editor.module.hair
 		{
 			
 		}
-		private function onClickToEdit(__item : Sprite , mefs : ModuleHairFrameShape , _name : String ):void 
-		{
-			
-		}
+		
 		
 		private function onOpen(btn : BSSButton) : void {
 			new ImageListPicker( onLoadImage , [new FileFilter("image list(*.imglist)" , "*.imglist") , new FileFilter("image (*.png)" , "*.png")]);
 		}
-		private function updateDDM():void
-		{
-			
-			m_efl.visible = true;
-			m_tb.activateAll(null);
-			
-			var _ret : Vector.<Texture2D> = Library.getS().getList("HAIR");
-			/*
-			for each(var _t : Texture2D in _ret)
-			{
-				var _type : String = _t.name;
-				if (m_eyeLipDDM.getItemIndex(_type) == -1)
-				{
-					m_eyeLipDDM.addItem(_type);
-					m_eyeBallDDM.addItem(_type);
-					m_eyeWhiteDDM.addItem(_type);
-					
-				}
-				
-			}*/
-		}
+
+		
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
 		{
 			var _texture : Texture2D = new Texture2D(bitmapData , _filename , "HAIR");
 			Library.getS().addTexture(_texture);
 			
-			var _texture : Texture2D = new Texture2D(bitmapData , _filename , "HAIR");
-			Library.getS().addTexture(_texture);
-			
-			updateDDM();
-			
+			m_efl.visible = true;
+			m_tb.activateAll(null);
+			m_efl.addTexture(new ModuleHairFrame(_texture) ,  _texture.name);
 			
 		}
 		
@@ -218,9 +222,12 @@ package editor.module.hair
 			
 			m_tb.deactivateAll([m_tb.btnImport]);
 			
-			//m_efl.onNew();
-			//m_efl.visible = false;
+			m_efl.onNew();
+			m_efl.visible = false;
 		
+			m_hairContainer.data = null;
+			m_hairContainer.refresh();
+			
 			onAddFrame(null);
 			deactivate();
 		}

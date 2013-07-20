@@ -98,11 +98,19 @@ package editor.module.hair
 		private var m_frameList : Vector.<ModuleHairFrame> = ModuleHairData.s_frameList;
 		public function addTexture(_t : ModuleHairFrame , a_name : String , clickAtAdd : Boolean = false ) : void
 		{
+			for each (var _oldData : ModuleHairFrame in m_frameList)
+			{
+				if (_oldData.texture == _t.texture)
+				{
+					return;
+				}
+			}
+				
 			m_frameList.push(_t);
 			
 			
-			/*
-			var __frame : ModuleHairFrameShape = _t.createShape();
+			
+			var __frame : ModuleHairFrameSprite = _t.createSprite();
 			__frame.refresh();
 			__frame.fitPos(84 , 84 , 8 , 8);
 			
@@ -118,7 +126,7 @@ package editor.module.hair
 			indi.x = 105;
 			indi.width = 90;
 			indi.height = 24;
-			indi.type = TextFieldType.INPUT;
+			//indi.type = TextFieldType.INPUT;
 			
 			var __item : ItemContainer = new ItemContainer(__frame , indi);
 			__item.clickFuntion = onClick;
@@ -128,7 +136,7 @@ package editor.module.hair
 			
 			if (clickAtAdd)
 				onClick(__item);
-			*/
+			
 			
 		}
 		
@@ -180,7 +188,7 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.text.TextField;
-import editor.module.eye.*;
+import editor.module.hair.*;
 
 class ItemContainer extends Sprite {
 	
@@ -188,10 +196,10 @@ class ItemContainer extends Sprite {
 	public var changeFuntion : Function;
 	
 	public var indi : TextField;
-	public var mef : ModuleEyeFrameSprite;
+	public var mef : ModuleHairFrameSprite;
 	
 	
-	public function ItemContainer(a_mef : ModuleEyeFrameSprite , a_indi : TextField)
+	public function ItemContainer(a_mef : ModuleHairFrameSprite , a_indi : TextField)
 	{
 		addEventListener(MouseEvent.CLICK , onClick);
 		mef = a_mef;
