@@ -7,6 +7,7 @@ package editor.ui
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
 	import flash.geom.ColorTransform;
+	import flash.geom.Point;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -18,13 +19,90 @@ package editor.ui
 		
 		
 		private var m_moveOPTA : Sprite = new Sprite();
-		
+		public var startRadian : Number;
+		public var lastEndDegree : Number;
 		
 		public var startMoveFunc : Function;
 		//private var movingFunc : Function;
 		//private var endMoveFunc : Function;
 		private var m_curMode : String;
 		private var m_curOptMode : int = -1;
+		
+		private static function D2R(degress:Number):Number
+		{
+			return degress / 180 * Math.PI;
+		}
+		private static function R2D(radian:Number):Number
+		{
+			return radian * 180 / Math.PI;
+		}
+		public static function drawSector(g:Graphics , startRadian : Number , endRadian : Number , r : int):void
+		{
+			
+			
+			//g.clear();
+			var totalRadian : Number = endRadian- startRadian;
+			
+			var _2PI : Number = Math.PI * 2;
+			if (totalRadian > 0)
+			{
+				while (totalRadian >  _2PI)
+				{
+					totalRadian -= _2PI;
+				}
+			} else {
+				while (totalRadian < -_2PI)
+				{
+					totalRadian += _2PI;
+				}
+			}
+			
+			
+				
+			var angle : Number;
+			const dAng:Number = 1;
+
+			
+			{
+				
+				var startDegress : int = R2D(startRadian);
+				var endDegress : int = startDegress;
+				
+				
+				endDegress = R2D(totalRadian + startRadian) ;
+				
+				//trace("beginFill");
+				g.beginFill(0xFFFFFF, 0.4);
+				//g.drawRect(0, 0, 100, 100);
+				
+				g.moveTo(0,0);
+				
+				var _dDegree : int;
+				if (endDegress > startDegress)
+				{	
+
+					for (_dDegree = startDegress ;_dDegree <= endDegress; _dDegree++) 
+					{
+						g.lineTo(Math.cos(D2R(_dDegree)) * r,Math.sin(D2R(_dDegree)) * r);
+					}
+				}
+				else
+				{	
+					for (_dDegree = startDegress ;_dDegree >= endDegress; _dDegree--) 
+					{
+						//trace(Math.cos(D2R(_dDegree)) * r,Math.sin(D2R(_dDegree)) * r)
+						g.lineTo(Math.cos(D2R(_dDegree)) * r,Math.sin(D2R(_dDegree)) * r);
+					}
+				}
+				
+				//trace("endFIll");
+				g.lineTo(0, 0);
+				g.endFill();
+				
+			}
+		
+		}
+		
 		
 		private function drawInsert(_graphics : Graphics , drawArrow : Boolean) : void
 		{
@@ -47,6 +125,44 @@ package editor.ui
 			_graphics.lineTo( 0 , -leng);
 				
 			
+		}
+		
+		public function drawRotationUpdate(newR : Number):void
+		{
+			if (m_curOptMode == 3) {
+				var g : Graphics = Shape(m_moveOPTU.getChildAt(0)).graphics;
+				drawRotation(g);
+				
+				//trace(newR ,startRadian );
+				
+				if (newR != startRadian)
+					drawSector(g, startRadian, newR , 52);
+				
+				
+				/*
+				m_moveOPTU.alpha = 
+				m_moveOPTR.alpha = 
+				m_moveOPTA.alpha = 1
+				m_moveOPTU.filters =
+				m_moveOPTR.filters =
+				m_moveOPTA.filters = s_filterArray;*/
+			
+				
+			}
+		}
+		
+		private function drawRotation(_graphics : Graphics) : void
+		{
+			const leng : int = 52;
+			_graphics.clear();
+			
+			
+			_graphics.lineStyle(8,0,0);
+			_graphics.drawCircle(0, 0, 52);
+			
+			_graphics.lineStyle(1);
+			_graphics.drawCircle(0, 0, 52);
+			_graphics.lineStyle(NaN);
 		}
 		
 		private function drawScale(_graphics : Graphics , drawArrow : Boolean) : void
@@ -129,6 +245,22 @@ package editor.ui
 				drawFunc =  drawArrow;
 			else if (m_curOptMode == 2)
 				drawFunc =  drawScale;
+			else if (m_curOptMode == 3)
+			{	
+				drawFunc =  drawScale;
+				
+				drawRotation(Shape(m_moveOPTU.getChildAt(0)).graphics);
+				Shape(m_moveOPTR.getChildAt(0)).graphics.clear();
+				if (_str == "XY")
+					m_moveOPTU.transform.colorTransform  = Z_CF;
+				else if (_str == "XZ")
+					m_moveOPTU.transform.colorTransform = Y_CF;
+				else if (_str == "ZY")
+					m_moveOPTU.transform.colorTransform = X_CF;
+				else if (_str == "PERSP")
+					m_moveOPTU.transform.colorTransform = Z_CF;
+				return;
+			}
 			else if (m_curOptMode == 5)
 			{
 				drawFunc =  drawInsert;
