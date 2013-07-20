@@ -139,7 +139,17 @@ package editor.module.hair
 		
 		private function onUp(e:MouseEvent):void 
 		{
-			 e.currentTarget.stopDrag();
+			var _dsp : Sprite = e.currentTarget as Sprite;
+			_dsp.stopDrag();
+			
+			m_hairShape.data.offsetX = m_hairShape.data.offsetX + m_hairShape.x - EdtDEF.QUADRANT_WIDTH;
+			m_hairShape.data.offsetY = m_hairShape.data.offsetY + m_hairShape.y - EdtDEF.QUADRANT_HEIGHT;
+			
+			m_hairShape.x = EdtDEF.QUADRANT_WIDTH;
+			m_hairShape.y = EdtDEF.QUADRANT_HEIGHT;
+			
+			m_hairShape.refresh();
+			 
 			
 		}
 		

@@ -51,6 +51,11 @@ package editor.struct
 		{
 			return "" + x + ":" + y + ":" + z;
 		}
+		public function to2DXMLString():String
+		{
+			return "" + x + ":" + y;
+		}
+		
 		public function fromXMLString(s:String):void
 		{
 			var arr : Array = s.split(":")
@@ -59,7 +64,12 @@ package editor.struct
 			z = Number(arr[2]);
 			
 		}
-		
+		public function from2DXMLString(s:String):void
+		{
+			var arr : Array = s.split(":")
+			x = Number(arr[0]);
+			y = Number(arr[1]);			
+		}
 	}
 
 }

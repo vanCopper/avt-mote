@@ -776,6 +776,7 @@ package editor.module.eye
 			}
 			else {
 				m_moduleEyeBlinkEditor.loadFrame(m_efl.getModuleEyeFrameData);
+				m_moduleEyeFrameList = null;
 			}
 		}
 		
