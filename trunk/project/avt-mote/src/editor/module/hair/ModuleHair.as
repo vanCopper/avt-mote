@@ -45,6 +45,8 @@ package editor.module.hair
 		private var m_meshEditor : ModuleHairMeshEditor;
 		private var m_hairLocate : ModuleHairLocate;
 		private var m_hairZAdj : ModuleHairZAdjust;
+		private var m_hairProperty : ModuleHairProperty;
+		private var m_hairView : ModuleHairView;
 		
 		private var m_hairContainer : ModuleHairFrameSprite;
 		
@@ -111,9 +113,12 @@ package editor.module.hair
 			m_content.addChild(m_eqm).y = m_tb.y + m_tb.height; 
 			
 			m_tb.btnImport.releaseFunction = onOpen;
-			m_tb.btnAF.releaseFunction = function onEditLocate(btn : BSSButton):void { enablePage(0);}
-			m_tb.btnLocate.releaseFunction = function onEditLocate(btn : BSSButton):void { enablePage(1);}
-			m_tb.btnZAdj.releaseFunction = function onEditLocate(btn : BSSButton):void { enablePage(2);}
+			m_tb.btnAF.releaseFunction = function (btn : BSSButton):void { enablePage(0);}
+			m_tb.btnLocate.releaseFunction = function (btn : BSSButton):void { enablePage(1);}
+			m_tb.btnZAdj.releaseFunction = function (btn : BSSButton):void { enablePage(2); }
+			m_tb.btnProperty.releaseFunction = function (btn : BSSButton):void { enablePage(3); }
+			m_tb.btnView.releaseFunction = function (btn : BSSButton):void { enablePage(4); }
+			
 			m_tb.deactivateAll([m_tb.btnImport]);
 			
 			m_efl  = new ModuleHairFrameLib();
@@ -140,6 +145,15 @@ package editor.module.hair
 			m_content.addChild(m_hairZAdj);
 			m_hairZAdj.visible = false;
 			
+			
+			m_hairProperty = new ModuleHairProperty();
+			m_content.addChild(m_hairProperty);
+			m_hairProperty.visible = false;
+			
+			
+			m_hairView = new ModuleHairView();
+			m_content.addChild(m_hairView);
+			m_hairView.visible = false;
 		}
 		
 		
@@ -188,17 +202,20 @@ package editor.module.hair
 			}
 			else if (p == 3)
 			{
-				
+				m_hairProperty.visible = false;
+				m_efl.clickFuntion = null;
+				m_hairProperty.deactivate();
 			}
 			else if (p == 4)
 			{
-			
+				m_hairView.visible = false;
+				m_efl.clickFuntion = null;
 			}
 			
 		}
 		private function enablePage(p:int):void
 		{
-			for (var i : int = 0 ; i < 4; i++ )
+			for (var i : int = 0 ; i < 5; i++ )
 			{
 				if (p != i)
 					disablePage(i);
@@ -231,6 +248,18 @@ package editor.module.hair
 				m_eqm.setVertex(null);
 				m_eqm.changeFunction = onZAdjChange;
 			}
+			else if (p == 3)
+			{
+				m_hairProperty.visible = true;
+				m_efl.clickFuntion = onHairProperty;
+				m_hairProperty.activate();
+			}
+			else if (p == 4)
+			{
+				m_hairView.visible = true;
+				m_efl.clickFuntion = null;
+				m_hairView.activate();
+			}
 		}
 		
 		
@@ -262,7 +291,11 @@ package editor.module.hair
 			m_hairZAdj.onSetNewZ();
 			m_eqm.setVertex(m_hairZAdj.getVertex());
 		}
-		
+		private function onHairProperty(__item : Sprite , mefs : ModuleHairFrameSprite , _name : String ):void 
+		{
+			m_hairProperty.setCurrentData(mefs.data);
+			m_hairProperty.refresh();
+		}
 		
 		
 		

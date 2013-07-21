@@ -144,6 +144,12 @@ package editor.ui
 		public function dispose():void
 		{
 			GraphicsUtil.removeAllChildrenWithDispose(this);
+			
+			okFunction = null;
+			changeFunction = null;
+			
+			_text = null;
+			m_slider = null;
 		}
 		
 	}

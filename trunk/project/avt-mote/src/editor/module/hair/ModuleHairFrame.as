@@ -23,6 +23,11 @@ package editor.module.hair
 		public var offsetY : Number = 0;
 		
 		
+		public var weightReciprocal : Number = 60;
+		public var ductility : Number = 0.4;
+		public var hardness : Number = 1.0;
+		//public var decline : Number = 1.05;
+		
 		public function genIndicesData():void
 		{
 			if (!indices && vertexData)
@@ -145,6 +150,10 @@ package editor.module.hair
 			str += "</vertexDataZ>";
 			str += "<offsetX>" + offsetX + "</offsetX>";
 			str += "<offsetY>" + offsetY + "</offsetY>";
+		
+			str += "<weightReciprocal>" + weightReciprocal + "</weightReciprocal>";
+			str += "<ductility>" + ductility + "</ductility>";
+			str += "<hardness>" + hardness + "</hardness>";
 			
 			str += "</ModuleHairFrame>";
 			return str;
@@ -242,6 +251,9 @@ package editor.module.hair
 				offsetX  = int(s.offsetX.text());
 				offsetY  = int(s.offsetY.text());
 				
+				weightReciprocal  = Number(s.weightReciprocal.text());
+				ductility  = Number(s.ductility.text());
+				hardness  = Number(s.hardness.text());
 				
 				if (loadStep == 0)
 				{

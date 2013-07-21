@@ -258,7 +258,6 @@ package editor.module.eye
 		private function onMouseMove(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
 		{
 			onMouseMoveD();			
-			onMouseMoveD();			
 			return 0;
 		}
 		
