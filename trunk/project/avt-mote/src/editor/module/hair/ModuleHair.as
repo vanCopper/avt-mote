@@ -210,6 +210,7 @@ package editor.module.hair
 			{
 				m_hairView.visible = false;
 				m_efl.clickFuntion = null;
+				m_hairView.deactivate();
 			}
 			
 		}
