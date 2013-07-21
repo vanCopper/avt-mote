@@ -36,6 +36,9 @@ package editor.module.head
 		public static var s_absRY : Number;
 		public static var s_absRZ : Number;
 		
+		
+		
+		
 		public static function clear():void
 		{
 			s_approximationMode = true;
@@ -47,6 +50,34 @@ package editor.module.head
 		
 			s_uvData = null;
 			s_indices = null;
+		}
+		
+		
+		public static function genConnect(pointPerLine:int, totalLine:int, _edtVectorAll:Vector.<EdtVertex3D>):void 
+		{
+			var ti : int = 0;
+			
+			ti = 0;
+			for each(var __edtP : EdtVertex3D in _edtVectorAll)
+			{
+				__edtP.priority = ti++;
+			}
+			
+			
+			for ( l = 0 ; l < totalLine ;l++ )
+			{
+				var start : int = l * pointPerLine;
+				for ( ti = 1 ; ti < pointPerLine ; ti++ )
+				{
+					EdtVertex3D.connect2PT(_edtVectorAll[start + ti - 1] , _edtVectorAll[start + ti]);
+				}
+			}
+			
+			for ( ti = 0 ; ti < pointPerLine ; ti++ )
+			for (var l : int = 1 ; l < totalLine ;l++ )
+			{
+				EdtVertex3D.connect2PT(_edtVectorAll[(l - 1) * pointPerLine + ti ] , _edtVectorAll[(l) * pointPerLine + ti ]);
+			}
 		}
 		
 		public static function genindicesData():void

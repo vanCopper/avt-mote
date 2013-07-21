@@ -2,6 +2,7 @@ package editor.module.hair
 {
 	import editor.config.StringPool;
 	import editor.Library;
+	import editor.module.head.ModuleHead3DView;
 	import editor.module.ModuleBase;
 	import editor.struct.Texture2D;
 	import editor.struct.Texture2DBitmap;
@@ -35,10 +36,15 @@ package editor.module.hair
 		private var m_tb : ModuleHairToolbar;
 		private var m_eqm : ModuleHairEQMgr;
 		private var m_quadrant2 : EdtQuadrant;
+		private var m_quadrant1 : EdtQuadrant;
+		private var m_quadrant0 : EdtQuadrant;
+		private var m_quadrant3 : EdtQuadrant;
+		
 		private var m_efl : ModuleHairFrameLib;
 		
 		private var m_meshEditor : ModuleHairMeshEditor;
 		private var m_hairLocate : ModuleHairLocate;
+		private var m_hairZAdj : ModuleHairZAdjust;
 		
 		private var m_hairContainer : ModuleHairFrameSprite;
 		
@@ -61,7 +67,22 @@ package editor.module.hair
 				m_quadrant2.dispose();
 				m_quadrant2 = null;
 			}
-						
+				
+			if (m_quadrant0)
+			{
+				m_quadrant0.dispose();
+				m_quadrant0 = null;
+			}
+			if (m_quadrant1)
+			{
+				m_quadrant1.dispose();
+				m_quadrant1 = null;
+			}
+			if (m_quadrant3)
+			{
+				m_quadrant3.dispose();
+				m_quadrant3 = null;
+			}
 			super.dispose();
 		}
 		
@@ -90,8 +111,9 @@ package editor.module.hair
 			m_content.addChild(m_eqm).y = m_tb.y + m_tb.height; 
 			
 			m_tb.btnImport.releaseFunction = onOpen;
-			m_tb.btnAF.releaseFunction = onAddFrame;
-			m_tb.btnLocate.releaseFunction = onEditLocate;
+			m_tb.btnAF.releaseFunction = function onEditLocate(btn : BSSButton):void { enablePage(0);}
+			m_tb.btnLocate.releaseFunction = function onEditLocate(btn : BSSButton):void { enablePage(1);}
+			m_tb.btnZAdj.releaseFunction = function onEditLocate(btn : BSSButton):void { enablePage(2);}
 			m_tb.deactivateAll([m_tb.btnImport]);
 			
 			m_efl  = new ModuleHairFrameLib();
@@ -113,9 +135,33 @@ package editor.module.hair
 			m_content.addChild(m_hairLocate);
 			m_hairLocate.visible = false;
 			
+			
+			m_hairZAdj = new ModuleHairZAdjust();
+			m_content.addChild(m_hairZAdj);
+			m_hairZAdj.visible = false;
+			
 		}
 		
 		
+		private function init4Quadrant():void
+		{
+			if (!m_quadrant1)
+			{	
+				m_quadrant1 = new EdtQuadrant(1);
+				//m_3dView = new ModuleHead3DView();
+				//m_3dView.scaleEnabled = false;
+				//m_quadrant1.indicate = m_3dView;
+			}
+			if (!m_quadrant0)
+				m_quadrant0 = new EdtQuadrant(0);	
+			if (!m_quadrant3)
+				m_quadrant3 = new EdtQuadrant(3);	
+				
+			
+			m_eqm.setQuadrant(m_quadrant0 , m_quadrant1 , m_quadrant2 , m_quadrant3);
+			
+			m_quadrant2.fullScreen = false;
+		}
 		
 		private function disablePage(p:int):void
 		{
@@ -134,7 +180,11 @@ package editor.module.hair
 			}
 			else if (p == 2)
 			{
-				
+				m_eqm.visible = false;
+				m_eqm.remainQuadrant(m_quadrant2);
+				m_eqm.curEdtQuadrant = m_quadrant2;
+				m_quadrant2.indicate = null;
+				m_hairZAdj.visible = false;
 			}
 			else if (p == 3)
 			{
@@ -146,63 +196,75 @@ package editor.module.hair
 			}
 			
 		}
-		
-		private function onAddFrame(btn : BSSButton):void
+		private function enablePage(p:int):void
 		{
-			disablePage(1);
-			m_meshEditor.visible = true;
-			m_efl.clickFuntion = onClickToEdit;
-			m_eqm.visible = true;
+			for (var i : int = 0 ; i < 4; i++ )
+			{
+				if (p != i)
+					disablePage(i);
+			}
 			
+			if (p == 0)
+			{
+				m_meshEditor.visible = true;
+				m_efl.clickFuntion = onClickToEdit;
+				m_eqm.visible = true;
+				m_quadrant2.indicate = m_hairContainer;
+				m_quadrant2.setVertex(null);
+				m_eqm.changeFunction = null;
+			}
+			else if (p == 1)
+			{
+				 m_hairLocate.visible = true;
+				 m_hairLocate.activate();
+				 m_efl.clickFuntion = onClickToLocate;
+			}
+			else if (p == 2)
+			{
+				init4Quadrant();
+			 
+				m_efl.clickFuntion = null;
+				m_eqm.visible = true;
+				m_quadrant2.indicate = null;
+				m_hairZAdj.visible = true;
+				m_efl.clickFuntion = onClickToZAdj;
+				m_eqm.setVertex(null);
+				m_eqm.changeFunction = onZAdjChange;
+			}
 		}
+		
+		
 		private function onSetMesh(_data:ModuleHairFrame):void 
 		{
 			m_quadrant2.setVertex(_data.vertexData);
 		}
+		
 		private function onClickToEdit(__item : Sprite , mefs : ModuleHairFrameSprite , _name : String ):void 
 		{
 			
-			
 			m_hairContainer.data = mefs.data;
 			m_hairContainer.refresh();
-			
-			//m_quadrant2.setVertex
-			
 			m_meshEditor.setCurrentData(m_hairContainer.data);
 			
 		}
-		
-		private function onEditBlink(btn : BSSButton):void
-		{
-			
-		}
-		
-		private function onEditMove(btn : BSSButton):void
-		{
-			 
-
-		}
-		
 		private function onClickToLocate(__item : Sprite , mefs : ModuleHairFrameSprite , _name : String ):void 
 		{
-			
 			m_hairLocate.setCurrentData(mefs.data);
-			
 		}
 		
-		private function onEditLocate(btn : BSSButton):void
+		private function onClickToZAdj(__item : Sprite , mefs : ModuleHairFrameSprite , _name : String ):void 
 		{
-			 disablePage(0);
-			 m_hairLocate.visible = true;
-			 m_hairLocate.activate();
-			 m_efl.clickFuntion = onClickToLocate;
+			m_hairZAdj.setCurrentData(mefs.data);
+			m_eqm.setVertex(m_hairZAdj.getVertex());
 		}
-		
-		
-		private function onEditView(btn : BSSButton):void
+		private function onZAdjChange():void 
 		{
-			
+			m_hairZAdj.onSetNewZ();
+			m_eqm.setVertex(m_hairZAdj.getVertex());
 		}
+		
+		
+		
 		
 		
 		private function onOpen(btn : BSSButton) : void {
@@ -234,11 +296,7 @@ package editor.module.hair
 			
 			m_eqm.deactivate();
 			
-			disablePage(0);
-			disablePage(1);
-			disablePage(2);
-			disablePage(3);
-			disablePage(4);
+			enablePage( -1);
 			
 			super.deactivate();
 		}
@@ -254,7 +312,7 @@ package editor.module.hair
 			m_hairContainer.data = null;
 			m_hairContainer.refresh();
 			
-			onAddFrame(null);
+			enablePage(-1);
 			deactivate();
 			
 			m_quadrant2.setVertex(null);

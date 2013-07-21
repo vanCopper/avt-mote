@@ -53,6 +53,7 @@ package editor.config
 		public static var MODULE_HAIR_IMPORT_IMAGE:String = "import images";
 		public static var MODULE_HAIR_ADD_FRAME:String = "add frame";
 		public static var MODULE_HAIR_LOCATE:String = "locate";
+		public static var MODULE_HAIR_Z_ADJUST:String = "z adjust";
 		
 	}
 

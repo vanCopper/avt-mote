@@ -722,8 +722,10 @@ package editor.ui {
 				_lineShape.y = 
 				_lineShapeDym.y = _CoordinateAxisX.y;
 				
-				_indicate.x = _CoordinateAxisY.x;
-				_indicate.y = _CoordinateAxisX.y;
+				if (_indicate) {
+					_indicate.x = _CoordinateAxisY.x;
+					_indicate.y = _CoordinateAxisX.y;
+				}
 			}
 			
 			//_xQ -= ((((_quadrant&1)!=0)?1:-1)* EdtDEF.QUADRANT_WIDTH /2) * (isFull ? 1:-1);

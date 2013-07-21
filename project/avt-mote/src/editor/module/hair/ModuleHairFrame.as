@@ -130,6 +130,21 @@ package editor.module.hair
 						str += "," + _v.to2DXMLString();
 				}
 			str += "</vertexData>";
+			str += "<vertexDataZ>";
+				first = true;
+				for (var vi : int = 0 ; vi < vertexPerLine ; vi++ )	
+				{
+					if (first)
+					{
+						str += vertexData[vi].z;
+						first = false;
+					}
+					else
+						str += "," + vertexData[vi].z;
+				}
+			str += "</vertexDataZ>";
+			str += "<offsetX>" + offsetX + "</offsetX>";
+			str += "<offsetY>" + offsetY + "</offsetY>";
 			
 			str += "</ModuleHairFrame>";
 			return str;
@@ -214,7 +229,18 @@ package editor.module.hair
 						vertexData.push(_ev);
 					}
 					genConnect(vertexPerLine , vertexData.length / vertexPerLine , vertexData);
+					
+					
+					__dataString = String(s.vertexDataZ.text());
+					__data = __dataString.split(",");
+					for (var vi : int = 0 ; vi < vertexPerLine ; vi++ )
+					{
+						vertexData[vi].z = Number(__data[vi]);
+					}
 				}
+				
+				offsetX  = int(s.offsetX.text());
+				offsetY  = int(s.offsetY.text());
 				
 				
 				if (loadStep == 0)
