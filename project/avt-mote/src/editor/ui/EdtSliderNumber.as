@@ -99,7 +99,7 @@ package editor.ui
 			}
 			
 			_text = new TextField();
-			_text.width = 30;
+			_text.width = 50;
 			_text.height = 20;
 			_text.background = true;
 			_text.border = true;
@@ -144,6 +144,12 @@ package editor.ui
 		public function dispose():void
 		{
 			GraphicsUtil.removeAllChildrenWithDispose(this);
+			
+			okFunction = null;
+			changeFunction = null;
+			
+			_text = null;
+			m_slider = null;
 		}
 		
 	}

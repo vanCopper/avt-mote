@@ -8,6 +8,7 @@ package editor.module.hair
 	import editor.struct.Plane3D;
 	import editor.struct.Texture2DBitmap;
 	import editor.struct.Vertex3D;
+	import editor.ui.TextCheckBox;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Graphics;
@@ -33,12 +34,11 @@ package editor.module.hair
 		public function ModuleHairLocate() 
 		{
 			
-			var _btn : BSSButton = BSSButton.createSimpleBSSButton(100, 20 , "locate");
-			//_btn.x = sp.x - (_btn.width >> 1);
-			_btn.y = 30;
-			_btn.releaseFunction = setLocate;
-			
-			addChild(_btn);
+			//var _btn : BSSButton = BSSButton.createSimpleBSSButton(100, 20 , "locate");
+			///_btn.x = sp.x - (_btn.width >> 1);
+			//_btn.y = 30;
+			//_btn.releaseFunction = setLocate;
+			//addChild(_btn);
 			
 			graphics.lineStyle(1);
 			graphics.moveTo(0 , EdtDEF.QUADRANT_HEIGHT);
@@ -65,6 +65,20 @@ package editor.module.hair
 			//new Plane3D().
 			//gen3Point(new Vertex3D(1, 2, 3), new Vertex3D(40, 50, 60), new Vertex3D(700, 808, 999));
 			
+			var tcb : TextCheckBox;
+			tcb = new TextCheckBox();
+			tcb.text = "hair higher than head";
+			tcb.selected = true;
+			tcb.x  = 5;
+			tcb.y  = 60;
+			tcb.changeFunction = function(_tcb:TextCheckBox):void { 
+				
+				
+				swapChildren(m_hairShape , m_headView);
+				//m_hairShape.visible = _tcb.selected ;
+				
+			}
+			addChild(tcb);
 		}
 		
 		public function setCurrentData(_data:ModuleHairFrame):void
@@ -127,11 +141,11 @@ package editor.module.hair
 		{
 			var _dsp : Sprite = e.currentTarget as Sprite;
 			
-			if (_dsp.parent)
-			{
-				var _p : DisplayObjectContainer = _dsp.parent;
-				_p.addChild(_dsp);
-			}
+			//if (_dsp.parent)
+			//{
+			//	var _p : DisplayObjectContainer = _dsp.parent;
+			//	_p.addChild(_dsp);
+			//}
 			
 			_dsp.startDrag();
 			

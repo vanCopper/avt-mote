@@ -170,6 +170,14 @@ package editor.ui
 			
 		private function onFocusRealSet(pos : int , mode : int) : void
 		{
+			if (pos >= 4)
+			{
+				CONFIG::ASSERT {
+					ASSERT(false , "error pos" + pos);
+				}
+				return;
+			}
+			
 			var _ceq : EdtQuadrant  = m_edtQuadrantVector[pos];
 			
 			if (mode == 1)

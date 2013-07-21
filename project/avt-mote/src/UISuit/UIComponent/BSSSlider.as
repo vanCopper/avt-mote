@@ -109,7 +109,7 @@ package   UISuit.UIComponent   {
 					thumbBtn.x = m_right;
 		}
 		
-		public function setThumbValue ( thumbIndex : int , newValue : int)
+		public function setThumbValue ( thumbIndex : int , newValue : Number)
 		: void {
 			CONFIG::ASSERT {
 			    ASSERT(m_max != m_min , "min and max must be different when use set value")

@@ -82,6 +82,14 @@ package editor.ui.EdtQuadrantOpt
 				}
 				var _ptA : Point = curEdtQuadrant.parent.globalToLocal(new Point(me.stageX , me.stageY));
 
+				if (_ptA.x < 0 || _ptA.x >= EdtDEF.QUADRANT_WIDTH*2 
+				|| _ptA.y < 0 || _ptA.y >= EdtDEF.QUADRANT_HEIGHT*2 
+				)
+				{	
+					clearTimeoutSet();
+					return 0;
+				}
+				
 				var _curPos : int = int(_ptA.x / EdtDEF.QUADRANT_WIDTH) + int(_ptA.y / EdtDEF.QUADRANT_HEIGHT) * 2;
 				return setFocusQuadrant(_curPos , curEdtQuadrant , directSet);
 				
