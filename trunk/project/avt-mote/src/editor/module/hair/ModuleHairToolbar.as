@@ -15,9 +15,9 @@ package editor.module.hair
 		public var btnAF : BSSButton;
 		public var btnLocate : BSSButton;
 		
-		/*
-		public var btnMove : BSSButton;
 		
+		public var btnZAdj : BSSButton;
+		/*
 		public var btnView : BSSButton;
 		*/
 		
@@ -49,6 +49,12 @@ package editor.module.hair
 			btnLocate.y = 5 ;
 			lastBtn = addChild(btnLocate) ;
 			btnLocate.statusMode = true;
+			
+			btnZAdj = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_HAIR_Z_ADJUST , true, _areaArray);
+			btnZAdj.x = 5 + lastBtn.x + lastBtn.width;
+			btnZAdj.y = 5 ;
+			lastBtn = addChild(btnZAdj) ;
+			btnZAdj.statusMode = true;
 			
 			/*
 			btnBlink = BSSButton.createSimpleBSSButton(20, 20, StringPool.MODULE_EYE_EDIT_BLINK , true, _areaArray);
@@ -102,7 +108,7 @@ package editor.module.hair
 		}
 		public function activateAll(exceptArr : Array):void
 		{
-			var _arr : Array =  [btnImport , btnAF ,btnLocate];
+			var _arr : Array =  [btnImport , btnAF ,btnLocate , btnZAdj];
 			
 			
 			for each (var btn : BSSButton in _arr)
@@ -117,7 +123,7 @@ package editor.module.hair
 		}
 		public function deactivateAll(exceptArr : Array):void
 		{
-			var _arr : Array =  [btnImport , btnAF ,btnLocate];
+			var _arr : Array =  [btnImport , btnAF ,btnLocate, btnZAdj];
 			
 			for each (var btn : BSSButton in _arr)
 			{
@@ -140,6 +146,8 @@ package editor.module.hair
 			
 			if (btnImport) btnImport.dispose(); btnImport = null;
 			if (btnAF) btnAF.dispose(); btnAF = null;
+			if (btnLocate) btnLocate.dispose(); btnLocate = null;
+			if (btnZAdj) btnZAdj.dispose(); btnZAdj = null;
 			
 			super.dispose();
 		}

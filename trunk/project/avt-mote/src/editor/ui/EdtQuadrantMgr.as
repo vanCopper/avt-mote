@@ -50,6 +50,15 @@ package editor.ui
 		}
 		public function remainQuadrant(_e0 : EdtQuadrant):void
 		{
+			if (curEdtQuadrant  != _e0)
+			{
+				if (curEdtQuadrant.fullScreen)
+				{	
+					onFullScreenSet(curEdtQuadrant.quadrant , false);
+					curEdtQuadrant.state = -1;
+				}
+			}
+			
 			if (m_edtQuadrantVector[0] && m_edtQuadrantVector[0].parent)
 				m_edtQuadrantVector[0].parent.removeChild(m_edtQuadrantVector[0]);
 			if (m_edtQuadrantVector[1] && m_edtQuadrantVector[1].parent)
@@ -75,7 +84,9 @@ package editor.ui
 			
 			
 			m_selectedEVI.length = 0;
-			 
+			if (m_crossShape)
+				m_crossShape.visible = false;
+			
 			m_has4Qurad = false;
 		}
 		
@@ -101,6 +112,7 @@ package editor.ui
 				
 			
 			}
+			m_crossShape.visible = true;
 			
 			addChildAt(m_edtQuadrantVector[3] , 0);
 			addChildAt(m_edtQuadrantVector[2] , 0);
@@ -124,7 +136,7 @@ package editor.ui
 			}
 		}
 		
-		private function onFullScreenSet(onFullScreenSet : int , fullScreen : Boolean) : void
+		private function onFullScreenSet(pos : int , fullScreen : Boolean) : void
 		{
 			if (!fullScreen)
 			{

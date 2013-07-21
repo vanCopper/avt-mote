@@ -35,7 +35,7 @@ package editor.module.hair
 			
 			var _btn : BSSButton = BSSButton.createSimpleBSSButton(100, 20 , "locate");
 			//_btn.x = sp.x - (_btn.width >> 1);
-			_btn.y = 10;
+			_btn.y = 30;
 			_btn.releaseFunction = setLocate;
 			
 			addChild(_btn);
