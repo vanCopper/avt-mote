@@ -515,7 +515,9 @@ package editor.module.eye
 			else {
 				m_hoverTextureSprite.visible = true;
 				
-				m_hoverTexture2DBitmap.texture2D = Library.getS().getTexture2D(_DDM.getHoverString());
+				m_hoverTexture2DBitmap.texture2D = Library.getS().getTexture2D(_DDM.getHoverString()
+					,null,"EYE"
+				);
 				
 				m_hoverTextureSprite.graphics.clear();
 				m_hoverTextureSprite.graphics.lineStyle(1 , 0x9999FF);
@@ -531,7 +533,10 @@ package editor.module.eye
 			if (_DDM.selectedId == 0)
 			{		if (m_eyeContainer.data) m_eyeContainer.data.eyeWhite = null;}
 			else {
-				m_eyeContainer.data.eyeWhite = Library.getS().getTexture2D(_DDM.getSelectedString());
+				m_eyeContainer.data.eyeWhite = Library.getS().getTexture2D(
+				_DDM.getSelectedString()
+					,null,"EYE"
+				);
 			}
 			m_eyeContainer.refresh();
 			if (currentEditMEFS) {
@@ -546,7 +551,9 @@ package editor.module.eye
 			if (_DDM.selectedId == 0)
 			{	if (m_eyeContainer.data) m_eyeContainer.data.eyeBall = null;}
 			else {
-				m_eyeContainer.data.eyeBall = Library.getS().getTexture2D(_DDM.getSelectedString());
+				m_eyeContainer.data.eyeBall = Library.getS().getTexture2D(_DDM.getSelectedString()
+					,null,"EYE"
+				);
 			}
 			m_eyeContainer.refresh();
 			if (currentEditMEFS) {
@@ -561,7 +568,9 @@ package editor.module.eye
 			if (_DDM.selectedId == 0)
 			{		if (m_eyeContainer.data) 	m_eyeContainer.data.eyeLip = null;}
 			else {
-				m_eyeContainer.data.eyeLip = Library.getS().getTexture2D(_DDM.getSelectedString());
+				m_eyeContainer.data.eyeLip = Library.getS().getTexture2D(_DDM.getSelectedString()
+					,null,"EYE"
+				);
 			}
 			m_eyeContainer.refresh();
 			if (currentEditMEFS) {
@@ -700,9 +709,9 @@ package editor.module.eye
 		}
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
 		{
-			var _texture : Texture2D = new Texture2D(bitmapData , _filename , "EYE");
+			var _texture : Texture2D = new Texture2D(bitmapData , _filename , _filename , "EYE");
 			Library.getS().addTexture(_texture);
-			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FLIP" , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
+			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FLIP" , _filename  , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
 			//m_tb.deactivateAll([m_tb.btnAR]);
 			
 			

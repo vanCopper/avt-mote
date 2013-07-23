@@ -216,7 +216,8 @@ package editor.module.hair
 				
 				var _tname : String;
 				_tname = s.Texture2D.name.text();
-				texture = Library.getS().getTexture2D(_tname);
+				if (_tname)
+					texture = Library.getS().getTexture2DXML(s.Texture2D[0]);
 				if (!texture) {
 					if (s.Texture2D != undefined)
 					{

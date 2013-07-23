@@ -15,10 +15,12 @@ package editor.struct
 		
 		public var bitmapData : BitmapData;
 		public var name:String;
+		public var filename:String;
 		public var type : String = "";
 		
 		public function Texture2D(a_bitmapData : BitmapData
 			,a_name : String
+			,a_filename : String
 			,a_type : String
 			,a_rectX : Number = NaN
 			,a_rectY : Number = NaN
@@ -29,6 +31,7 @@ package editor.struct
 		{
 			bitmapData = a_bitmapData;
 			name = a_name;
+			filename = a_filename;
 			type = a_type;
 			
 			if (isNaN(a_rectX) || isNaN(a_rectY) || isNaN(a_rectW) || isNaN(a_rectH) )
@@ -62,6 +65,7 @@ package editor.struct
 		{
 			return "<Texture2D>"
 				+ "<name>" + name + "</name>"
+				+ "<filename>" + filename + "</filename>"
 				+ "<rectX>" + rectX + "</rectX>"
 				+ "<rectY>" + rectY + "</rectY>"
 				+ "<rectW>" + rectW + "</rectW>"
@@ -76,7 +80,10 @@ package editor.struct
 			rectW = Number(xml.name.text());
 			rectH = Number(xml.name.text());
 			name = xml.name.text();
-			
+			if (xml.filename == undefined)
+				filename = name.replace("#FLIP" , "");
+			else
+				filename = xml.filename.text();
 		}
 		
 		

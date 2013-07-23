@@ -98,10 +98,13 @@ package editor
 			return _ret;
 		}
 		private var m_textureList : Vector.<Texture2D> = new Vector.<Texture2D>();
-		public function addTexture(_t : Texture2D) : void
+		public function addTexture(_t : Texture2D , test : Boolean = true) : void
 		{
-			if (getTexture2D(_t.name))
-				return;
+			if (test) {
+				if (getTexture2D(_t.name , _t.filename , _t.type ))
+					return;
+			}
+			
 			
 			m_textureList.push(_t);
 			
@@ -153,12 +156,44 @@ package editor
 			
 			return null;
 		}
-		public function getTexture2D(_name : String):Texture2D
+		
+		public function getTexture2DXML(_xml : XML) :Texture2D
+		{
+			if (_xml.name.text())
+				return getTexture2D(_xml.name.text()
+				, _xml.filename ? null : _xml.filename.text()
+				, _xml.type.text() , _xml
+				);
+			else
+				return null;
+		}
+		
+		
+		public function getTexture2D(_name : String , _filename : String , _type : String , refXML : XML = null):Texture2D
 		{
 			for each(var _t : Texture2D in m_textureList)
 			{
-				if (_name == _t.name)
+				if (_name == _t.name && _type == _t.type)
+				{	
 					return _t;
+				}
+				
+			}
+			
+			if (_filename && refXML)
+			for each( _t in m_textureList)
+			{
+				if (_filename == _t.filename)
+				{	
+					var _texture : Texture2D = new Texture2D(_t.bitmapData , _name , _filename , _type
+						, Number(refXML.rectX.text())
+						, Number(refXML.rectY.text())
+						, Number(refXML.rectW.text())
+						, Number(refXML.rectH.text())
+						);
+						Library.getS().addTexture(_texture , false);
+					return _texture;
+				}
 			}
 			
 			return null;

@@ -665,7 +665,7 @@ package editor.module.head
 			m_bmp.x =  -  (( bitmapData.width ) >> 1);
 			m_bmp.y =  - ((bitmapData.height)  >> 1);
 			
-			ModuleHeadData.s_texture = new Texture2D(bitmapData , _filename , "HEAD");
+			ModuleHeadData.s_texture = new Texture2D(bitmapData , _filename , _filename , "HEAD");
 			Library.getS().addTexture(ModuleHeadData.s_texture);
 			
 			m_tb.deactivateAll([m_tb.btnAR]);
