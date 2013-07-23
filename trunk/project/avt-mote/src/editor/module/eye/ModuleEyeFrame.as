@@ -211,6 +211,7 @@ package editor.module.eye
 			callback = a_callback;
 			if (s)
 			{
+				loadStep++;
 				name = s.name.text();
 				
 				var _tname : String;
@@ -270,7 +271,7 @@ package editor.module.eye
 					genConnect();
 				}
 				
-				
+				loadStep--;
 				if (loadStep == 0)
 				{
 					if (callback != null)
