@@ -15,6 +15,7 @@
     </exact>
     <Texture2D>
       <name>head-hair-clean.png</name>
+      <filename>head-hair-clean.png</filename>
       <rectX>0</rectX>
       <rectY>0</rectY>
       <rectW>256</rectW>
@@ -34,6 +35,7 @@
         <eyeWhite>
           <Texture2D>
             <name>eye/eye-w.png</name>
+            <filename>eye/eye-w.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>68</rectW>
@@ -44,6 +46,7 @@
         <eyeBall>
           <Texture2D>
             <name>eye/eye-b.png</name>
+            <filename>eye/eye-b.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>44</rectW>
@@ -55,6 +58,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls0.png</name>
+            <filename>eye/eye-ls0.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>84</rectW>
@@ -70,6 +74,7 @@
         <eyeWhite>
           <Texture2D>
             <name>eye/eye-w.png</name>
+            <filename>eye/eye-w.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>68</rectW>
@@ -80,6 +85,7 @@
         <eyeBall>
           <Texture2D>
             <name>eye/eye-b.png</name>
+            <filename>eye/eye-b.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>44</rectW>
@@ -91,6 +97,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls1.png</name>
+            <filename>eye/eye-ls1.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>85</rectW>
@@ -106,6 +113,7 @@
         <eyeWhite>
           <Texture2D>
             <name>eye/eye-w.png</name>
+            <filename>eye/eye-w.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>68</rectW>
@@ -116,6 +124,7 @@
         <eyeBall>
           <Texture2D>
             <name>eye/eye-b.png</name>
+            <filename>eye/eye-b.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>44</rectW>
@@ -127,6 +136,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls2.png</name>
+            <filename>eye/eye-ls2.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>84</rectW>
@@ -146,6 +156,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls3.png</name>
+            <filename>eye/eye-ls3.png</filename>
             <rectX>0</rectX>
             <rectY>0</rectY>
             <rectW>85</rectW>
@@ -161,6 +172,7 @@
         <eyeWhite>
           <Texture2D>
             <name>eye/eye-w.png#FLIP</name>
+            <filename>eye/eye-w.png</filename>
             <rectX>68</rectX>
             <rectY>0</rectY>
             <rectW>-68</rectW>
@@ -171,6 +183,7 @@
         <eyeBall>
           <Texture2D>
             <name>eye/eye-b.png#FLIP</name>
+            <filename>eye/eye-b.png</filename>
             <rectX>44</rectX>
             <rectY>0</rectY>
             <rectW>-44</rectW>
@@ -182,6 +195,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls0.png#FLIP</name>
+            <filename>eye/eye-ls0.png</filename>
             <rectX>84</rectX>
             <rectY>0</rectY>
             <rectW>-84</rectW>
@@ -197,6 +211,7 @@
         <eyeWhite>
           <Texture2D>
             <name>eye/eye-w.png#FLIP</name>
+            <filename>eye/eye-w.png</filename>
             <rectX>68</rectX>
             <rectY>0</rectY>
             <rectW>-68</rectW>
@@ -207,6 +222,7 @@
         <eyeBall>
           <Texture2D>
             <name>eye/eye-b.png#FLIP</name>
+            <filename>eye/eye-b.png</filename>
             <rectX>44</rectX>
             <rectY>0</rectY>
             <rectW>-44</rectW>
@@ -218,6 +234,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls1.png#FLIP</name>
+            <filename>eye/eye-ls1.png</filename>
             <rectX>85</rectX>
             <rectY>0</rectY>
             <rectW>-85</rectW>
@@ -233,6 +250,7 @@
         <eyeWhite>
           <Texture2D>
             <name>eye/eye-w.png#FLIP</name>
+            <filename>eye/eye-w.png</filename>
             <rectX>68</rectX>
             <rectY>0</rectY>
             <rectW>-68</rectW>
@@ -243,6 +261,7 @@
         <eyeBall>
           <Texture2D>
             <name>eye/eye-b.png#FLIP</name>
+            <filename>eye/eye-b.png</filename>
             <rectX>44</rectX>
             <rectY>0</rectY>
             <rectW>-44</rectW>
@@ -254,6 +273,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls2.png#FLIP</name>
+            <filename>eye/eye-ls2.png</filename>
             <rectX>84</rectX>
             <rectY>0</rectY>
             <rectW>-84</rectW>
@@ -273,6 +293,7 @@
         <eyeLip>
           <Texture2D>
             <name>eye/eye-ls3.png#FLIP</name>
+            <filename>eye/eye-ls3.png</filename>
             <rectX>85</rectX>
             <rectY>0</rectY>
             <rectW>-85</rectW>
@@ -335,6 +356,7 @@
         <name>hair/hair-b.png</name>
         <Texture2D>
           <name>hair/hair-b.png</name>
+          <filename>hair/hair-b.png</filename>
           <rectX>0</rectX>
           <rectY>0</rectY>
           <rectW>380</rectW>
@@ -354,6 +376,7 @@
         <name>hair/hair-l.png</name>
         <Texture2D>
           <name>hair/hair-l.png</name>
+          <filename>hair/hair-l.png</filename>
           <rectX>0</rectX>
           <rectY>0</rectY>
           <rectW>220</rectW>
@@ -373,6 +396,7 @@
         <name>hair/hair-r.png</name>
         <Texture2D>
           <name>hair/hair-r.png</name>
+          <filename>hair/hair-r.png</filename>
           <rectX>0</rectX>
           <rectY>0</rectY>
           <rectW>128</rectW>
