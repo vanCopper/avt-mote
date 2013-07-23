@@ -104,10 +104,10 @@ package editor.module.eye
 			var t : Texture2D = eyeWhite;
 			
 			return Vector.<Vertex3D>([
-				new Vertex3D(t.rectX , t.rectY, 0)
-				,new Vertex3D(t.rectX + t.rectW , t.rectY, 0)
-				,new Vertex3D(t.rectX , t.rectY + t.rectH, 0)
-				,new Vertex3D(t.rectX + t.rectW , t.rectY + t.rectH, 0)
+				new Vertex3D(0 , 0, 0)
+				,new Vertex3D(0 + t.rectW , 0, 0)
+				,new Vertex3D(0 , t.rectH, 0)
+				,new Vertex3D(0 + t.rectW , 0 + t.rectH, 0)
 			]);
 		}
 		private function genEyeBallVertex3D():Vector.<Vertex3D>
@@ -118,10 +118,10 @@ package editor.module.eye
 			var t : Texture2D = eyeBall;
 			
 			return Vector.<Vertex3D>([
-				new Vertex3D(eyeBallX + t.rectX , eyeBallY + t.rectY, 0)
-				,new Vertex3D(eyeBallX + t.rectX + t.rectW , eyeBallY + t.rectY, 0)
-				,new Vertex3D(eyeBallX + t.rectX , t.rectY + eyeBallY + t.rectH, 0)
-				,new Vertex3D(eyeBallX + t.rectX + t.rectW , eyeBallY + t.rectY + t.rectH, 0)
+				new Vertex3D(eyeBallX + 0 , eyeBallY + 0, 0)
+				,new Vertex3D(eyeBallX + 0 + t.rectW , eyeBallY + 0, 0)
+				,new Vertex3D(eyeBallX + 0 , 0 + eyeBallY + t.rectH, 0)
+				,new Vertex3D(eyeBallX + 0 + t.rectW , eyeBallY + 0 + t.rectH, 0)
 			]);
 		}
 		private function genEyeLipVertex3D():Vector.<Vertex3D>
@@ -132,10 +132,10 @@ package editor.module.eye
 			var t : Texture2D = eyeLip;
 			
 			return Vector.<Vertex3D>([
-				new Vertex3D(eyeLipX + t.rectX , eyeLipY + t.rectY, 0)
-				,new Vertex3D(eyeLipX + t.rectX + t.rectW , eyeLipY + t.rectY, 0)
-				,new Vertex3D(eyeLipX + t.rectX , t.rectY + eyeLipY + t.rectH, 0)
-				,new Vertex3D(eyeLipX + t.rectX + t.rectW , eyeLipY + t.rectY + t.rectH, 0)
+				new Vertex3D(eyeLipX + 0 , eyeLipY + 0, 0)
+				,new Vertex3D(eyeLipX + 0 + t.rectW , eyeLipY + 0, 0)
+				,new Vertex3D(eyeLipX + 0 , 0 + eyeLipY + t.rectH, 0)
+				,new Vertex3D(eyeLipX + 0 + t.rectW , eyeLipY + 0+ t.rectH, 0)
 			]);
 		}
 		
@@ -192,7 +192,8 @@ package editor.module.eye
 				
 				var _tname : String;
 				_tname = s.eyeWhite.Texture2D.name.text();
-				eyeWhite = Library.getS().getTexture2D(_tname);
+				if (_tname)
+				eyeWhite = Library.getS().getTexture2DXML(s.eyeWhite.Texture2D[0]);
 				if (!eyeWhite)
 				{
 					if (s.eyeWhite.Texture2D != undefined)
@@ -203,7 +204,8 @@ package editor.module.eye
 				}
 
 				_tname = s.eyeBall.Texture2D.name.text();
-				eyeBall = Library.getS().getTexture2D(_tname);
+				if (_tname)
+				eyeBall = Library.getS().getTexture2DXML(s.eyeBall.Texture2D[0]);
 				if (!eyeBall)
 				{
 					if (s.eyeBall.Texture2D != undefined)
@@ -218,7 +220,8 @@ package editor.module.eye
 				eyeBallY = Number(_p[1]);
 				
 				_tname = s.eyeLip.Texture2D.name.text();
-				eyeLip = Library.getS().getTexture2D(_tname);
+				if (_tname)
+				eyeLip = Library.getS().getTexture2DXML(s.eyeLip.Texture2D[0]);
 				if (!eyeLip)
 				{
 					if (s.eyeLip.Texture2D != undefined)

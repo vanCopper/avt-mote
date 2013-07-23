@@ -308,7 +308,7 @@ package editor.module.hair
 		
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
 		{
-			var _texture : Texture2D = new Texture2D(bitmapData , _filename , "HAIR");
+			var _texture : Texture2D = new Texture2D(bitmapData , _filename , _filename , "HAIR");
 			Library.getS().addTexture(_texture);
 			
 			m_efl.visible = true;

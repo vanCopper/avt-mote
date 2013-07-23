@@ -5,6 +5,7 @@ package editor.util
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 	/**
@@ -27,6 +28,7 @@ package editor.util
 		{
 			var ldr : Loader = new Loader();
 			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE , onComplete );
+			ldr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR , onComplete );
 			var url : String = TextureLoader.s_imgPath +  m_filename;
 			ldr.load(new URLRequest(url));
 			
@@ -42,6 +44,7 @@ package editor.util
 			{
 				var ldr : Loader = new Loader();
 				ldr.contentLoaderInfo.addEventListener(Event.COMPLETE , onComplete );
+				ldr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR , onComplete );
 				ldr.loadBytes(ba);
 			}
 			else {
@@ -68,7 +71,15 @@ package editor.util
 		
 		private function onComplete(e:Event):void 
 		{
+		
 			e.currentTarget.removeEventListener(Event.COMPLETE , onComplete );
+			e.currentTarget.removeEventListener(IOErrorEvent.IO_ERROR , onComplete );
+			
+			if (e.type == IOErrorEvent.IO_ERROR)
+			{
+				trace(e);
+				return;
+			}
 			var ldi : LoaderInfo = (e.currentTarget) as LoaderInfo;
 			
 			if (m_callback != null)
