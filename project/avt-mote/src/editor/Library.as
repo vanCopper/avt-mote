@@ -161,7 +161,7 @@ package editor
 		{
 			if (_xml.name.text())
 				return getTexture2D(_xml.name.text()
-				, _xml.filename ? null : _xml.filename.text()
+				, _xml.filename.text() ?  _xml.filename.text() : null
 				, _xml.type.text() , _xml
 				);
 			else

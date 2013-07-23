@@ -286,18 +286,18 @@ package editor.module.eye
 			if (p == 0)
 			{
 				m_eqm.visible =
-				 m_eyeContainer.visible =
-				 m_eyeChoose.visible = false;
+				m_eyeContainer.visible =
+				m_eyeChoose.visible = false;
 				 
 				m_eyeWhiteDDM.closeMenu();
 				m_eyeBallDDM.closeMenu();
 				m_eyeLipDDM.closeMenu();
 				 
-				 m_hoverTexture2DBitmap.visible = false;
-				 m_efl.clearSelect();
-				 m_efl.clickFuntion = null;
-				  
-				 m_eqm.deactivate();
+				m_hoverTexture2DBitmap.visible = false;
+				m_efl.clearSelect();
+				m_efl.clickFuntion = null;
+
+				m_eqm.deactivate();
 			}
 			else if (p == 1)
 			{
@@ -325,82 +325,82 @@ package editor.module.eye
 			
 		}
 		
+		private function enablePage(p:int) : void
+		{
+			for (var vi : int = 0 ; vi < 5 ; vi++)
+			{
+				if (p != vi)
+					 disablePage(vi);
+			}
+			
+			if (p == 0)
+			{
+				m_eqm.visible =
+				m_eyeContainer.visible =
+				m_eyeChoose.visible = true;
+				m_hoverTexture2DBitmap.visible = true;
+				
+				m_eqm.activate();
+				
+				m_efl.clearSelect();
+				m_efl.clickFuntion = onClickToEdit;
+				m_efl.clickWhenClone = true;
+			} 
+			else if (p == 1)
+			{
+				
+				 m_efl.clickFuntion = onClickToSetFrame;
+				 m_efl.clickWhenClone = false;
+				  
+				 m_moduleEyeBlinkEditor.visible = true;
+				 m_moduleEyeBlinkEditor.refresh();
+			}
+			else  if (p == 2)
+			{
+				 m_moduleEyeMA.visible = true;
+				 m_moduleEyeMA.activate();
+				 m_efl.clickFuntion = onClickToSetTemplate;
+				 m_efl.clickWhenClone = false;
+			}
+			else  if (p == 3)
+			{
+				m_moduleEyeLocate.visible = true;
+				m_moduleEyeLocate.activate();
+				m_efl.clickFuntion = null;
+				m_efl.clickWhenClone = false;
+			}
+			else  if (p == 4)
+			{
+				m_moduleEyeView.visible = true;
+				m_moduleEyeView.activate();
+			} 
+			
+		}
+		
 		private function onAddFrame(btn : BSSButton):void
 		{
-			disablePage(1);
-			disablePage(2);
-			disablePage(3);
-			disablePage(4);
-			
-			m_eqm.visible =
-			m_eyeContainer.visible =
-			m_eyeChoose.visible = true;
-			m_hoverTexture2DBitmap.visible = true;
-			
-			m_eqm.activate();
-			
-			m_efl.clearSelect();
-			m_efl.clickFuntion = onClickToEdit;
-			m_efl.clickWhenClone = true;
-			
-			
+			enablePage(0);
 		}
 		
 		private function onEditBlink(btn : BSSButton):void
 		{
-			 
-			 disablePage(0);
-			 disablePage(2);
-			 disablePage(3);
-			 disablePage(4);
-			 
-			 m_efl.clickFuntion = onClickToSetFrame;
-			 m_efl.clickWhenClone = false;
-			  
-			 m_moduleEyeBlinkEditor.visible = true;
-			 m_moduleEyeBlinkEditor.refresh();
+			enablePage(1);
 		}
 		
 		private function onEditMove(btn : BSSButton):void
 		{
-			 
-			 disablePage(0);
-			 disablePage(1);
-			 disablePage(3);
-			 disablePage(4);
-			 
-			 m_moduleEyeMA.visible = true;
-			 m_moduleEyeMA.activate();
-			 m_efl.clickFuntion = onClickToSetTemplate;
-			 m_efl.clickWhenClone = false;
+			 enablePage(2);
 		}
 		
 		private function onEditLocate(btn : BSSButton):void
 		{
-			 
-			 disablePage(0);
-			 disablePage(1);
-			 disablePage(2);
-			 disablePage(4);
-			 
-			m_moduleEyeLocate.visible = true;
-			 m_moduleEyeLocate.activate();
-			 m_efl.clickFuntion = null;
-			 m_efl.clickWhenClone = false;
+			 enablePage(3);
 		}
 		
 		
 		private function onEditView(btn : BSSButton):void
 		{
-		 
-			disablePage(0);
-			disablePage(1);
-			disablePage(2);
-			disablePage(3);
-
-			m_moduleEyeView.visible = true;
-			m_moduleEyeView.activate();
-			
+			enablePage(4);
 		}
 		
 		
