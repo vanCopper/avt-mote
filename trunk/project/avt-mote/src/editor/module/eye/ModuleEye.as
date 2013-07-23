@@ -302,6 +302,7 @@ package editor.module.eye
 			else if (p == 1)
 			{
 				m_moduleEyeBlinkEditor.visible = false;
+				m_moduleEyeBlinkEditor.deactivate();
 				m_efl.clickFuntion = null;
 			}
 			else if (p == 2)
@@ -353,7 +354,9 @@ package editor.module.eye
 				 m_efl.clickWhenClone = false;
 				  
 				 m_moduleEyeBlinkEditor.visible = true;
+				 m_moduleEyeBlinkEditor.activate();
 				 m_moduleEyeBlinkEditor.refresh();
+				
 			}
 			else  if (p == 2)
 			{
