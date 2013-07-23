@@ -103,6 +103,14 @@ package editor.module.eye
 				
 			var t : Texture2D = eyeWhite;
 			
+			if (t.rectW < 0)
+				return Vector.<Vertex3D>([
+					new Vertex3D(-t.rectW , 0, 0)
+					,new Vertex3D(0 , 0, 0)
+					,new Vertex3D(-t.rectW , t.rectH, 0)
+					,new Vertex3D(0 , 0 + t.rectH, 0)
+			]);
+			else 
 			return Vector.<Vertex3D>([
 				new Vertex3D(0 , 0, 0)
 				,new Vertex3D(0 + t.rectW , 0, 0)
@@ -117,6 +125,14 @@ package editor.module.eye
 				
 			var t : Texture2D = eyeBall;
 			
+			if (t.rectW < 0)
+			return Vector.<Vertex3D>([
+				new Vertex3D(eyeBallX -t.rectW , eyeBallY + 0, 0)
+				,new Vertex3D(eyeBallX  , eyeBallY + 0, 0)
+				,new Vertex3D(eyeBallX -t.rectW , 0 + eyeBallY + t.rectH, 0)
+				,new Vertex3D(eyeBallX , eyeBallY + 0 + t.rectH, 0)
+			]);
+			else
 			return Vector.<Vertex3D>([
 				new Vertex3D(eyeBallX + 0 , eyeBallY + 0, 0)
 				,new Vertex3D(eyeBallX + 0 + t.rectW , eyeBallY + 0, 0)
@@ -130,7 +146,14 @@ package editor.module.eye
 				return null;
 				
 			var t : Texture2D = eyeLip;
-			
+			if (t.rectW < 0)
+			return Vector.<Vertex3D>([
+				new Vertex3D(eyeLipX -t.rectW , eyeLipY + 0, 0)
+				,new Vertex3D(eyeLipX , eyeLipY + 0, 0)
+				,new Vertex3D(eyeLipX -t.rectW , 0 + eyeLipY + t.rectH, 0)
+				,new Vertex3D(eyeLipX , eyeLipY + 0+ t.rectH, 0)
+			]);
+			else
 			return Vector.<Vertex3D>([
 				new Vertex3D(eyeLipX + 0 , eyeLipY + 0, 0)
 				,new Vertex3D(eyeLipX + 0 + t.rectW , eyeLipY + 0, 0)
