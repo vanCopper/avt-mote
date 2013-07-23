@@ -68,6 +68,13 @@ package editor.struct
 			
 		}
 		
+		public function get bitmapData():BitmapData
+		{
+			if (_bmp && _bmp.bitmapData)
+				return _bmp.bitmapData;
+			return null;
+		}
+		
 		public function Texture2DBitmap(a_texture2D : Texture2D) 
 		{
 			mouseChildren = false;

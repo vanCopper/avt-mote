@@ -321,6 +321,16 @@ package editor.module.eye
 			
 			return str;
 		}
+		public function deactivate():void
+		{
+			m_player.reset();
+			m_player.deactivate();
+		}
+		public function activate():void
+		{
+			m_player.reset();
+			m_player.activate();
+		}
 		
 		public function refresh():void
 		{

@@ -34,10 +34,10 @@ package editor.module.eye
 				idx++;
 			}
 		}
-		private static function drawEyeArray(g:Graphics , v : Vector.<Vertex3D> , bitmapData : BitmapData ,start : Number = NaN, end : Number = NaN):void
+		private static function drawEyeArray(g:Graphics , v : Vector.<Vertex3D> , uvtData :  Vector.<Number>  , bitmapData : BitmapData ,start : Number = NaN, end : Number = NaN):void
 		{
 			const indices : Vector.<int> = Vector.<int>([0, 1, 2, 2, 1, 3]);
-			const uvtData :  Vector.<Number> =  Vector.<Number>([0, 0, 1, 0, 0, 1, 1, 1]);
+			//const uvtData :  Vector.<Number> =  Vector.<Number>([0, 0, 1, 0, 0, 1, 1, 1]);
 			var vertices : Vector.<Number> = new Vector.<Number>();
 			
 			
@@ -100,17 +100,17 @@ package editor.module.eye
 			
 			if (_leftEyeData.eyeWhite)
 			{	
-				drawEyeArray(shp.graphics , v , _leftEyeData.eyeWhite.bitmapData , start  , start + 4);
+				drawEyeArray(shp.graphics , v , _leftEyeData.eyeWhite.genUV(), _leftEyeData.eyeWhite.bitmapData , start  , start + 4);
 				start += 4;
 			}
 			if (_leftEyeData.eyeBall)
 			{	
-				drawEyeArray(shp.graphics , v, _leftEyeData.eyeBall.bitmapData, start  , start + 4);
+				drawEyeArray(shp.graphics , v, _leftEyeData.eyeBall.genUV() , _leftEyeData.eyeBall.bitmapData, start  , start + 4);
 				start += 4;
 			}
 			if (_leftEyeData.eyeLip)
 			{
-				drawEyeArray(shpLip.graphics , v, _leftEyeData.eyeLip.bitmapData, start  , start + 4);
+				drawEyeArray(shpLip.graphics , v,_leftEyeData.eyeLip.genUV() , _leftEyeData.eyeLip.bitmapData, start  , start + 4);
 				start += 4;
 			}
 			drawEyeMaskArray(shpMask.graphics , v , start);
@@ -127,17 +127,17 @@ package editor.module.eye
 			start = 0;
 			if (_rightEyeData.eyeWhite)
 			{
-				drawEyeArray(shp.graphics , v , _rightEyeData.eyeWhite.bitmapData , start  , start + 4);
+				drawEyeArray(shp.graphics , v , _rightEyeData.eyeWhite.genUV() , _rightEyeData.eyeWhite.bitmapData , start  , start + 4);
 				start += 4;
 			}
 			if (_rightEyeData.eyeBall)
 			{
-				drawEyeArray(shp.graphics , v, _rightEyeData.eyeBall.bitmapData, start  , start + 4);
+				drawEyeArray(shp.graphics , v , _rightEyeData.eyeBall.genUV() , _rightEyeData.eyeBall.bitmapData, start  , start + 4);
 				start += 4;
 			}
 			if (_rightEyeData.eyeLip)
 			{
-				drawEyeArray(shpLip.graphics , v, _rightEyeData.eyeLip.bitmapData, start  , start + 4);
+				drawEyeArray(shpLip.graphics , v , _rightEyeData.eyeLip.genUV() , _rightEyeData.eyeLip.bitmapData, start  , start + 4);
 				start += 4;
 			}
 			

@@ -17,7 +17,7 @@ package editor.struct
 		public var name:String;
 		public var filename:String;
 		public var type : String = "";
-		
+		private var  uvtData :  Vector.<Number>;
 		public function Texture2D(a_bitmapData : BitmapData
 			,a_name : String
 			,a_filename : String
@@ -50,6 +50,37 @@ package editor.struct
 			
 		
 		}
+		public function genUV(): Vector.<Number> {
+			
+			if (!uvtData && bitmapData)
+			{
+				var startX : Number;
+				var endX : Number;
+				
+				if (rectW < 0)
+				{
+					startX = (rectX + rectW) / bitmapData.width;
+					endX = (rectX) / bitmapData.width;
+				} else 
+				{
+					startX = (rectX) / bitmapData.width;
+					endX = (rectX + rectW) / bitmapData.width;
+				}
+				
+				var startY : Number =  (rectY) / bitmapData.height;
+				var endY : Number =  (rectY + rectH) / bitmapData.height;
+				
+				uvtData =  Vector.<Number>([startX, startY,
+											endX, startY, 
+											startX, endY,
+											endX, endY]);
+			}
+			
+			return uvtData;
+			
+			
+		}
+		
 		public function dispose() : void
 		{
 			if (bitmapData)
@@ -57,6 +88,10 @@ package editor.struct
 				bitmapData.dispose();
 				bitmapData = null;
 			}
+			name = null;
+			filename = null;
+			type = null;
+			uvtData = null;
 		}
 		
 		

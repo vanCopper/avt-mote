@@ -36,9 +36,20 @@ package editor.module.eye
 			curFrameSpL.x = -100;
 			curFrameSpR.x = 50;
 			
-			addEventListener(Event.ENTER_FRAME , onUpdate);
-			
 		}
+		
+		public function deactivate():void
+		{
+			if (hasEventListener(Event.ENTER_FRAME))
+				removeEventListener(Event.ENTER_FRAME , onUpdate);
+		}
+		public function activate():void
+		{
+			if (!hasEventListener(Event.ENTER_FRAME))
+				addEventListener(Event.ENTER_FRAME , onUpdate);
+		}
+		
+		
 		private function dispose():void
 		{
 			removeEventListener(Event.ENTER_FRAME , onUpdate);

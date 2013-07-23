@@ -7,6 +7,7 @@ package editor.module.head
 	import editor.Library;
 	import editor.module.ModuleBase;
 	import editor.struct.Texture2D;
+	import editor.struct.Texture2DBitmap;
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtAddUI;
 	import editor.ui.EdtQuadrant;
@@ -43,7 +44,7 @@ package editor.module.head
 		private var m_quadrant0 : EdtQuadrant;
 		private var m_quadrant3 : EdtQuadrant;
 		
-		private var m_bmp : Bitmap;
+		private var m_bmp : Texture2DBitmap;
 		private var m_bmpShape : Shape;
 		
 		private var m_bmpCnt : DisplayObjectContainer;
@@ -73,7 +74,7 @@ package editor.module.head
 			
 			m_content.addChild(m_eqm).y = m_tb.y + m_tb.height; 
 			
-			m_bmp = new Bitmap();
+			m_bmp = new Texture2DBitmap(null);
 			m_bmpShape = new Shape();
 			m_bmpCnt = new Sprite();
 			m_bmpCnt.addChild(m_bmp);
@@ -656,17 +657,20 @@ package editor.module.head
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
 		{
 			
-			if (m_bmp.bitmapData)
-			{
-				m_bmp.bitmapData.dispose();
-				m_bmp.bitmapData = null;
-			}
-			m_bmp.bitmapData = bitmapData;
-			m_bmp.x =  -  (( bitmapData.width ) >> 1);
-			m_bmp.y =  - ((bitmapData.height)  >> 1);
+			//if (m_bmp.bitmapData)
+			//{
+			//	m_bmp.bitmapData.dispose();
+			//	m_bmp.bitmapData = null;
+			//}
+			
+			
 			
 			ModuleHeadData.s_texture = new Texture2D(bitmapData , _filename , _filename , "HEAD");
 			Library.getS().addTexture(ModuleHeadData.s_texture);
+			
+			m_bmp.texture2D = ModuleHeadData.s_texture;
+			m_bmp.x =  -  (( bitmapData.width ) >> 1);
+			m_bmp.y =  - ((bitmapData.height)  >> 1);
 			
 			m_tb.deactivateAll([m_tb.btnAR]);
 		}
@@ -674,7 +678,7 @@ package editor.module.head
 		
 		private function onTextureLoaded(_filename : String , texture : Texture2D):void
 		{
-			m_bmp.bitmapData = texture.bitmapData;
+			m_bmp.texture2D = texture;
 			m_bmp.x =  -  ((m_bmp.bitmapData.width ) >> 1);
 			m_bmp.y =  - ((m_bmp.bitmapData.height)  >> 1);
 			ModuleHeadData.s_texture = texture;
@@ -819,6 +823,7 @@ package editor.module.head
 			m_browser.reset();
 			m_tb.btnEdit.releaseFunction(m_tb.btnEdit);
 			deactivate();
+			m_bmp.texture2D = null;
 		}
 		
 		public override function onSave(__root : XML):void
