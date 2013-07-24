@@ -2,6 +2,7 @@ package player.struct
 {
 	import adobe.utils.CustomActions;
 	import flash.geom.Vector3D;
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -284,6 +285,38 @@ package player.struct
 			Tw = a[15];
 		}
 
+		public static function decodeMatrix4x4(ba:ByteArray):Matrix4x4
+		{
+			var ret : Matrix4x4 = new Matrix4x4();
+			ret.decode(ba);
+			return ret;
+		}
+		
+		public function decode(ba:ByteArray):void
+		{
+			
+			Xx = ba.readFloat();
+			Xy = ba.readFloat();
+			Xz = ba.readFloat();
+			Xw = ba.readFloat();
+				
+			Yx = ba.readFloat();
+			Yy = ba.readFloat();
+			Yz = ba.readFloat();
+			Yw = ba.readFloat();
+				
+				
+			Zx = ba.readFloat();
+			Zy = ba.readFloat();
+			Zz = ba.readFloat();
+			Zw = ba.readFloat();
+				
+				
+			Tx = ba.readFloat();
+			Ty = ba.readFloat();
+			Tz = ba.readFloat();
+			Tw = ba.readFloat();
+		}
 			
 			
 	}

@@ -1,5 +1,6 @@
 package player 
 {
+	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.utils.ByteArray;
 	import player.struct.Matrix4x4;
@@ -39,8 +40,9 @@ package player
 			
 		}
 		
-		public function render(g:Graphics , _matrix : Matrix4x4):void
+		public function render(g:Graphics  , bitmapData : BitmapData , _matrix : Matrix4x4):void
 		{
+			
 			
 			if (!m_vertices)
 			{
@@ -55,7 +57,11 @@ package player
 			
 			if (m_changed)
 			{
+				g.clear();
+				g.beginBitmapFill(bitmapData, null, false, true);
+			
 				m_matrix = _matrix;
+				m_changed = false;
 				var ii : int = 0;
 				
 				if (m_matrix)
@@ -76,7 +82,7 @@ package player
 					}
 				}
 				
-				m_changed = false;
+				
 			}
 			
 			g.drawTriangles(m_vertices , m_indices, m_uvData  );
