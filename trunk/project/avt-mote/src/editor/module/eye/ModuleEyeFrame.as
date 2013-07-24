@@ -176,7 +176,8 @@ package editor.module.eye
 			if (eyeMaskData.length)
 				_flag |= 8;
 				
-			
+			ba.writeByte(_flag);
+				
 			if (eyeWhite)	eyeWhite.encode(ba);
 			if (eyeBall)	eyeBall.encode(ba);
 			if (eyeLip) 	eyeLip.encode(ba);
