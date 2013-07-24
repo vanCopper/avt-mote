@@ -298,10 +298,19 @@ package editor.module.eye
 		}
 		
 		
-		private function genArrayBA(ba:ByteArray , arr : Array) : void
+		private function genArrayBA(ba:ByteArray , arr : Array , close : Boolean = false) : void
 		{
+			var skip : int = close ? 1 : 0;
+			
+			
 			for each (var _btn : BSSButton in arr)
 			{
+				if (skip)
+				{
+					skip--;
+					continue;
+				}
+				
 				if (_btn.numChildren == 5)
 				{
 					var _sp : ModuleEyeFrameSprite = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
@@ -324,16 +333,22 @@ package editor.module.eye
 				}
 			}
 			
+			if (close)
+			{
+				ba.position--;
+				ba.length--;
+			}
+			
 			
 		}
 		
 		public function encode(ba:ByteArray):void
 		{
-			ba.writeByte(m_eyeBlinkAddUI.value);
+			ba.writeByte(m_eyeBlinkAddUI.value * 2 - 2);
 			genArrayBA(ba, m_lc.btnArray);
-			genArrayBA(ba, m_lo.btnArray);
+			genArrayBA(ba, m_lo.btnArray , true);
 			genArrayBA(ba, m_rc.btnArray);
-			genArrayBA(ba, m_ro.btnArray);
+			genArrayBA(ba, m_ro.btnArray , true);
 			
 		}
 		
