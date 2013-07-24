@@ -20,19 +20,20 @@ package editor.module.eye
 			var idx : int = start + 2;
 			
 		
-			
+			g.beginFill(0xFF00000 , 0.25);	
 			while (idx < _eyeMaskData.length)
 			{
-				g.beginFill(0xFF00000 , 0.25);	
+				
 				g.moveTo(_eyeMaskData[start].x , _eyeMaskData[start].y);
 				
 				g.lineTo(_eyeMaskData[idx-1].x , _eyeMaskData[idx-1].y);
 				g.lineTo(_eyeMaskData[idx].x , _eyeMaskData[idx].y);
 				g.lineTo(_eyeMaskData[start].x , _eyeMaskData[start].y);
-				g.endFill();	
+				
 				
 				idx++;
 			}
+			g.endFill();	
 		}
 		private static function drawEyeArray(g:Graphics , v : Vector.<Vertex3D> , uvtData :  Vector.<Number>  , bitmapData : BitmapData ,start : Number = NaN, end : Number = NaN):void
 		{
@@ -69,7 +70,6 @@ package editor.module.eye
 		
 		public static function drawEye(sp:Sprite , md : Matrix4x4 , _leftEyeData : ModuleEyeFrame, _rightEyeData  : ModuleEyeFrame ) : void
 		{
-			
 			
 			
 			GraphicsUtil.removeAllChildren(sp);
