@@ -9,6 +9,7 @@ package editor.module.eye
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
 	import UISuit.UIUtils.GraphicsUtil;
 	/**
@@ -445,6 +446,24 @@ package editor.module.eye
 				m_lastRModuleEyeFrame = m_mefs.data;
 				
 			setData();
+			
+		}
+		
+		
+		public function encode(ba:ByteArray):void
+		{
+			ba.writeFloat(ModuleEyeData.s_eaL);
+			ba.writeFloat(ModuleEyeData.s_ebL);
+			ba.writeFloat(ModuleEyeData.s_erL);
+			ba.writeFloat(ModuleEyeData.s_eCenterLX);
+			ba.writeFloat(ModuleEyeData.s_eCenterLY);
+			
+			ba.writeFloat(ModuleEyeData.s_eaR);
+			ba.writeFloat(ModuleEyeData.s_ebR);
+			ba.writeFloat(ModuleEyeData.s_erR);
+			ba.writeFloat(ModuleEyeData.s_eCenterRX);
+			ba.writeFloat(ModuleEyeData.s_eCenterRY);
+			
 			
 		}
 		

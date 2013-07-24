@@ -19,6 +19,7 @@ package editor.module.eye
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.text.TextField;
+	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
 	import UISuit.UIUtils.GraphicsUtil;
 	/**
@@ -387,6 +388,28 @@ package editor.module.eye
 	
 		public function setTemplate(mefs : ModuleEyeFrameSprite , _name : String):void
 		{
+			
+			
+		}
+		
+		public function encode(ba:ByteArray):void
+		{
+			if (ModuleEyeData.s_eyeLocated)
+			{
+				ModuleEyeData.s_eyeMatrix.encode(ba);
+			
+				ModuleEyeData.s_eyeLPlane.encode(ba);
+				ba.writeFloat(ModuleEyeData.s_eyeLScale);
+				ba.writeFloat(ModuleEyeData.s_eyeLLocateX);
+				ba.writeFloat(ModuleEyeData.s_eyeLLocateY);
+			
+			
+				ModuleEyeData.s_eyeRPlane.encode(ba);
+				ba.writeFloat(ModuleEyeData.s_eyeRScale);
+				ba.writeFloat(ModuleEyeData.s_eyeRLocateX);
+				ba.writeFloat(ModuleEyeData.s_eyeRLocateY);
+					
+			}
 			
 			
 		}

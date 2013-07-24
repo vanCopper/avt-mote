@@ -3,6 +3,7 @@ package editor.module.eye
 	import editor.ui.EdtAddUI;
 	import flash.display.Sprite;
 	import flash.text.TextField;
+	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
 	/**
 	 * ...
@@ -295,6 +296,47 @@ package editor.module.eye
 				 _i++;
 			}
 		}
+		
+		
+		private function genArrayBA(ba:ByteArray , arr : Array) : void
+		{
+			for each (var _btn : BSSButton in arr)
+			{
+				if (_btn.numChildren == 5)
+				{
+					var _sp : ModuleEyeFrameSprite = _btn.getChildAt(4) as  ModuleEyeFrameSprite;
+					if (_sp)
+					{	
+						if (_sp.data)
+						{	
+							ba.writeByte(ModuleEyeData.getModuleEyeFrameIndex(_sp.data.name));
+						}
+						else
+							ba.writeByte( -1);
+					}
+					else
+					{
+						ba.writeByte( -1);
+					}
+				}
+				else {
+					ba.writeByte( -1);
+				}
+			}
+			
+			
+		}
+		
+		public function encode(ba:ByteArray):void
+		{
+			ba.writeByte(m_eyeBlinkAddUI.value);
+			genArrayBA(ba, m_lc.btnArray);
+			genArrayBA(ba, m_lo.btnArray);
+			genArrayBA(ba, m_rc.btnArray);
+			genArrayBA(ba, m_ro.btnArray);
+			
+		}
+		
 		
 		public function toXMLString():String
 		{

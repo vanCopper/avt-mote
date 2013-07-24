@@ -53,6 +53,19 @@ package editor.module.eye
 			s_eyeRPlane.reset();
 		}
 		
+		public static function getModuleEyeFrameIndex(_v : String) : int
+		{
+			var index : int = 0;
+			for each (var mef : ModuleEyeFrame in s_frameList)
+			{
+				if (mef.name == _v)
+					return index;
+				index++;
+			}
+			
+			return -1;
+		}
+		
 	}
 
 }

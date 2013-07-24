@@ -1,5 +1,6 @@
 package editor.struct 
 {
+	import flash.utils.ByteArray;
 	
 	/**
 	 * ...
@@ -25,6 +26,14 @@ package editor.struct
 			d = Number(arr[3]);
 		}
 		
+		public function encode(ba:ByteArray):void
+		{
+			ba.writeFloat(a);
+			ba.writeFloat(b);
+			ba.writeFloat(c);
+			ba.writeFloat(d);
+			
+		}
 		public function toXMLString():String
 		{
 			return a + ":" + b + ":" + c + ":" + d;

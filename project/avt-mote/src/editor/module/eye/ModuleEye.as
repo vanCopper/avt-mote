@@ -11,6 +11,7 @@ package editor.module.eye
 	import editor.ui.EdtVertex3D;
 	import editor.ui.SpriteWH;
 	import editor.ui.SripteWithRect;
+	import editor.util.ByteArrayUtil;
 	import editor.util.ImageListPicker;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -20,6 +21,7 @@ package editor.module.eye
 	import flash.events.MouseEvent;
 	import flash.net.FileFilter;
 	import flash.text.TextField;
+	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
 	import UISuit.UIComponent.BSSCheckBox;
 	import UISuit.UIComponent.BSSDropDownMenu;
@@ -833,6 +835,48 @@ package editor.module.eye
 			}
 						
 			//m_tb.deactivateAll([m_tb.btnImport]);
+			
+		}
+		
+		
+		public override function onExport(__rootBA : ByteArray):void
+		{
+			var baData : ByteArray = new ByteArray();
+			
+			
+			
+			
+			{	
+				baData.writeByte(1);
+				ByteArrayUtil.writeUnsignedByteOrShort(baData , ModuleEyeData.s_frameList.length);
+				for each (var _mef : ModuleEyeFrame in ModuleEyeData.s_frameList)
+				{
+					_mef.encode(baData);
+				}
+			}
+			
+			{	
+				baData.writeByte(2);
+				m_moduleEyeBlinkEditor.encode(baData);
+			}
+			
+			if (!isNaN(ModuleEyeData.s_eaL))
+			{	
+				baData.writeByte(3);
+				m_moduleEyeMA.encode(baData);
+			}
+			
+			if (ModuleEyeData.s_eyeLocated)
+			{	
+				baData.writeByte(4);
+				m_moduleEyeLocate.encode(baData);
+			}
+			
+			
+			__rootBA.writeByte(0x22);
+			ByteArrayUtil.writeUnsignedShortOrInt(__rootBA , baData.length);
+			__rootBA.writeBytes(baData);
+			
 			
 		}
 		
