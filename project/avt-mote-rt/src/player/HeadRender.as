@@ -82,7 +82,9 @@ package player
 					}
 				}
 				g.drawTriangles(m_vertices , m_indices, m_uvData  );
-			}
+			} 
+			//else
+			//	trace("skip a head render")
 			
 			
 		}
