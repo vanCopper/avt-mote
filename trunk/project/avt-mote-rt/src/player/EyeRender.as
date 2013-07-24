@@ -265,7 +265,9 @@ package player
 					
 					drawEye(sp , bitmapData , md , _lEyeFrameData , _rEyeFrameData);
 				}
-			}
+			} 
+			//else
+			//	trace("skip a eye render")
 			
 			
 		}
