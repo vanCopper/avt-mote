@@ -122,14 +122,10 @@ package player
 					m_eyeLLocateX = baData.readFloat();
 					m_eyeLLocateY = baData.readFloat();
 				
-					var _lEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexL[0]];
-					if (_lEyeFrameData.eyeBall)
-					{
-						m_eyeLCenter = new Vertex3D();
-						m_eyeLCenter.x = _lEyeFrameData.eyeBallRawX + Math.abs(_lEyeFrameData.eyeBall.rectW) / 2;
-						m_eyeLCenter.y = _lEyeFrameData.eyeBallRawY + Math.abs(_lEyeFrameData.eyeBall.rectH) / 2;
-						EyeFrameData.dealVertex3D(m_eyeLCenter , m_eyeLScale , m_eyeLPlane , m_eyeMatrix , m_eyeLLocateX , m_eyeLLocateY);
-					}
+					m_eyeLCenter = new Vertex3D();
+					m_eyeLCenter.x = m_eyeLLocateX;
+					m_eyeLCenter.y = m_eyeLLocateY;
+					EyeFrameData.dealVertex3D(m_eyeLCenter , m_eyeLScale , m_eyeLPlane , m_eyeMatrix , m_eyeLLocateX , m_eyeLLocateY);
 					
 	
 				
@@ -138,14 +134,10 @@ package player
 					m_eyeRLocateX = baData.readFloat();
 					m_eyeRLocateY = baData.readFloat();
 					
-					var _rEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexR[0]];
-					if (_rEyeFrameData.eyeBall)
-					{
-						m_eyeRCenter = new Vertex3D();
-						m_eyeRCenter.x = _rEyeFrameData.eyeBallRawX + Math.abs(_rEyeFrameData.eyeBall.rectW) / 2;
-						m_eyeRCenter.y = _rEyeFrameData.eyeBallRawY + Math.abs(_rEyeFrameData.eyeBall.rectH) / 2;
-						EyeFrameData.dealVertex3D(m_eyeRCenter , m_eyeRScale , m_eyeRPlane , m_eyeMatrix , m_eyeRLocateX , m_eyeRLocateY);
-					}
+					m_eyeRCenter = new Vertex3D();
+					m_eyeRCenter.x = m_eyeRLocateX;
+					m_eyeRCenter.y = m_eyeRLocateY;
+					EyeFrameData.dealVertex3D(m_eyeRCenter , m_eyeRScale , m_eyeRPlane , m_eyeMatrix , m_eyeRLocateX , m_eyeRLocateY);
 					//trace(m_eyeMatrix);
 				}	
 			}
@@ -234,9 +226,12 @@ package player
 							
 							var pt : Point = getXYOfArea(_lRadian,true,_lRate);
 						
-							_lEyeFrameData.eyeBallX = _lEyeFrameData.eyeBallRawX + pt.x ; 
-							_lEyeFrameData.eyeBallY = _lEyeFrameData.eyeBallRawX + pt.y ; 
-							_lEyeFrameData.updateEyeBallVertex3D(m_eyeMatrix , m_eyeLPlane, m_eyeLScale , m_eyeLLocateX , m_eyeLLocateY);
+							if (_lEyeFrameData.eyeBall)
+							{
+								_lEyeFrameData.eyeBallX = pt.x + m_eCenterLX - Math.abs(_lEyeFrameData.eyeBall.rectW) / 2; 
+								_lEyeFrameData.eyeBallY = pt.y + m_eCenterLY - _lEyeFrameData.eyeBall.rectH / 2; 
+								_lEyeFrameData.updateEyeBallVertex3D(m_eyeMatrix , m_eyeLPlane, m_eyeLScale , m_eyeLLocateX , m_eyeLLocateY);
+							}
 							
 						}
 					}
@@ -256,9 +251,14 @@ package player
 							
 							pt = getXYOfArea(_rRadian,true,_rRate);
 						
-							_rEyeFrameData.eyeBallX = _rEyeFrameData.eyeBallRawX + pt.x ; 
-							_rEyeFrameData.eyeBallY = _rEyeFrameData.eyeBallRawX + pt.y ; 
-							_rEyeFrameData.updateEyeBallVertex3D(m_eyeMatrix , m_eyeRPlane, m_eyeRScale , m_eyeRLocateX , m_eyeRLocateY);
+							if (_rEyeFrameData.eyeBall)
+							{
+								_rEyeFrameData.eyeBallX = pt.x + m_eCenterRX - Math.abs(_rEyeFrameData.eyeBall.rectW) / 2; 
+								_rEyeFrameData.eyeBallY = pt.y + m_eCenterRY - _rEyeFrameData.eyeBall.rectH / 2; 
+								_rEyeFrameData.updateEyeBallVertex3D(m_eyeMatrix , m_eyeRPlane, m_eyeRScale , m_eyeRLocateX , m_eyeRLocateY);
+							}
+							
+							
 							
 						}
 					}

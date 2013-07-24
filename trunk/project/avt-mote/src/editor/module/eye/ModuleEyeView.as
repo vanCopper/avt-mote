@@ -158,23 +158,12 @@ package editor.module.eye
 			var md : Matrix4x4 = m_currentMatrix; 
 			
 			var lCenter : Vertex3D = new Vertex3D();
-			lCenter.x = (m_leftEyeData.eyeVertex3D[0].x + m_leftEyeData.eyeVertex3D[1].x +
-						 m_leftEyeData.eyeVertex3D[2].x + m_leftEyeData.eyeVertex3D[3].x
-						) / 4;
-			
-			lCenter.y = (m_leftEyeData.eyeVertex3D[0].y + m_leftEyeData.eyeVertex3D[1].y +
-						 m_leftEyeData.eyeVertex3D[2].y + m_leftEyeData.eyeVertex3D[3].y
-						) / 4;
-			
-			lCenter.z = (m_leftEyeData.eyeVertex3D[0].z + m_leftEyeData.eyeVertex3D[1].z +
-						 m_leftEyeData.eyeVertex3D[2].z + m_leftEyeData.eyeVertex3D[3].z
-						) / 4;
-			
-			
+			lCenter.x = ModuleEyeData.s_eCenterLX;
+			lCenter.y = ModuleEyeData.s_eCenterLY;
+			ModuleEyeFrame.dealVertex3D(lCenter , ModuleEyeData.s_eyeLScale , ModuleEyeData.s_eyeLPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeLLocateX , ModuleEyeData.s_eyeLLocateY);
 			
 			var _vx : Number;
 			var _vy : Number;
-			
 			
 			{
 				_vx = (md.Xx * lCenter.x + md.Xy * lCenter.y + md.Xz * lCenter.z) ;
@@ -189,18 +178,10 @@ package editor.module.eye
 			if (_lRate > 1) _lRate = 1;
 			
 			var rCenter : Vertex3D = new Vertex3D();
-			rCenter.x = (m_rightEyeData.eyeVertex3D[0].x + m_rightEyeData.eyeVertex3D[1].x +
-						 m_rightEyeData.eyeVertex3D[2].x + m_rightEyeData.eyeVertex3D[3].x
-						) / 4;
-			
-			rCenter.y = (m_rightEyeData.eyeVertex3D[0].y + m_rightEyeData.eyeVertex3D[1].y +
-						 m_rightEyeData.eyeVertex3D[2].y + m_rightEyeData.eyeVertex3D[3].y
-						) / 4;
-			
-			rCenter.z = (m_rightEyeData.eyeVertex3D[0].z + m_rightEyeData.eyeVertex3D[1].z +
-						 m_rightEyeData.eyeVertex3D[2].z + m_rightEyeData.eyeVertex3D[3].z
-						) / 4;
-			
+			rCenter.x = ModuleEyeData.s_eCenterRX;
+			rCenter.y = ModuleEyeData.s_eCenterRY;
+			ModuleEyeFrame.dealVertex3D(rCenter , ModuleEyeData.s_eyeRScale , ModuleEyeData.s_eyeRPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeRLocateX , ModuleEyeData.s_eyeRLocateY);
+
 			{
 				_vx = (md.Xx * rCenter.x + md.Xy * rCenter.y + md.Xz * rCenter.z) ;
 				_vy = (md.Yx * rCenter.x + md.Yy * rCenter.y + md.Yz * rCenter.z) ;
@@ -227,8 +208,12 @@ package editor.module.eye
 				
 				var pt : Point = ModuleEyeFunc.getXYOfArea(_lRadian,true,_lRate);
 			
-				m_leftEyeData.eyeBallX += pt.x ; 
-				m_leftEyeData.eyeBallY += pt.y ; 
+				if (m_leftEyeData.eyeBall)
+				{
+					m_leftEyeData.eyeBallX = pt.x + ModuleEyeData.s_eCenterLX - Math.abs(m_leftEyeData.eyeBall.rectW) / 2; 
+					m_leftEyeData.eyeBallY = pt.y + ModuleEyeData.s_eCenterLY - m_leftEyeData.eyeBall.rectH / 2; 
+				}
+				
 				m_leftEyeData.genEyeVertex3D(true);
 				
 			}
@@ -240,9 +225,13 @@ package editor.module.eye
 			
 			if (!isNaN(_ea))
 			{
-				pt = ModuleEyeFunc.getXYOfArea(_rRadian,true,_rRate);
-				m_rightEyeData.eyeBallX += pt.x ; 
-				m_rightEyeData.eyeBallY += pt.y ; 
+				pt = ModuleEyeFunc.getXYOfArea(_rRadian, true, _rRate);
+				if (m_rightEyeData.eyeBall)
+				{
+					m_rightEyeData.eyeBallX = pt.x + ModuleEyeData.s_eCenterRX - Math.abs(m_rightEyeData.eyeBall.rectW) / 2; 
+					m_rightEyeData.eyeBallY = pt.y + ModuleEyeData.s_eCenterRY - m_rightEyeData.eyeBall.rectH / 2; 
+				}
+				
 				m_rightEyeData.genEyeVertex3D(false);
 				
 			}
