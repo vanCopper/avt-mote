@@ -2,6 +2,7 @@
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import player.AVTMPlayer;
 	
 	/**
 	 * ...
@@ -20,6 +21,12 @@
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
+			var _player : AVTMPlayer = new AVTMPlayer();
+			addChild(_player);
+			
+			_player.x = 300;
+			_player.y = 300;
+			
 		}
 		
 	}
