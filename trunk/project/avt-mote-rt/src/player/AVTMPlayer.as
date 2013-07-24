@@ -4,6 +4,8 @@ package player
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.utils.ByteArray;
+	import player.struct.Matrix4x4;
+	import player.struct.Vertex3D;
 	
 	/**
 	 * ...
@@ -41,9 +43,22 @@ package player
 				};
 				
 			}
+			
+		}
+		
+		public function render(_m : Matrix4x4):void
+		{
 			graphics.clear();
 			graphics.beginBitmapFill(m_bitmapData,null,false,true);
-			m_head.render(graphics);
+			m_head.render(graphics , _m );
+		}
+		
+		public function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4
+		{
+			if (m_head)
+				return m_head.getMatrix(xValue, yValue, zValue);
+			
+			return null;
 		}
 		
 	}

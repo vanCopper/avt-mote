@@ -19,6 +19,20 @@ package player.struct
 			z = _z;
 		}
 		
+		public function normalize():void
+		{
+			var _len : Number = Math.sqrt(x * x + y * y + z * z);
+			
+			if (_len)
+			{
+				x /= _len;
+				y /= _len;
+				z /= _len;
+			}
+			
+			
+		}
+		
 		public static function decodeVertex3D(ba:ByteArray):Vertex3D
 		{
 			var vtx : Vertex3D = new Vertex3D();
