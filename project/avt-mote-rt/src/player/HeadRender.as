@@ -81,11 +81,10 @@ package player
 						m_vertices[ii++] =  ev.y ;
 					}
 				}
-				
-				
+				g.drawTriangles(m_vertices , m_indices, m_uvData  );
 			}
 			
-			g.drawTriangles(m_vertices , m_indices, m_uvData  );
+			
 		}
 		
 		public function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4
