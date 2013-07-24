@@ -409,10 +409,6 @@ package editor.module.hair
 					}
 					str += "</ModuleHairFrames>";
 					
-					//str += m_moduleEyeBlinkEditor.toXMLString();
-					//str += m_moduleEyeMA.toXMLString();
-					//str += m_moduleEyeLocate.toXMLString();
-					
 				str += "</ModuleHair>";
 				
 				__root.appendChild(

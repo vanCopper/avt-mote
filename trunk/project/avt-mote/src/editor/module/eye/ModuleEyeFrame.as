@@ -6,9 +6,11 @@ package editor.module.eye
 	import editor.struct.Texture2D;
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtVertex3D;
+	import editor.util.ByteArrayUtil;
 	import editor.util.TextureLoader;
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -160,6 +162,33 @@ package editor.module.eye
 				,new Vertex3D(eyeLipX + 0 , 0 + eyeLipY + t.rectH, 0)
 				,new Vertex3D(eyeLipX + 0 + t.rectW , eyeLipY + 0+ t.rectH, 0)
 			]);
+		}
+		
+		public function encode(ba:ByteArray):void
+		{
+			var _flag : int = 0;
+			if (eyeWhite)
+				_flag |= 1;
+			if (eyeBall)
+				_flag |= 2;
+			if (eyeLip)
+				_flag |= 4;
+			if (eyeMaskData.length)
+				_flag |= 8;
+				
+			
+			if (eyeWhite)	eyeWhite.encode(ba);
+			if (eyeBall)	eyeBall.encode(ba);
+			if (eyeLip) 	eyeLip.encode(ba);
+			
+			if (eyeMaskData.length)
+			{
+				ByteArrayUtil.writeUnsignedByteOrShort(ba,eyeMaskData.length);
+				for each (var _v : Vertex3D in eyeMaskData)	
+				{
+					_v.encode(ba);
+				}
+			}
 		}
 		
 		public function toXMLString():String

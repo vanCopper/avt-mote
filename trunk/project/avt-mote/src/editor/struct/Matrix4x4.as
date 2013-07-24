@@ -2,6 +2,7 @@ package editor.struct
 {
 	import adobe.utils.CustomActions;
 	import flash.geom.Vector3D;
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -129,6 +130,31 @@ package editor.struct
 			Ty = a[13];
 			Tz = a[14];
 			Tw = a[15];
+		}
+		
+		
+		public function encode(ba:ByteArray):void
+		{
+			ba.writeFloat(Xx);
+			ba.writeFloat(Xy);
+			ba.writeFloat(Xz);
+			ba.writeFloat(Xw);
+			
+			ba.writeFloat(Yx);
+			ba.writeFloat(Yy);
+			ba.writeFloat(Yz);
+			ba.writeFloat(Yw);
+			
+			ba.writeFloat(Zx);
+			ba.writeFloat(Zy);
+			ba.writeFloat(Zz);
+			ba.writeFloat(Zw);
+			
+			ba.writeFloat(Tx);
+			ba.writeFloat(Ty);
+			ba.writeFloat(Tz);
+			ba.writeFloat(Tw);
+			
 		}
 		
 		public function toXMLString():String
