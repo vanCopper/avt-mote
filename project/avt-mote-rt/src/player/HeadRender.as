@@ -2,6 +2,7 @@ package player
 {
 	import flash.display.Graphics;
 	import flash.utils.ByteArray;
+	import player.struct.Matrix4x4;
 	import player.struct.Texture2D;
 	import player.struct.Vertex3D;
 	import player.util.MeshUtil;
@@ -31,13 +32,14 @@ package player
 		private var m_indices : Vector.<int>;
 		private var m_changed : Boolean;
 		private var m_vertices : Vector.<Number>;
+		private var m_matrix : Matrix4x4;
 		
 		public function HeadRender() 
 		{
 			
 		}
 		
-		public function render(g:Graphics):void
+		public function render(g:Graphics , _matrix : Matrix4x4):void
 		{
 			
 			if (!m_vertices)
@@ -46,20 +48,89 @@ package player
 				m_changed = true;
 			}
 			
+			if (!m_changed && _matrix)
+			{
+				m_changed = !_matrix.isEqual(m_matrix);
+			}
+			
 			if (m_changed)
 			{
+				m_matrix = _matrix;
 				var ii : int = 0;
-				for ( var i : int = 0; i <  m_vertexData.length ; i++ )
+				
+				if (m_matrix)
 				{
-					var ev : Vertex3D = m_vertexData[i];
-					m_vertices[ii++] =  ev.x ;
-					m_vertices[ii++] =  ev.y ;
+					for ( var i : int = 0; i <  m_vertexData.length ; i++ )
+					{
+						var ev : Vertex3D = m_vertexData[i];
+						m_vertices[ii++] = (m_matrix.Xx * ev.x + m_matrix.Xy * ev.y + m_matrix.Xz * ev.z) ;
+						m_vertices[ii++] = (m_matrix.Yx * ev.x + m_matrix.Yy * ev.y + m_matrix.Yz * ev.z) ;
+				
+					}
+				} else {
+					for ( i = 0; i <  m_vertexData.length ; i++ )
+					{
+						ev = m_vertexData[i];
+						m_vertices[ii++] =  ev.x ;
+						m_vertices[ii++] =  ev.y ;
+					}
 				}
 				
 				m_changed = false;
 			}
 			
 			g.drawTriangles(m_vertices , m_indices, m_uvData  );
+		}
+		
+		public function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4
+		{
+			var md : Matrix4x4;
+			var mX : Matrix4x4 = new Matrix4x4();
+			var mY : Matrix4x4 = new Matrix4x4();
+			var mZ : Matrix4x4 = new Matrix4x4();
+			var mXY : Matrix4x4;
+			
+			var v : Vertex3D = new Vertex3D();
+			var vX : Vertex3D = new Vertex3D();
+			var vY : Vertex3D = new Vertex3D();
+			var vZ : Vertex3D = new Vertex3D();
+				
+			if (m_approximationMode)
+			{
+				v = new Vertex3D();
+				v.y = Math.sin(m_rotorR);
+				v.x = Math.cos(m_rotorR);
+				
+				vX.x = v.x;
+				vX.y = v.y;
+			
+				Matrix4x4.rotateArbitraryAxis(mX ,  vX  , xValue);
+				
+				mX.effectPoint3D(v.y , -v.x , 0 , vY);
+				Matrix4x4.rotateArbitraryAxis(mY , vY  , yValue);
+				
+				mXY = Matrix4x4.contact(mX , mY); 
+				mXY.effectPoint3D(0 , 0 , 1 ,vZ);
+				Matrix4x4.rotateArbitraryAxis(mZ , vZ  , -zValue);
+				
+				
+				md = Matrix4x4.contact(mXY , mZ);
+			}
+			else {
+				vX = m_yRotor;
+				Matrix4x4.rotateArbitraryAxis(mX , vX  , xValue);
+				
+				mX.effectPoint3D(m_xRotor.x , m_xRotor.y , m_xRotor.z , vY);
+				Matrix4x4.rotateArbitraryAxis(mY , vY  , yValue);
+				mXY = Matrix4x4.contact(mX , mY); 
+				
+				mXY.effectPoint3D(m_zRotor.x , m_zRotor.y ,m_zRotor.z , vZ);
+				Matrix4x4.rotateArbitraryAxis(mZ , vZ  , zValue);
+				md = Matrix4x4.contact(mXY , mZ);
+				
+			}
+			
+			return md;
 		}
 		
 		public function decode(ba : ByteArray , endPos : uint) : void
