@@ -5,6 +5,7 @@ package editor.module
 	import editor.ui.SripteWithRect;
 	import flash.display.DisplayObjectContainer;
 	import flash.text.TextField;
+	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
 	/**
 	 * ...
@@ -64,6 +65,11 @@ package editor.module
 		{
 			
 		}
+		public function onExport(__rootBA : ByteArray):void
+		{
+			
+		}
+		
 		public function onOpenXML(__root : XML):void
 		{
 			

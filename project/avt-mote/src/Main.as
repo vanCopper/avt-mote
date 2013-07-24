@@ -78,6 +78,7 @@ package
 			tb.btnNew.releaseFunction = onNew;
 			tb.btnOpen.releaseFunction = onOpen;
 			tb.btnSaveAs.releaseFunction = onSaveAs;
+			tb.btnExport.releaseFunction = onExport;
 			
 			var _lib : Library = new Library();
 			_lib.x  = 400;
@@ -163,6 +164,25 @@ package
 			
 			
 			fr.save(_data, Config.lastFileName);
+			
+		}
+		
+		private function onExport(btn:BSSButton):void 
+		{
+			var _data : ByteArray = new ByteArray();
+			_data.writeByte('A'.charCodeAt(0));
+			_data.writeByte('M'.charCodeAt(0));
+			_data.writeByte('X'.charCodeAt(0));
+			_data.writeByte('B'.charCodeAt(0));
+			
+			m_mb.onExport(_data);
+			var fr : FileReference = new FileReference;
+			
+			//fr.addEventListener(Event.SELECT, onFileSaveSelect);
+			//fr.addEventListener(Event.CANCEL , onFileSaveCancel);
+			
+			
+			fr.save(_data, Config.lastFileName.replace(".amxmla" , ".amxmlb"));
 			
 		}
 	}

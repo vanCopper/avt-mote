@@ -12,6 +12,7 @@ package editor.module.head
 	import editor.ui.EdtAddUI;
 	import editor.ui.EdtQuadrant;
 	import editor.ui.EdtVertex3D;
+	import editor.util.ByteArrayUtil;
 	import editor.util.ImagePicker;
 	import editor.util.TextureLoader;
 	import flash.display.Bitmap;
@@ -824,6 +825,56 @@ package editor.module.head
 			m_tb.btnEdit.releaseFunction(m_tb.btnEdit);
 			deactivate();
 			m_bmp.texture2D = null;
+		}
+		
+		public override function onExport(__rootBA : ByteArray):void
+		{
+			var baData : ByteArray = new ByteArray();
+			
+			
+			
+			
+			{	
+				baData.writeByte(1);
+				baData.writeFloat(ModuleHeadData.s_rotorX);
+				baData.writeFloat(ModuleHeadData.s_rotorY);
+				baData.writeFloat(ModuleHeadData.s_rotorR);
+			}
+			
+			if (!ModuleHeadData.s_approximationMode)
+			{
+				baData.writeByte(2);
+				baData.writeFloat(ModuleHeadData.s_absRX);
+				baData.writeFloat(ModuleHeadData.s_absRY);
+				baData.writeFloat(ModuleHeadData.s_absRZ);
+				
+				ModuleHeadData.s_xRotor.encode(baData);
+				ModuleHeadData.s_yRotor.encode(baData);
+				ModuleHeadData.s_zRotor.encode(baData);
+			}
+			
+			if (ModuleHeadData.s_texture)
+			{
+				baData.writeByte(3);
+				ModuleHeadData.s_texture.encode(baData);
+			}
+			
+			{	
+				baData.writeByte(4);
+				baData.writeShort(ModuleHeadData.s_pointPerLine );
+				baData.writeShort(ModuleHeadData.s_totalLine );
+				
+				for each (var _v : Vertex3D in ModuleHeadData.s_vertexData)	
+				{
+					_v.encode(baData);
+				}
+			}
+			
+			__rootBA.writeByte(0x21);
+			ByteArrayUtil.writeUnsignedShortOrInt(__rootBA , baData.length);
+			__rootBA.writeBytes(baData);
+			
+			
 		}
 		
 		public override function onSave(__root : XML):void
