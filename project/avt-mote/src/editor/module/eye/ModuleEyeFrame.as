@@ -45,17 +45,15 @@ package editor.module.eye
 		
 		private function dealEyeVertexL(v : Vector.<Vertex3D>):void
 		{
-			dealVertex3D(v , ModuleEyeData.s_eyeLScale , ModuleEyeData.s_eyeLPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeLLocateX , ModuleEyeData.s_eyeLLocateY);
+			dealVertex3DArray(v , ModuleEyeData.s_eyeLScale , ModuleEyeData.s_eyeLPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeLLocateX , ModuleEyeData.s_eyeLLocateY);
 		}
 		private function dealEyeVertexR(v : Vector.<Vertex3D>):void
 		{
-			dealVertex3D(v , ModuleEyeData.s_eyeRScale , ModuleEyeData.s_eyeRPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeRLocateX , ModuleEyeData.s_eyeRLocateY);
+			dealVertex3DArray(v , ModuleEyeData.s_eyeRScale , ModuleEyeData.s_eyeRPlane , ModuleEyeData.s_eyeMatrix , ModuleEyeData.s_eyeRLocateX , ModuleEyeData.s_eyeRLocateY);
 		}
 		
-		private function dealVertex3D( v : Vector.<Vertex3D> , sacle : Number , plane : Plane3D , md : Matrix4x4 , _xOff : Number  , _yOff : Number ) : void
+		public static function dealVertex3D( vtx : Vertex3D , sacle : Number , plane : Plane3D , md : Matrix4x4 , _xOff : Number  , _yOff : Number ) : void
 		{
-			for each(var vtx : Vertex3D in v )
-			{
 				vtx.x *= sacle;
 				vtx.y *= sacle;
 				vtx.x += _xOff;
@@ -64,6 +62,13 @@ package editor.module.eye
 				vtx.z = plane.confitZ(vtx.x , vtx.y)
 				
 				md.effectPoint3D(vtx.x, vtx.y , vtx.z , vtx);
+		}
+		
+		private function dealVertex3DArray( v : Vector.<Vertex3D> , sacle : Number , plane : Plane3D , md : Matrix4x4 , _xOff : Number  , _yOff : Number ) : void
+		{
+			for each(var vtx : Vertex3D in v )
+			{
+				dealVertex3D(vtx , sacle  , plane , md  , _xOff   , _yOff );
 			}
 		}
 		
@@ -181,8 +186,8 @@ package editor.module.eye
 				
 			if (eyeWhite)	eyeWhite.encode(ba);
 			if (eyeBall)	{
-				ba.writeFloat(eyeBallX);
-				ba.writeFloat(eyeBallY);
+				//ba.writeFloat(eyeBallX);
+				//ba.writeFloat(eyeBallY);
 				eyeBall.encode(ba);
 			}
 			if (eyeLip) 	{

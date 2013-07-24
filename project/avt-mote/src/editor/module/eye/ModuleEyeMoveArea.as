@@ -281,7 +281,8 @@ package editor.module.eye
 				
 				var pt : Point = getXYOfArea(m_radianPlay);
 				
-				
+				//trace(-(m_mefsRoll.eyeBall.width >> 1))
+				//trace(-(m_mefsRoll.eyeBall.height >> 1))
 				
 				m_mefsRoll.eyeBall.x = -(m_mefsRoll.eyeBall.width >> 1) + pt.x ; 
 				m_mefsRoll.eyeBall.y = -(m_mefsRoll.eyeBall.height >> 1) + pt.y ; 

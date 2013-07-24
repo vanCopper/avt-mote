@@ -16,8 +16,8 @@ package player.struct
 		public var eyeBall : Texture2D;
 		public var eyeBallX : Number;
 		public var eyeBallY : Number;
-		public var eyeBallRawX : Number;
-		public var eyeBallRawY : Number;
+		//public var eyeBallRawX : Number;
+		//public var eyeBallRawY : Number;
 		
 		public var eyeLip : Texture2D;
 		public var eyeLipX : Number;
@@ -53,10 +53,13 @@ package player.struct
 				vertexLength+=8;
 			}
 			if (_flag & 2)	{ 
-				eyeBallRawX = eyeBallX = ba.readFloat();
-				eyeBallRawY = eyeBallY = ba.readFloat();
+				//eyeBallRawX = eyeBallX = ba.readFloat();
+				//eyeBallRawY = eyeBallY = ba.readFloat();
 				eyeBall = Texture2D.decodeVertex3D(ba);
 				vertexLength += 8;
+				
+				eyeBallX = 4;
+				eyeBallY = 4;
 				
 			}
 			if (_flag & 4) 	{
