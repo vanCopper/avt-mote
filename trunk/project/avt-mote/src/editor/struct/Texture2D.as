@@ -2,6 +2,7 @@ package editor.struct
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -94,6 +95,13 @@ package editor.struct
 			uvtData = null;
 		}
 		
+		public function encode(ba:ByteArray):void
+		{
+			ba.writeShort(rectX);
+			ba.writeShort(rectY);
+			ba.writeShort(rectW);
+			ba.writeShort(rectH);
+		}
 		
 		
 		public function toXMLString():String

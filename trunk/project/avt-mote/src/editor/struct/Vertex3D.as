@@ -1,5 +1,6 @@
 package editor.struct
 {
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -51,6 +52,15 @@ package editor.struct
 		{
 			return "" + x + ":" + y + ":" + z;
 		}
+		
+		public function encode(ba:ByteArray):void
+		{
+			ba.writeFloat(x);
+			ba.writeFloat(y);
+			ba.writeFloat(z);
+			
+		}
+		
 		public function to2DXMLString():String
 		{
 			return "" + x + ":" + y;

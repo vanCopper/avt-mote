@@ -5,6 +5,7 @@ package editor
 	import editor.ui.SripteWithRect;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
 	/**
 	 * ...
@@ -60,6 +61,14 @@ package editor
 				_md.onSave(__root);
 			}
 		}
+		public function onExport(__rootBA : ByteArray):void
+		{
+			for each (var _md : ModuleBase in  m_mdList)
+			{
+				_md.onExport(__rootBA);
+			}
+		}
+		
 		public function onOpenXML(__root : XML):void
 		{
 			for each (var _md : ModuleBase in  m_mdList)
