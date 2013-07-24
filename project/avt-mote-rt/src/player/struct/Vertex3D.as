@@ -47,12 +47,6 @@ package player.struct
 			z = ba.readFloat();
 			
 		}
-		
-		public function to2DXMLString():String
-		{
-			return "" + x + ":" + y;
-		}
-
 	}
 
 }
