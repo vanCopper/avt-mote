@@ -187,7 +187,10 @@ package editor.module.eye
 				ByteArrayUtil.writeUnsignedByteOrShort(ba,eyeMaskData.length);
 				for each (var _v : Vertex3D in eyeMaskData)	
 				{
-					_v.encode(ba);
+					ba.writeFloat(_v.x);
+					ba.writeFloat(_v.y);
+					
+					//_v.(ba);
 				}
 			}
 		}
