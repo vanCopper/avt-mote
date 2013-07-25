@@ -12,6 +12,7 @@ package editor.module.hair
 	import editor.ui.EdtVertex3D;
 	import editor.ui.SpriteWH;
 	import editor.ui.SripteWithRect;
+	import editor.util.ByteArrayUtil;
 	import editor.util.ImageListPicker;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -21,6 +22,7 @@ package editor.module.hair
 	import flash.events.MouseEvent;
 	import flash.net.FileFilter;
 	import flash.text.TextField;
+	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
 	import UISuit.UIComponent.BSSCheckBox;
 	import UISuit.UIComponent.BSSDropDownMenu;
@@ -394,6 +396,31 @@ package editor.module.hair
 				}
 				
 			}
+		}
+		
+		
+		public override function onExport(__rootBA : ByteArray):void
+		{
+			var baData : ByteArray = new ByteArray();
+			
+			
+			
+			
+			{	
+				
+				baData.writeByte(1);
+				ByteArrayUtil.writeUnsignedByteOrShort(baData , ModuleHairData.s_frameList.length);
+				for each (var _mhf : ModuleHairFrame in ModuleHairData.s_frameList)
+				{
+					_mhf.encode(baData);
+				}
+			}
+			
+			__rootBA.writeByte(0x23);
+			ByteArrayUtil.writeUnsignedShortOrInt(__rootBA , baData.length);
+			__rootBA.writeBytes(baData);
+			
+			
 		}
 		
 		public override function onSave(__root : XML):void

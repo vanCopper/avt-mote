@@ -6,6 +6,7 @@ package editor.module.hair
 	import editor.ui.EdtVertex3D;
 	import editor.ui.EdtVertexInfo;
 	import editor.util.TextureLoader;
+	import flash.utils.ByteArray;
 	/**
 	 * ...
 	 * @author Blueshell
@@ -104,8 +105,35 @@ package editor.module.hair
 		
 		
 		
-		
-		
+		public function encode(ba:ByteArray):void
+		{
+			if (texture) 
+				texture.encode(ba);
+			else
+				new Texture2D(null,null,null,null,0,0,0,0 ).encode(ba);
+			
+			ba.writeByte(vertexPerLine);
+			ba.writeByte(vertexData.length / vertexPerLine);
+			
+			
+			for each (var _v : Vertex3D in vertexData)	
+			{
+				ba.writeFloat(_v.x);
+				ba.writeFloat(_v.y);
+			}
+			
+				
+			for (var vi : int = 0 ; vi < vertexPerLine ; vi++ )	
+			{
+				ba.writeFloat(vertexData[vi].z);
+			}
+			
+			ba.writeFloat(offsetX);
+			ba.writeFloat(offsetY);
+			ba.writeFloat(weightReciprocal);
+			ba.writeFloat(ductility);
+			ba.writeFloat(hardness);
+		}
 		
 		public function toXMLString():String
 		{
