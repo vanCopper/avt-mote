@@ -49,13 +49,13 @@ package player.struct
 			var _flag : int = ba.readByte();
 			
 			if (_flag & 1)	{
-				eyeWhite = Texture2D.decodeVertex3D(ba);
+				eyeWhite = Texture2D.decodeTexture2D(ba);
 				vertexLength+=8;
 			}
 			if (_flag & 2)	{ 
 				//eyeBallRawX = eyeBallX = ba.readFloat();
 				//eyeBallRawY = eyeBallY = ba.readFloat();
-				eyeBall = Texture2D.decodeVertex3D(ba);
+				eyeBall = Texture2D.decodeTexture2D(ba);
 				vertexLength += 8;
 				
 				eyeBallX = 4;
@@ -66,7 +66,7 @@ package player.struct
 				eyeLipX = ba.readFloat();
 				eyeLipY = ba.readFloat();
 				
-				eyeLip = Texture2D.decodeVertex3D(ba);
+				eyeLip = Texture2D.decodeTexture2D(ba);
 			}
 			
 			if (_flag & 8)

@@ -165,7 +165,7 @@ package player
 				}
 				else if (_flag == 3)
 				{
-					m_texture = Texture2D.decodeVertex3D(ba);
+					m_texture = Texture2D.decodeTexture2D(ba);
 				}
 				else if (_flag == 4)
 				{
@@ -173,10 +173,10 @@ package player
 					m_totalLine = ba.readUnsignedShort();
 					
 					var _total : int = m_pointPerLine * m_totalLine;
-					var _vertexData : Vector.<Vertex3D> = new Vector.<Vertex3D>();
+					var _vertexData : Vector.<Vertex3D> = new Vector.<Vertex3D>(_total , true);
 					for (var i : int = 0 ; i < _total ; i++ )
 					{
-						_vertexData.push(Vertex3D.decodeVertex3D(ba));
+						_vertexData[i] = (Vertex3D.decodeVertex3D(ba));
 					}
 					
 					

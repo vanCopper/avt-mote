@@ -195,12 +195,6 @@ package player
 					var _lEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexL[m_curFrame]];
 					var _rEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexR[m_curFrame]];
 					
-					if (md == null)
-					{
-						md = new Matrix4x4();
-						md.identity();
-					}
-				
 					
 					var _vx : Number;
 					var _vy : Number;
