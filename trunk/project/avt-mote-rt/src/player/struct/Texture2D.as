@@ -13,7 +13,7 @@ package player.struct
 		public var rectH : int;
 		private var  uvtData :  Vector.<Number>;
 		
-		public static function decodeVertex3D(ba:ByteArray):Texture2D
+		public static function decodeTexture2D(ba:ByteArray):Texture2D
 		{
 			var tx : Texture2D = new Texture2D();
 			tx.decode(ba);
