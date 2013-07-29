@@ -61,6 +61,9 @@ package
 			m_mb.addModule(new ModuleEye(_mContainer));
 			import editor.module.hair.ModuleHair;
 			m_mb.addModule(new ModuleHair(_mContainer));
+			import editor.module.body.ModuleBody;
+			m_mb.addModule(new ModuleBody(_mContainer));
+			
 			
 			addChild(_mContainer).y = m_mb.y + m_mb.height + 5;
 			

@@ -56,6 +56,17 @@ package editor.config
 		public static var MODULE_HAIR_Z_ADJUST:String = "z adjust";
 		public static var MODULE_HAIR_PROPERTY:String = "property";
 		public static var MODULE_HAIR_VIEW:String = "view";
+		
+		
+		public static var MODULE_BODY:String = "body";
+		public static var MODULE_BODY_IMPORT_IMAGE:String = "import images";
+		public static var MODULE_BODY_ADD_FRAME:String = "add frame";
+		public static var MODULE_BODY_LOCATE:String = "locate";
+		public static var MODULE_BODY_BREATH:String = "breath";
+		public static var MODULE_BODY_VIEW:String = "view";
+		
+		
+		
 	}
 
 }
