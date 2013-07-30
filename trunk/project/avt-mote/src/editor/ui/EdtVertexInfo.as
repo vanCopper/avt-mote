@@ -11,6 +11,16 @@ package editor.ui
 		public var dot : EdtDot;
 		public var point : Point;
 		
+		public function isSelectd():Boolean
+		{
+			if (dot)
+			{
+				return dot.mode == EdtDot.DOT_SELECTED_MODE;
+			}
+			
+			return false;
+		}
+		
 		public function EdtVertexInfo(_vertex : EdtVertex3D = null , _dot : EdtDot = null) 
 		{
 			dot =  _dot;

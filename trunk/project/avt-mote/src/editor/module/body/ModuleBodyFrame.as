@@ -16,6 +16,7 @@ package editor.module.body
 		public var name : String;
 		public var texture : Texture2D;
 		public var vertexData : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
+		private var _vertexBreathData : Vector.<EdtVertex3D>;
 		public var vertexPerLine : int = 0 ;
 		public var uvData : Vector.<Number>;
 		public var indices : Vector.<int>;
@@ -24,10 +25,23 @@ package editor.module.body
 		public var offsetY : Number = 0;
 		
 		
-		public var weightReciprocal : Number = 60;
-		public var ductility : Number = 0.4;
-		public var hardness : Number = 1.0;
 		//public var decline : Number = 1.05;
+		
+		public function get vertexBreathData():Vector.<EdtVertex3D>
+		{
+			if (_vertexBreathData == null || _vertexBreathData.length == 0)
+			{
+				
+				_vertexBreathData = new Vector.<EdtVertex3D>();
+				
+				for each (var _ev3d : EdtVertex3D in vertexData)
+				{	
+					_vertexBreathData.push(_ev3d.cloneEdtVertex3D());
+				}
+				genConnect(vertexPerLine , _vertexBreathData.length / vertexPerLine , _vertexBreathData);
+			}
+			return _vertexBreathData;
+		}
 		
 		public function genIndicesData():void
 		{
@@ -53,8 +67,7 @@ package editor.module.body
 						indices.push(p3);
 					}
 				}
-			}
-			
+			}			
 		}
 		
 		public function genUVData():void
@@ -78,6 +91,18 @@ package editor.module.body
 			var __v : Vector.<Number> = new Vector.<Number>();
 				
 			for each( var ev : EdtVertex3D in vertexData)
+			{
+				__v.push(ev.x + offsetX);
+				__v.push(ev.y + offsetY);
+			}
+			return __v;
+		}
+		
+		public function get verticesBreath():Vector.<Number>
+		{
+			var __v : Vector.<Number> = new Vector.<Number>();
+				
+			for each( var ev : EdtVertex3D in vertexBreathData)
 			{
 				__v.push(ev.x + offsetX);
 				__v.push(ev.y + offsetY);
@@ -122,23 +147,17 @@ package editor.module.body
 				ba.writeFloat(_v.y);
 			}
 			
-				
-			for (var vi : int = 0 ; vi < vertexPerLine ; vi++ )	
-			{
-				ba.writeFloat(vertexData[vi].z);
-			}
+			
+			
 			
 			ba.writeFloat(offsetX);
 			ba.writeFloat(offsetY);
-			ba.writeFloat(weightReciprocal);
-			ba.writeFloat(ductility);
-			ba.writeFloat(hardness);
 		}
 		
 		public function toXMLString():String
 		{
 			
-			var str : String = "<ModuleHairFrame>";
+			var str : String = "<ModuleBodyFrame>";
 			str += "<name>";
 				str += name;
 			str += "</name>";
@@ -163,27 +182,31 @@ package editor.module.body
 						str += "," + _v.to2DXMLString();
 				}
 			str += "</vertexData>";
-			str += "<vertexDataZ>";
-				first = true;
-				for (var vi : int = 0 ; vi < vertexPerLine ; vi++ )	
+			
+			
+			str += "<vertexBreathData>";
+				if (_vertexBreathData && _vertexBreathData.length)
 				{
-					if (first)
+					first  = true;
+					for each ( _v  in _vertexBreathData)	
 					{
-						str += vertexData[vi].z;
-						first = false;
+						if (first)
+						{
+							str += _v.to2DXMLString();
+							first = false;
+						}
+						else
+							str += "," + _v.to2DXMLString();
 					}
-					else
-						str += "," + vertexData[vi].z;
 				}
-			str += "</vertexDataZ>";
+			str += "</vertexBreathData>";
+			
+			
 			str += "<offsetX>" + offsetX + "</offsetX>";
 			str += "<offsetY>" + offsetY + "</offsetY>";
 		
-			str += "<weightReciprocal>" + weightReciprocal + "</weightReciprocal>";
-			str += "<ductility>" + ductility + "</ductility>";
-			str += "<hardness>" + hardness + "</hardness>";
-			
-			str += "</ModuleHairFrame>";
+
+			str += "</ModuleBodyFrame>";
 			return str;
 		}
 		
@@ -269,20 +292,27 @@ package editor.module.body
 					genConnect(vertexPerLine , vertexData.length / vertexPerLine , vertexData);
 					
 					
-					__dataString = String(s.vertexDataZ.text());
-					__data = __dataString.split(",");
-					for (var vi : int = 0 ; vi < vertexPerLine ; vi++ )
+				}
+				
+				
+				__dataString  = String(s.vertexBreathData.text());
+				if (__dataString)
+				{
+					 _vertexBreathData = new Vector.<EdtVertex3D>;
+					__data  = __dataString.split(",");
+					for each (vstr in __data )
 					{
-						vertexData[vi].z = Number(__data[vi]);
+						_ev = new EdtVertex3D();
+						_ev.from2DXMLString(vstr);
+						_vertexBreathData.push(_ev);
 					}
+					genConnect(vertexPerLine , vertexData.length / vertexPerLine , _vertexBreathData);
+					
+					
 				}
 				
 				offsetX  = int(s.offsetX.text());
 				offsetY  = int(s.offsetY.text());
-				
-				weightReciprocal  = Number(s.weightReciprocal.text());
-				ductility  = Number(s.ductility.text());
-				hardness  = Number(s.hardness.text());
 				
 				if (loadStep == 0)
 				{

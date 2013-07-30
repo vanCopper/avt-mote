@@ -10,6 +10,7 @@ package editor.module.body
 	import editor.ui.EdtAddUI;
 	import editor.ui.EdtQuadrant;
 	import editor.ui.EdtVertex3D;
+	import editor.ui.EdtVertexInfo;
 	import editor.ui.SpriteWH;
 	import editor.ui.SripteWithRect;
 	import editor.util.ByteArrayUtil;
@@ -41,7 +42,13 @@ package editor.module.body
 		private var m_quadrant2 : EdtQuadrant;
 		private var m_efl : ModuleBodyFrameLib;
 		
-		private var m_hairContainer : ModuleBodyFrameSprite;
+		private var m_bodyContainer : ModuleBodyFrameSprite;
+		private var m_bodyShape : ModuleBodyFrameShape;
+		
+		private var m_meshEditor : ModuleBodyMeshEditor;
+		private var m_meshBreathEditor : ModuleBodyMeshBreathEditor;
+
+		
 		
 		public override function dispose():void
 		{
@@ -63,10 +70,10 @@ package editor.module.body
 				m_quadrant2 = null;
 			}
 				
-			if (m_hairContainer)
+			if (m_bodyContainer)
 			{
 				//m_hairContainer.dispose();
-				m_hairContainer = null;
+				m_bodyContainer = null;
 			}
 			
 			super.dispose();
@@ -80,15 +87,18 @@ package editor.module.body
 			m_content.addChild(m_tb).y = 25;
 			
 			m_quadrant2 = new EdtQuadrant(2);
-			m_quadrant2._xQ = -100;
-			m_quadrant2._yQ = -100;
+			//m_quadrant2._xQ = -100;
+			//m_quadrant2._yQ = -100;
 			
 			
 			m_eqm = new ModuleBodyEQMgr();
 			m_eqm.addChildAt(m_quadrant2 , 0);
+			m_eqm.visible = false;
 			
-			m_hairContainer = new ModuleBodyFrameSprite(null);
-			m_quadrant2.indicate = m_hairContainer;
+			m_bodyContainer = new ModuleBodyFrameSprite(null);
+			//m_quadrant2.indicate = m_bodyContainer;
+			
+			m_bodyShape = new ModuleBodyFrameShape(null);
 			
 			m_quadrant2.fullScreen = (true);
 			m_quadrant2.state = 2;
@@ -113,6 +123,16 @@ package editor.module.body
 			
 			m_content.addChild(m_efl);
 			
+			m_meshEditor = new ModuleBodyMeshEditor();
+			m_content.addChild(m_meshEditor).visible = false;
+			m_meshEditor.okFunction = onSetMesh;
+			
+			
+			m_meshBreathEditor = new ModuleBodyMeshBreathEditor();
+			m_content.addChild(m_meshBreathEditor).visible = false;
+			m_meshBreathEditor.okFunction = onSetBreathMesh;
+			m_meshBreathEditor.getFunction = function(): Vector.<EdtVertexInfo> { if (m_quadrant2) return m_quadrant2._edtVertexArray; return null; }
+			m_meshBreathEditor.changeFunction  = refreshShape;
 		}
 		
 		/*
@@ -141,11 +161,21 @@ package editor.module.body
 		{
 			if (p == 0)
 			{
-				
+				m_meshEditor.visible = false;
+				m_efl.clickFuntion = null;
+				m_eqm.visible = false;
+				m_efl.clickFuntion = null;
+				m_eqm.deactivate();
+				m_quadrant2.indicate = null;
 			}
 			else if (p == 1)
 			{
-				
+				m_meshBreathEditor.visible = false;
+				m_efl.clickFuntion = null;
+				m_eqm.visible = false;
+				m_efl.clickFuntion = null;
+				m_eqm.deactivate();
+				m_quadrant2.indicate = null;
 			}
 			else if (p == 2)
 			{
@@ -171,11 +201,23 @@ package editor.module.body
 			
 			if (p == 0)
 			{
-				
+				m_meshEditor.visible = true;
+				m_efl.clickFuntion = onClickToEdit;
+				m_eqm.visible = true;
+				m_quadrant2.indicate = m_bodyContainer;
+				m_quadrant2.setVertex(null);
+				m_eqm.changeFunction = null;
+				m_eqm.activate();
 			}
 			else if (p == 1)
 			{
-				
+				m_meshBreathEditor.visible = true;
+				m_efl.clickFuntion = onClickToEditBreath;
+				m_eqm.visible = true;
+				m_quadrant2.indicate = m_bodyShape;
+				m_quadrant2.setVertex(null);
+				m_eqm.changeFunction = refreshShape;
+				m_eqm.activate();
 			}
 			else if (p == 2)
 			{
@@ -192,17 +234,42 @@ package editor.module.body
 		}
 		
 		
+		
+		
 		private function onSetMesh(_data:ModuleBodyFrame):void 
 		{
 			m_quadrant2.setVertex(_data.vertexData);
 		}
 		
+		private function onSetBreathMesh(_data:ModuleBodyFrame):void 
+		{
+			m_quadrant2.setVertex(_data.vertexBreathData);
+		}
+		
 		private function onClickToEdit(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
 		{
 			
-			m_hairContainer.data = mefs.data;
-			m_hairContainer.refresh();
+			m_bodyContainer.data = mefs.data;
+			m_bodyContainer.refresh();
+			m_meshEditor.setCurrentData(m_bodyContainer.data);
 		}
+		private function refreshShape():void
+		{
+			m_bodyShape.refresh(true);
+			m_meshBreathEditor.testReset();
+		}
+		private function onClickToEditBreath(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
+		{
+			
+			m_bodyShape.data = mefs.data;
+			m_bodyShape.data.genUVData();
+			m_bodyShape.data.genIndicesData();
+			
+			m_bodyShape.refresh(true);
+			m_meshBreathEditor.setCurrentData(m_bodyShape.data);
+			
+		}
+		
 		private function onClickToLocate(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
 		{
 
@@ -215,7 +282,7 @@ package editor.module.body
 		
 		
 		private function onOpen(btn : BSSButton) : void {
-			new ImageListPicker( onLoadImage , [ , new FileFilter("image (*.png)" , "*.png") , new FileFilter("image list(*.imglist)" , "*.imglist")]);
+			new ImageListPicker( onLoadImage , [ new FileFilter("image (*.png)" , "*.png") , new FileFilter("image list(*.imglist)" , "*.imglist")]);
 		}
 
 		
@@ -256,8 +323,11 @@ package editor.module.body
 			m_efl.onNew();
 			m_efl.visible = false;
 		
-			m_hairContainer.data = null;
-			m_hairContainer.refresh();
+			m_bodyContainer.data = null;
+			m_bodyContainer.refresh();
+			
+			m_bodyShape.data = null;
+			m_bodyShape.refresh(true);
 			
 			enablePage(-1);
 			deactivate();
@@ -356,9 +426,9 @@ package editor.module.body
 			}
 			else
 			{
-				var ModuleEyeXML : XML = <ModuleBody/>;
+				var ModuleBodyXML : XML = <ModuleBody/>;
 				__root.appendChild(
-					ModuleEyeXML
+					ModuleBodyXML
 				);
 			}
 		}

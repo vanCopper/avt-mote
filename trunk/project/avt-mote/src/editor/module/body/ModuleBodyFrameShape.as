@@ -1,4 +1,4 @@
-package editor.module.hair 
+package editor.module.body 
 {
 	import editor.struct.Texture2DBitmap;
 	import flash.display.Graphics;
@@ -10,11 +10,11 @@ package editor.module.hair
 	 * ...
 	 * @author Blueshell
 	 */
-	public class ModuleHairFrameShape extends Shape 
+	public class ModuleBodyFrameShape extends Shape 
 	{
-		public var data : ModuleHairFrame;
+		public var data : ModuleBodyFrame;
 		
-		public function ModuleHairFrameShape(_data : ModuleHairFrame) 
+		public function ModuleBodyFrameShape(_data : ModuleBodyFrame) 
 		{
 			data = _data;
 		}
@@ -25,7 +25,7 @@ package editor.module.hair
 				parent.removeChild(this);
 		}
 		
-		public function refresh():void
+		public function refresh(breath : Boolean):void
 		{
 			if (data) {
 				graphics.clear();
@@ -37,7 +37,7 @@ package editor.module.hair
 					{
 						g.clear();
 						g.beginBitmapFill(data.texture.bitmapData,null,false,true);
-						g.drawTriangles(data.vertices , data.indices, data.uvData);
+						g.drawTriangles(breath ? data.verticesBreath : data.vertices , data.indices, data.uvData);
 						g.endFill();
 					}
 				}

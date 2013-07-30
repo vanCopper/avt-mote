@@ -104,6 +104,7 @@ package editor.module.hair
 			
 			m_eqm = new ModuleHairEQMgr();
 			m_eqm.addChildAt(m_quadrant2 , 0);
+			m_eqm.visible = false;
 			
 			m_hairContainer = new ModuleHairFrameSprite(null);
 			m_quadrant2.indicate = m_hairContainer;

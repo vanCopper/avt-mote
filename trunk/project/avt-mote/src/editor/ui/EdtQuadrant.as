@@ -70,6 +70,11 @@ package editor.ui {
 				_indicate.y = _CoordinateAxisX.y;
 				
 				_maskContainer.addChildAt(_indicate , 0);
+				
+				if (_indicate)
+				{	
+					_indicate.scaleX = _indicate.scaleY = (fullScreen ? 2 : 1) * scaleQ;
+				}
 			}
 			else 
 			{
