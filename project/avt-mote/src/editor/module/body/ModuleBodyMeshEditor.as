@@ -1,5 +1,6 @@
-package editor.module.hair 
+package editor.module.body 
 {
+	import editor.module.body.ModuleBodyFrame;
 	import editor.module.head.ModuleHeadData;
 	import editor.ui.EdtAddUI;
 	import editor.ui.EdtSlider;
@@ -10,15 +11,15 @@ package editor.module.hair
 	 * ...
 	 * @author Blueshell
 	 */
-	public class ModuleHairMeshEditor extends Sprite
+	public class ModuleBodyMeshEditor extends Sprite
 	{
 		private var m_hSlider : EdtSlider;
 		private var m_vSlider : EdtSlider;
 		private var m_okBtn : BSSButton;
-		private var m_data:ModuleHairFrame;
+		private var m_data:ModuleBodyFrame;
 		public var okFunction : Function;
 		
-		public function ModuleHairMeshEditor() 
+		public function ModuleBodyMeshEditor() 
 		{
 			m_hSlider = new EdtSlider(2, 20 , "水平切割");
 			m_vSlider = new EdtSlider(2, 20 , "垂直切割");
@@ -41,7 +42,7 @@ package editor.module.hair
 			setCurrentData(null);
 		}
 		
-		public function setCurrentData(_data:ModuleHairFrame):void
+		public function setCurrentData(_data:ModuleBodyFrame):void
 		{
 			m_data = _data;
 			

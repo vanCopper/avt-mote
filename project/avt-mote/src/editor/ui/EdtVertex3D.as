@@ -9,7 +9,7 @@ package editor.ui
 	{
 		public var priority : int;
 		public var conect : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
-		public var isSelected : Boolean;
+	//	public var isSelected : Boolean;
 		
 		public var line0 : EdtVertex3D;
 		public var line1 : EdtVertex3D;
