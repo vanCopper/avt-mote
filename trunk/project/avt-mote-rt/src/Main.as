@@ -47,8 +47,8 @@
 			var mXOff : Number = (mouseX - m_player.x);
 			var mYOff : Number = (mouseY - m_player.y);
 			
-			var _xR : Number = - mXOff / 300 * 0.15;
-			var _yR : Number =  mYOff / 300 * 0.15;
+			var _xR : Number = - mXOff / 300 * 0.1;
+			var _yR : Number =  mYOff / 300 * 0.1;
 			
 			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_xR, _yR, 0);
 			//_currentMatrix.identity();
