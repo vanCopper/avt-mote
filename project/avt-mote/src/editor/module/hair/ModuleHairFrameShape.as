@@ -10,7 +10,7 @@ package editor.module.hair
 	 * ...
 	 * @author Blueshell
 	 */
-	public class ModuleHairFrameShape extends Shape 
+	public class ModuleHairFrameShape extends Sprite 
 	{
 		public var data : ModuleHairFrame;
 		

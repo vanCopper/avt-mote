@@ -47,7 +47,8 @@ package editor.module.body
 		
 		private var m_meshEditor : ModuleBodyMeshEditor;
 		private var m_meshBreathEditor : ModuleBodyMeshBreathEditor;
-
+		private var m_bodyLocate : ModuleBodyLocate;
+		private var m_bodyView : ModuleBodyView;
 		
 		
 		public override function dispose():void
@@ -87,8 +88,8 @@ package editor.module.body
 			m_content.addChild(m_tb).y = 25;
 			
 			m_quadrant2 = new EdtQuadrant(2);
-			//m_quadrant2._xQ = -100;
-			//m_quadrant2._yQ = -100;
+			m_quadrant2._xQ = -80;
+			m_quadrant2._yQ = -80;
 			
 			
 			m_eqm = new ModuleBodyEQMgr();
@@ -133,6 +134,13 @@ package editor.module.body
 			m_meshBreathEditor.okFunction = onSetBreathMesh;
 			m_meshBreathEditor.getFunction = function(): Vector.<EdtVertexInfo> { if (m_quadrant2) return m_quadrant2._edtVertexArray; return null; }
 			m_meshBreathEditor.changeFunction  = refreshShape;
+			
+			m_bodyLocate  = new  ModuleBodyLocate();
+			m_content.addChild(m_bodyLocate).visible = false;
+			
+			m_bodyView  = new  ModuleBodyView();
+			m_content.addChild(m_bodyView).visible = false;
+			
 		}
 		
 		/*
@@ -173,17 +181,20 @@ package editor.module.body
 				m_meshBreathEditor.visible = false;
 				m_efl.clickFuntion = null;
 				m_eqm.visible = false;
-				m_efl.clickFuntion = null;
 				m_eqm.deactivate();
 				m_quadrant2.indicate = null;
 			}
 			else if (p == 2)
 			{
-				
+				m_bodyLocate.visible = false;
+				m_bodyLocate.deactivate();
+				m_efl.clickFuntion = null;
 			}
 			else if (p == 3)
 			{
-				
+				m_bodyView.visible = false;
+				m_bodyView.deactivate();
+				m_efl.clickFuntion = null;
 			}
 			else if (p == 4)
 			{
@@ -221,11 +232,15 @@ package editor.module.body
 			}
 			else if (p == 2)
 			{
-				
+				m_bodyLocate.visible = true;
+				m_bodyLocate.activate();
+				m_efl.clickFuntion = onClickToLocate;
 			}
 			else if (p == 3)
 			{
-				
+				m_bodyView.visible = true;
+				m_bodyView.activate();
+				m_efl.clickFuntion = onClickToView;
 			}
 			else if (p == 4)
 			{
@@ -253,9 +268,14 @@ package editor.module.body
 			m_bodyContainer.refresh();
 			m_meshEditor.setCurrentData(m_bodyContainer.data);
 		}
+		private function onClickToLocate(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
+		{
+			m_bodyLocate.setCurrentData(mefs.data);
+		}
+		
 		private function refreshShape():void
 		{
-			m_bodyShape.refresh(true);
+			m_bodyShape.refresh(true , false);
 			m_meshBreathEditor.testReset();
 		}
 		private function onClickToEditBreath(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
@@ -265,20 +285,21 @@ package editor.module.body
 			m_bodyShape.data.genUVData();
 			m_bodyShape.data.genIndicesData();
 			
-			m_bodyShape.refresh(true);
+			m_bodyShape.refresh(true , false);
 			m_meshBreathEditor.setCurrentData(m_bodyShape.data);
 			
 		}
-		
-		private function onClickToLocate(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
-		{
-
-		}
-		
-		private function onClickToZAdj(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
+		private function onClickToView(__item : Sprite , mefs : ModuleBodyFrameSprite , _name : String ):void 
 		{
 			
+			m_bodyShape.data = mefs.data;
+			m_bodyShape.data.genUVData();
+			m_bodyShape.data.genIndicesData();
+			
+			m_bodyView.setCurrentData(m_bodyShape.data);
+			
 		}
+		
 		
 		
 		private function onOpen(btn : BSSButton) : void {
@@ -309,9 +330,7 @@ package editor.module.body
 		{
 			
 			m_eqm.deactivate();
-			
 			enablePage( -1);
-			
 			super.deactivate();
 		}
 		
@@ -327,7 +346,7 @@ package editor.module.body
 			m_bodyContainer.refresh();
 			
 			m_bodyShape.data = null;
-			m_bodyShape.refresh(true);
+			m_bodyShape.refresh(true , false);
 			
 			enablePage(-1);
 			deactivate();
@@ -398,7 +417,7 @@ package editor.module.body
 				}
 			}
 			
-			__rootBA.writeByte(0x23);
+			__rootBA.writeByte(0x24);
 			ByteArrayUtil.writeUnsignedShortOrInt(__rootBA , baData.length);
 			__rootBA.writeBytes(baData);
 			
