@@ -19,11 +19,14 @@ package player
 		private var m_head : HeadRender;
 		private var m_eye : EyeRender;
 		private var m_hair : HairRender;
+		private var m_body : BodyRender;
 		
 		private var m_hairUnderShape : Shape;
+		private var m_bodyShape : Shape;
 		private var m_headShape : Shape;
 		private var m_eyeSprite : Sprite;
 		private var m_hairTopShape : Shape;
+		
 		
 		public function AVTMPlayer() 
 		{
@@ -32,6 +35,7 @@ package player
 			m_head = new HeadRender();
 			m_eye = new EyeRender();
 			m_hair = new HairRender();
+			m_body = new BodyRender();
 			
 			var ba : ByteArray = new TestDataBA();
 			//var filehead : String = ;
@@ -53,11 +57,15 @@ package player
 					{
 						m_hair.decode(ba , pos + length);
 					}
+					else if (flag == 0x24)
+					{
+						m_body.decode(ba , pos + length);
+					}
 					
 					if (ba.position != pos + length)
 					{
 						trace("error pos");
-						ba.position == pos + length;
+						ba.position = pos + length;
 					};
 				}
 				
@@ -66,6 +74,9 @@ package player
 			
 			m_hairUnderShape = new Shape();
 			addChild(m_hairUnderShape);
+			
+			m_bodyShape = new Shape();
+			addChild(m_bodyShape);
 			
 			m_headShape = new Shape();
 			addChild(m_headShape);
@@ -92,6 +103,7 @@ package player
 			HairRender.WIND =  -0.01 * Math.abs(Math.sin(sinWind)) + 0.0002;
 			
 			m_hair.render(m_hairUnderShape.graphics  , m_bitmapData , _m , true );
+			m_body.render(m_bodyShape.graphics  , m_bitmapData , _m );
 			m_head.render(m_headShape.graphics  , m_bitmapData , _m );
 			m_eye.render(m_eyeSprite , m_bitmapData , _m );
 			m_hair.render(m_hairTopShape.graphics  , m_bitmapData , _m , false);
