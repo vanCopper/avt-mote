@@ -59,7 +59,7 @@
           <Texture2D>
             <name>eye/eye-ls0.png</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>133</rectX>
+            <rectX>388</rectX>
             <rectY>766</rectY>
             <rectW>84</rectW>
             <rectH>69</rectH>
@@ -98,8 +98,8 @@
           <Texture2D>
             <name>eye/eye-ls1.png</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>222</rectX>
-            <rectY>766</rectY>
+            <rectX>426</rectX>
+            <rectY>840</rectY>
             <rectW>85</rectW>
             <rectH>50</rectH>
             <type>EYE</type>
@@ -137,8 +137,8 @@
           <Texture2D>
             <name>eye/eye-ls2.png</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>312</rectX>
-            <rectY>766</rectY>
+            <rectX>337</rectX>
+            <rectY>883</rectY>
             <rectW>84</rectW>
             <rectH>33</rectH>
             <type>EYE</type>
@@ -157,8 +157,8 @@
           <Texture2D>
             <name>eye/eye-ls3.png</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>401</rectX>
-            <rectY>766</rectY>
+            <rectX>247</rectX>
+            <rectY>883</rectY>
             <rectW>85</rectW>
             <rectH>23</rectH>
             <type>EYE</type>
@@ -196,7 +196,7 @@
           <Texture2D>
             <name>eye/eye-ls0.png#FLIP</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>217</rectX>
+            <rectX>472</rectX>
             <rectY>766</rectY>
             <rectW>-84</rectW>
             <rectH>69</rectH>
@@ -235,8 +235,8 @@
           <Texture2D>
             <name>eye/eye-ls1.png#FLIP</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>307</rectX>
-            <rectY>766</rectY>
+            <rectX>511</rectX>
+            <rectY>840</rectY>
             <rectW>-85</rectW>
             <rectH>50</rectH>
             <type>EYE</type>
@@ -274,8 +274,8 @@
           <Texture2D>
             <name>eye/eye-ls2.png#FLIP</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>396</rectX>
-            <rectY>766</rectY>
+            <rectX>421</rectX>
+            <rectY>883</rectY>
             <rectW>-84</rectW>
             <rectH>33</rectH>
             <type>EYE</type>
@@ -294,8 +294,8 @@
           <Texture2D>
             <name>eye/eye-ls3.png#FLIP</name>
             <filename>mergeImage_0.png</filename>
-            <rectX>486</rectX>
-            <rectY>766</rectY>
+            <rectX>332</rectX>
+            <rectY>883</rectY>
             <rectW>-85</rectW>
             <rectH>23</rectH>
             <type>EYE</type>
@@ -333,7 +333,7 @@
       </ro>
     </ModuleEyeBlink>
     <ModuleEyeMoveArea>
-      <left>23.194827009486403,18.853381659532598,0.1297025371559121,34.5,41.5</left>
+      <left>23.194827009486403,18.8533816595326,0.1297025371559121,34.5,41.5</left>
       <right>25.495097567963924,19.190883252211194,-0.19739555984988075,33.5,42.5</right>
     </ModuleEyeMoveArea>
     <ModuleEyeLocate>
@@ -414,4 +414,25 @@
       </ModuleHairFrame>
     </ModuleHairFrames>
   </ModuleHair>
+  <ModuleBody>
+    <ModuleBodyFrames>
+      <ModuleBodyFrame>
+        <name>body.png</name>
+        <Texture2D>
+          <name>body.png</name>
+          <filename>mergeImage_0.png</filename>
+          <rectX>133</rectX>
+          <rectY>766</rectY>
+          <rectW>250</rectW>
+          <rectH>112</rectH>
+          <type>BODY</type>
+        </Texture2D>
+        <vertexPerLine>8</vertexPerLine>
+        <vertexData>51.31818181818182:44.11363636363636,70.25:42.68181818181818,85.49999999999999:35.45454545454545,88.95454545454544:20,133.29545454545453:20,139.52272727272725:34.56818181818181,150.9090909090909:44.56818181818181,171.8181818181818:44.54545454545454,35.93181818181818:62.24999999999999,59.54545454545454:58.86363636363636,82.04545454545453:54.772727272727266,99.1590909090909:54.31818181818181,128.49999999999997:53.38636363636363,142.24999999999997:56.38636363636363,162.63636363636363:58.40909090909091,190.18181818181816:61.590909090909086,25.68181818181818:89.40909090909089,49.99999999999999:84.8409090909091,75.22727272727272:83.49999999999999,100.0681818181818:84.40909090909089,128.63636363636363:84.11363636363636,155.43181818181816:84.56818181818181,178.54545454545453:85.31818181818181,210.65909090909088:89.86363636363635,15.886363636363637:112,40.24999999999999:112,65.93181818181819:112,94.54545454545452:112,134.54545454545453:112,171.75:112,200.18181818181816:112,232.27272727272725:112</vertexData>
+        <vertexBreathData>51.31818181818182:44.11363636363636,70.25:42.68181818181818,85.49999999999999:35.45454545454545,88.95454545454544:20,133.29545454545453:20,139.52272727272725:34.56818181818181,150.9090909090909:44.56818181818181,171.8181818181818:44.54545454545454,35.93181818181818:62.24999999999999,59.54545454545454:58.86363636363636,81.66477351286804:51.97904226444357,99.0058621123087:51.47994113292678,128.8700095057034:50.45568181818181,142.6566064638783:53.74800442384293,162.63636363636363:58.40909090909091,190.18181818181816:61.590909090909086,25.68181818181818:89.40909090909089,49.79239543726235:84.21169013712151,74.81801566477075:82.80711516091506,99.93326524840522:83.75970425464413,129.00744194450553:83.45026745743593,155.73852441630265:83.92626238147272,178.54545454545453:85.31818181818181,210.65909090909088:89.86363636363635,15.886363636363637:112,40.25:112,65.54055439462024:112,94.30897935455484:112,134.9492646827766:112,171.75:112,200.18181818181816:112,232.27272727272725:112</vertexBreathData>
+        <offsetX>-104</offsetX>
+        <offsetY>36</offsetY>
+      </ModuleBodyFrame>
+    </ModuleBodyFrames>
+  </ModuleBody>
 </avt-mote>

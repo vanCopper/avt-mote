@@ -5,6 +5,7 @@ package editor.module.body
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtVertex3D;
 	import editor.ui.EdtVertexInfo;
+	import editor.util.ByteArrayUtil;
 	import editor.util.TextureLoader;
 	import flash.utils.ByteArray;
 	/**
@@ -147,7 +148,36 @@ package editor.module.body
 				ba.writeFloat(_v.y);
 			}
 			
-			
+			if (!_vertexBreathData)
+			{
+				ba.writeShort(0);
+			}
+			else {
+				var _diff : Vector.<int> = new Vector.<int>();
+				
+				
+				for (var i : int = 0 ; i < vertexData.length ; i++ )	 
+				{
+					if (vertexData[i].x != _vertexBreathData[i].x ||
+						vertexData[i].y != _vertexBreathData[i].y
+					)
+					{
+						_diff.push(i);
+					}
+				}
+				ba.writeShort(_diff.length);
+				var idx : int ;
+				for each (idx in _diff)
+					ByteArrayUtil.writeUnsignedByteOrShort(ba , idx);
+				
+				for each (idx in _diff)
+				{
+					ba.writeFloat(_vertexBreathData[idx].x);
+					ba.writeFloat(_vertexBreathData[idx].y);
+					
+				}
+				
+			}
 			
 			
 			ba.writeFloat(offsetX);
