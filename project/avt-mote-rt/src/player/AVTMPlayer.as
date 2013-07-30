@@ -91,7 +91,7 @@ package player
 			m_eye.curLag = 1;
 		}
 		private var sinWind : Number = 0;
-		public function render(_m : Matrix4x4):void
+		public function render(_m : Matrix4x4 , xValue : Number, yValue : Number, zValue: Number):void
 		{
 			if (_m == null)
 			{
@@ -103,7 +103,7 @@ package player
 			HairRender.WIND =  -0.01 * Math.abs(Math.sin(sinWind)) + 0.0002;
 			
 			m_hair.render(m_hairUnderShape.graphics  , m_bitmapData , _m , true );
-			m_body.render(m_bodyShape.graphics  , m_bitmapData , _m );
+			m_body.render(m_bodyShape.graphics  , m_bitmapData , xValue , zValue );
 			m_head.render(m_headShape.graphics  , m_bitmapData , _m );
 			m_eye.render(m_eyeSprite , m_bitmapData , _m );
 			m_hair.render(m_hairTopShape.graphics  , m_bitmapData , _m , false);

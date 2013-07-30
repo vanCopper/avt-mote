@@ -33,7 +33,7 @@
 			//stage.addEventListener(MouseEvent.MOUSE_MOVE , onMouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN , onMouseDown);
 			
-			m_player.render(null);
+			m_player.render(null , 0 , 0 ,0);
 			
 			
 			//CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
@@ -52,7 +52,7 @@
 			
 			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_xR, _yR, 0);
 			//_currentMatrix.identity();
-			m_player.render(_currentMatrix);
+			m_player.render(_currentMatrix , _xR , _yR , 0);
 		}
 		
 		/*

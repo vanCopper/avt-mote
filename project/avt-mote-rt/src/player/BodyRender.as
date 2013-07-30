@@ -25,7 +25,7 @@ package player
 			
 		}
 
-		public function render(g:Graphics  , bitmapData : BitmapData , md : Matrix4x4 ) : void
+		public function render(g:Graphics  , bitmapData : BitmapData , yOff : Number , zOff : Number ) : void
 		{
 			breath += breathOff;
 			if (breath >= 1)
@@ -46,7 +46,7 @@ package player
 			var _frameListLength : int = m_frameList.length;
 			for (var i : int = 0 ; i < _frameListLength; i++ )
 			{
-				m_frameList[i].updateAndRender(g,breath);
+				m_frameList[i].updateAndRender(g,breath , yOff , zOff);
 			}
 			g.endFill();
 		}

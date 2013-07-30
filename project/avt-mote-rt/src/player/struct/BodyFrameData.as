@@ -26,6 +26,10 @@ package player.struct
 		public var offsetX : Number = 0;
 		public var offsetY : Number = 0;
 		public var vertices : Vector.<Number>;
+		public var verticesDraw : Vector.<Number>;
+		public var centerX : Vector.<Number>;
+
+		//public var verticesOff : Vector.<Number>;
 		
 		public static function decodeBodyFrameData(ba:ByteArray):BodyFrameData
 		{
@@ -78,30 +82,108 @@ package player.struct
 			
 			
 			vertices = new Vector.<Number>();
+			
+			for each (_pt in vertexData)
+			{
+				_pt.x += offsetX;
+				_pt.y += offsetY;
+			}
+			for each (_pt in vertexBreathData)
+			{
+				_pt.x += offsetX;
+				_pt.y += offsetY;
+			}
+			
 			for each (var _pt : Point in vertexData)
 			{
-				vertices.push(_pt.x + offsetX);
-				vertices.push(_pt.y + offsetY);
+				vertices.push(_pt.x );
+				vertices.push(_pt.y );
+			}
+			
+			centerX = new Vector.<Number>(totalLine , true); 
+			
+			
+			var _centerX : Number;
+			
+			for (var j : int = 0 ; j < totalLine ; j++ )
+			{
+				_centerX = 0;
+				i = j * vertexPerLine;
+				var end : int = vertexPerLine + i;
+				
+				for ( ; i < end ; i++ )
+					_centerX += vertexData[i].x;
+				
+				centerX[j] = _centerX / vertexPerLine;
 			}
 		}
 		
-		private function updatePos( interp : Number):void 
+		private function updatePos( interp : Number , yOff : Number , zOff : Number):void 
 		{
 			var _breathChangeIndexLength : int = breathChangeIndex.length;
 			for (var i : int = 0 ; i < _breathChangeIndexLength ; i++)
 			{
 				var _index : int = breathChangeIndex[i];
 				var _index2 : int = _index << 1;
-				vertices[_index2] = vertexData[_index].x + (vertexBreathData[i].x - vertexData[_index].x) * interp;
-				vertices[_index2 + 1] = vertexData[_index].y + (vertexBreathData[i].y - vertexData[_index].y) * interp;
+				vertices[_index2] = vertexData[_index].x + (vertexBreathData[i].x - vertexData[_index].x) * interp ;
+				vertices[_index2 + 1] = vertexData[_index].y + (vertexBreathData[i].y - vertexData[_index].y) * interp ;
 			}
 			
+			verticesDraw = vertices.slice();
+			
+			var j : int = 0;
+			var j2 : int = vertexPerLine;
+			
+			var _xOffCur : Number;
+			var _yOffCur : Number;
+			var _offNew : Number;
+			if (yOff || zOff)
+			{
+				var oi : int;
+				var end : int;
+				var _centerX : Number;
+				var _line : int = 3;
+				var _stepX : Number = 0.25 / _line;
+				var _stepY : Number = 8 / _line;
+				
+				for ( oi = 0 ; oi < _line; oi ++  )
+				{
+					j = oi * vertexPerLine * 2;
+					_centerX = centerX[oi];
+					
+					var rateNumberX : Number = (_line - oi) * _stepX;
+					var rateNumberY  : Number = (1 + oi) * _stepY;
+					//trace(rateNumber);
+					
+					for (i = 0 ; i < vertexPerLine ; i++ , j += 2)
+					{	
+						var _off : Number = vertices[j] - _centerX;
+						_xOffCur = yOff * rateNumberX;
+						_yOffCur = zOff * _off / rateNumberY;
+
+						if (_off > 0)
+							verticesDraw[j] =  _centerX +  _off *  (1 + _xOffCur);
+						else
+							verticesDraw[j] =  _centerX +  _off *  (1 - _xOffCur);
+							
+						verticesDraw[j+1] += _yOffCur;
+						//trace(_yOffCur)
+					}
+				}
+			}
+			
+			
+
 		}
 		
-		public function updateAndRender(g:Graphics , interp : Number):void
+		public function updateAndRender(g:Graphics , interp : Number  , yOff : Number , zOff : Number):void
 		{
-			updatePos(interp);
-			g.drawTriangles(vertices, indices, uvData);
+			updatePos(interp , yOff  , zOff);
+			g.drawTriangles(verticesDraw, indices, uvData);
+			
+			///g.endFill();
+			//g.beginFill(0)
+			//for (var i : int = 0; i < verticesDraw.length ; i += 2  )  g.drawRect(verticesDraw[i] - 3 , verticesDraw[i + 1] - 3 , 6 , 6);
 		}
 				
 		
