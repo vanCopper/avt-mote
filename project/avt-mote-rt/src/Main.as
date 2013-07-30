@@ -13,6 +13,7 @@
 	public class Main extends Sprite 
 	{
 		private var m_player : AVTMPlayer;
+		private var m_Rz : Number = 0;
 		public function Main():void 
 		{
 			if (stage) init();
@@ -49,10 +50,11 @@
 			
 			var _xR : Number = - mXOff / 300 * 0.1;
 			var _yR : Number =  mYOff / 300 * 0.1;
-			
-			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_xR, _yR, 0);
+			m_Rz += 0.03;
+			var _zR : Number =  Math.sin(m_Rz) * Math.PI / 180 * 2;
+			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_xR, _yR, _zR);
 			//_currentMatrix.identity();
-			m_player.render(_currentMatrix , _xR , _yR , 0);
+			m_player.render(_currentMatrix , _xR , _yR , _zR);
 		}
 		
 		/*
