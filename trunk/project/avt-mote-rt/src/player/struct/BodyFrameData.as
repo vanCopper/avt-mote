@@ -25,6 +25,9 @@ package player.struct
 		
 		public var offsetX : Number = 0;
 		public var offsetY : Number = 0;
+		public var headLine : int = 0;
+
+		
 		public var vertices : Vector.<Number>;
 		public var verticesDraw : Vector.<Number>;
 		public var centerX : Vector.<Number>;
@@ -75,7 +78,8 @@ package player.struct
 			
 			offsetX =  ba.readFloat();
 			offsetY = ba.readFloat();
-		
+			headLine = ba.readUnsignedByte();
+			
 			genUVData();
 			indices = new Vector.<int>();
 			MeshUtil.genIndicesData(indices , vertexPerLine , totalLine);
@@ -137,12 +141,12 @@ package player.struct
 			var _xOffCur : Number;
 			var _yOffCur : Number;
 			var _offNew : Number;
-			if (yOff || zOff)
+			if (headLine && (yOff || zOff))
 			{
 				var oi : int;
 				var end : int;
 				var _centerX : Number;
-				var _line : int = 3;
+				const _line : int = headLine;
 				var _stepX : Number = 0.25 / _line;
 				var _stepY : Number = 8 / _line;
 				

@@ -19,15 +19,26 @@ package editor.ui
 		
 		public var okFunction : Function ;
 		public var changeFunction : Function ;
-		
+		public var intVer : Boolean = false;
 		public function get value() : Number
 		{
-			return Number(_text.text);
+			if (intVer)
+				return int(_text.text);
+			else
+				return Number(_text.text);
 		}
 		public function set value(v : Number) : void
 		{
-			_text.text = ""+v;
-			m_slider.setThumbValue(0, v);
+			if (intVer)
+			{
+				_text.text = ""+int(v);
+				m_slider.setThumbValue(0, int(v));
+			}
+			else {
+				_text.text = ""+v;
+				m_slider.setThumbValue(0, v);
+			}
+			
 		}
 		
 		public function EdtSliderNumber(min : Number, max : Number , tip : String)
@@ -129,7 +140,10 @@ package editor.ui
 		
 		private function onChange(_slider : BSSSlider):void
 		{
-			_text.text = "" + Number(_slider.getThumbValue(0));
+			if (intVer)
+				_text.text = "" + int(_slider.getThumbValue(0));
+			else
+				_text.text = "" + Number(_slider.getThumbValue(0));
 			if (changeFunction != null)
 			{
 				changeFunction(value);
@@ -138,7 +152,10 @@ package editor.ui
 		public function reset():void
 		{
 			m_slider.setThumbValue(0 , m_min);
-			_text.text = "" + int(m_min);
+			if (intVer)
+				_text.text = "" + int(m_min);
+			else
+				_text.text = "" + Number(m_min);
 		}
 		
 		public function dispose():void

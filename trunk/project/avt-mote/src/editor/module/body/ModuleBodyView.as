@@ -9,6 +9,7 @@ package editor.module.body
 	import editor.struct.Matrix4x4;
 	import editor.struct.Vertex3D;
 	import editor.ui.EdtAddUI;
+	import editor.ui.EdtRotationAxis;
 	import editor.ui.EdtSlider;
 	import editor.ui.EdtSliderNumber;
 	import editor.ui.EdtVertex3D;
@@ -39,10 +40,17 @@ package editor.module.body
 		private var m_yR:Number = 0;
 		private var m_zR:Number = 0;
 
+		private var m_xRD:Number = 0;
+		private var m_yRD:Number = 0;
+		private var m_zRD:Number = 0;
+		
 		private var sinWind : Number = 0;
 		private var breath : Number = 0;
 		private var breathOff : Number = 0.02;
 		private var m_breath : EdtSliderNumber;
+		private var m_connect : EdtSliderNumber;
+		private var m_controler : EdtRotationAxis;
+		
 		
 		public function ModuleBodyView(showChotol : Boolean = true) 
 		{
@@ -67,6 +75,52 @@ package editor.module.body
 			m_breath.y = 70;
 			m_breath.value = 0.02;
 			
+			
+			m_connect = new EdtSliderNumber( 0 , 6 , "head connect line");
+			addChild(m_connect);
+			m_connect.x = 5;
+			m_connect.y = 130;
+			m_connect.value = 2;
+			m_connect.intVer = true;
+			m_connect.changeFunction = function(v:int) : void { if (m_bodyShape && m_bodyShape.data)  m_bodyShape.data.headLine = v; }
+			
+			m_controler = new EdtRotationAxis();
+			m_controler.onUpdate = onUpdateAxis;
+			m_controler.x = 100;
+			m_controler.y = 300;
+			
+			addChild(m_controler);
+			
+		}
+		
+		
+		private function onUpdateAxis(xValue : Number, yValue : Number, zValue : Number , end : Boolean):void
+		{
+			xValue /= 8;
+			yValue /= 8;
+			zValue /= 8;
+			
+			//trace(xValue , yValue, zValue);
+			if (end)
+			{
+				m_xR += xValue;
+				m_yR += yValue;
+				m_zR += zValue;
+			
+				render(m_xR,m_yR,m_zR);
+			}
+			else
+			{
+				render(m_xR + xValue,m_yR+ yValue,m_zR+ zValue);
+			}
+		}
+		
+		private function render(xValue : Number, yValue : Number, zValue: Number):void
+		{
+			m_xRD = yValue;
+			m_yRD = xValue;
+			m_zRD = zValue;
+			
 		}
 		
 		public function setCurrentData(_data:ModuleBodyFrame):void
@@ -76,11 +130,14 @@ package editor.module.body
 			{	
 				_data.genUVData();
 				_data.genIndicesData();
+				
+				m_connect.value = _data.headLine;
+				m_bodyShape.refreshInterp(breath , m_xRD, m_yRD, m_zRD );
 			}
-			m_bodyShape.refreshInterp(breath);
+			
 		}
 		
-		private function drawHeadVertex():void
+		private function drawHeadVertex(xValue : Number, yValue : Number, zValue: Number):void
 		{
 			
 			var md : Matrix4x4 = m_currentMatrix; 
@@ -105,7 +162,8 @@ package editor.module.body
 				
 			}
 			
-			onRenderChange(null , __v , md );
+			ModuleHeadData.drawTriangles(m_headView.graphics , __v);
+			m_bodyShape.refreshInterp(breath , xValue, yValue , zValue );
 			
 		}
 		
@@ -123,19 +181,13 @@ package editor.module.body
 			}
 		}
 		
-		private function onRenderChange(_browser : ModuleHead3DBrowser , __v : Vector.<Number> , md : Matrix4x4):void
-		{
-			ModuleHeadData.drawTriangles(m_headView.graphics , __v);
-			
-			m_bodyShape.refreshInterp(breath);
-		}
 		
 		private function onUpdate(e:Event):void 
 		{
 			sinWind += breathOff;
-			m_zR = Math.sin(sinWind) * 0.05;
-			m_xR = m_yR = Math.sin(sinWind) * 0.02;
-			m_currentMatrix = ModuleHead3DBrowser.getMatrix(m_xR, m_yR, m_zR);
+			//m_zR = Math.sin(sinWind) * 0.05;
+			//m_xR = m_yR = Math.sin(sinWind) * 0.02;
+			m_currentMatrix = ModuleHead3DBrowser.getMatrix(m_xRD, m_yRD, m_zRD);
 			
 			if (breathOff != 0)
 				breathOff =  breathOff / Math.abs(breathOff) * m_breath.value;
@@ -152,7 +204,7 @@ package editor.module.body
 				breathOff = Math.abs(breathOff);
 			}
 			
-			drawHeadVertex();
+			drawHeadVertex(m_xRD, m_yRD, m_zRD);
 		}
 		
 		public function activate():void
@@ -163,9 +215,9 @@ package editor.module.body
 			
 			m_currentMatrix.identity();	
 			sinWind = 0;
+			m_controler.activate();
 			
-			
-			drawHeadVertex();
+			drawHeadVertex(m_xRD, m_yRD, m_zRD);
 			
 		}
 		public function deactivate():void
@@ -180,6 +232,8 @@ package editor.module.body
 				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , onMouseMove);
 				//CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_DOWN , onMouseDown);
 			}
+			
+			m_controler.deactivate();
 		}
 		
 		/*

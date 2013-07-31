@@ -24,10 +24,30 @@ package editor.module.body
 		
 		public var offsetX : Number = 0;
 		public var offsetY : Number = 0;
+		public var headLine : int = 2;
 		
-		
+		public var centerX : Vector.<Number>;
 		//public var decline : Number = 1.05;
-		
+		public function genCenterX():void
+		{
+			var totalLine: int = vertexData.length / vertexPerLine;
+			centerX = new Vector.<Number>(totalLine , true); 
+			
+			
+			var _centerX : Number;
+			var i : int;
+			for (var j : int = 0 ; j < totalLine ; j++ )
+			{
+				_centerX = 0;
+				i = j * vertexPerLine;
+				var end : int = vertexPerLine + i;
+				
+				for ( ; i < end ; i++ )
+					_centerX += vertexData[i].x;
+				
+				centerX[j] = _centerX / vertexPerLine + offsetX;
+			}
+		}
 		public function get vertexBreathData():Vector.<EdtVertex3D>
 		{
 			if (_vertexBreathData == null || _vertexBreathData.length == 0)
@@ -182,6 +202,7 @@ package editor.module.body
 			
 			ba.writeFloat(offsetX);
 			ba.writeFloat(offsetY);
+			ba.writeByte(headLine);
 		}
 		
 		public function toXMLString():String
@@ -234,7 +255,7 @@ package editor.module.body
 			
 			str += "<offsetX>" + offsetX + "</offsetX>";
 			str += "<offsetY>" + offsetY + "</offsetY>";
-		
+			str += "<headLine>" + headLine + "</headLine>";
 
 			str += "</ModuleBodyFrame>";
 			return str;
@@ -343,6 +364,7 @@ package editor.module.body
 				
 				offsetX  = int(s.offsetX.text());
 				offsetY  = int(s.offsetY.text());
+				headLine  = int(s.headLine.text());
 				
 				if (loadStep == 0)
 				{
