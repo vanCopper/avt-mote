@@ -25,14 +25,14 @@ package editor.module.body
 				parent.removeChild(this);
 		}
 		
-		public function refreshInterp(interp : Number ):void
+		public function refreshInterp(interp : Number , xValue : Number, yValue : Number, zValue: Number):void
 		{
 			if (data) {
-				if (interp == 0)
+				if (interp == 0 && xValue == 0 && yValue == 0 && zValue == 0)
 				{
 					refresh(false , true);
 				}
-				 else if (interp == 1)
+				 else if (interp == 1 && xValue == 0 && yValue == 0 && zValue == 0)
 				{
 					refresh(true , true);
 				}
@@ -58,9 +58,63 @@ package editor.module.body
 								__v.push(_vertices[i] + (_verticesBreath[i] - _vertices[i]) * interp);
 							}
 							
-							g.drawTriangles(__v , data.indices, data.uvData);
+							
+							
+							var verticesDraw  : Vector.<Number> = __v.slice();
+			
+							var j : int = 0;
+							var j2 : int = data.vertexPerLine;
+							
+							var _xOffCur : Number;
+							var _yOffCur : Number;
+							var _offNew : Number;
+							var yOff : Number = xValue;
+							var zOff : Number = zValue;
+							
+							
+							if (yOff || zOff)
+							{
+								var oi : int;
+								var end : int;
+								var _centerX : Number;
+								const _line : int = data.headLine;
+								var _stepX : Number = 0.25 / _line;
+								var _stepY : Number = 8 / _line;
+								data.genCenterX();
+								for ( oi = 0 ; oi < _line; oi ++  )
+								{
+									j = oi * data.vertexPerLine * 2;
+									_centerX = data.centerX[oi];
+									
+									var rateNumberX : Number = (_line - oi) * _stepX;
+									var rateNumberY  : Number = (1 + oi) * _stepY;
+									//trace(rateNumber);
+									
+									for (i = 0 ; i < data.vertexPerLine ; i++ , j += 2)
+									{	
+										var _off : Number = __v[j] - _centerX;
+										_xOffCur = yOff * rateNumberX;
+										_yOffCur = zOff * _off / rateNumberY;
+										//trace(_yOffCur , zOff , _off , rateNumberY)
+										
+										if (_off > 0)
+											verticesDraw[j] =  _centerX +  _off *  (1 + _xOffCur);
+										else
+											verticesDraw[j] =  _centerX +  _off *  (1 - _xOffCur);
+											
+										verticesDraw[j+1] += _yOffCur;
+										
+									}
+								}
+							}
+							
+							g.drawTriangles(verticesDraw , data.indices, data.uvData);
 							g.endFill();
 							
+							//g.beginFill(0)
+							//for ( i  = 0; i < verticesDraw.length ; i += 2  )  g.drawRect(verticesDraw[i] - 3 , verticesDraw[i + 1] - 3 , 6 , 6);
+							//g.endFill();
+		
 						}
 					}
 				}
