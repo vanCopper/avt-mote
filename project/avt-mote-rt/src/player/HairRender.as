@@ -70,7 +70,7 @@ package player
 		
 		
 		
-		public function decode(ba : ByteArray , endPos : uint) : void
+		public function decode(ba : ByteArray , endPos : uint ,a_bitmapData:BitmapData) : void
 		{
 			while (ba.position < endPos)
 			{
@@ -82,7 +82,7 @@ package player
 					m_frameList = new Vector.<HairFrameData>(_frameListLength , true);
 					for (var i : int = 0 ; i < _frameListLength; i++ )
 					{
-						m_frameList[i] = HairFrameData.decodeHairFrameData(ba);
+						m_frameList[i] = HairFrameData.decodeHairFrameData(ba,a_bitmapData);
 					}
 					
 					m_frameList.sort(sortZ);

@@ -1,5 +1,6 @@
 package player.struct 
 {
+	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
@@ -34,14 +35,14 @@ package player.struct
 		
 		
 		
-		public static function decodeHairFrameData(ba:ByteArray):HairFrameData
+		public static function decodeHairFrameData(ba:ByteArray,a_bitmapData:BitmapData):HairFrameData
 		{
 			var ret : HairFrameData = new HairFrameData();
-			ret.decode(ba);
+			ret.decode(ba,a_bitmapData);
 			return ret;
 		}
 		
-		public function decode(ba:ByteArray):void
+		public function decode(ba:ByteArray,a_bitmapData:BitmapData):void
 		{
 			texture = Texture2D.decodeTexture2D(ba);
 			
@@ -70,7 +71,7 @@ package player.struct
 			ductility = ba.readFloat();
 			hardness = ba.readFloat();
 
-			genUVData();
+			genUVData(a_bitmapData);
 			indices = new Vector.<int>();
 			MeshUtil.genIndicesData(indices , vertexPerLine , totalLine);
 			initMass();
@@ -220,13 +221,13 @@ package player.struct
 		}
 		
 		
-		private function genUVData():void
+		private function genUVData(a_bitmapData : BitmapData ):void
 		{
 			uvData = new Vector.<Number>();
 			for each (var _ev : Vertex3D in vertexData)
 			{
-				uvData.push ((_ev.x /*+ (s_texture.rectW >> 1)*/ + texture.rectX) / 512);
-				uvData.push ((_ev.y /*+ (s_texture.rectH >> 1)*/ + texture.rectY) / 1024);//TODO
+				uvData.push ((_ev.x /*+ (s_texture.rectW >> 1)*/ + texture.rectX) / a_bitmapData.width);
+				uvData.push ((_ev.y /*+ (s_texture.rectH >> 1)*/ + texture.rectY) /  a_bitmapData.height);//TODO
 			}
 			
 		}

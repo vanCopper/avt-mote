@@ -66,7 +66,7 @@ package player
 		private var m_curFrame : int;
 		public var curLag : int = m_maxLag;
 		
-		public function decode(baData : ByteArray , endPos : uint) : void
+		public function decode(baData : ByteArray , endPos : uint ,a_bitmapData:BitmapData) : void
 		{
 			while (baData.position < endPos)
 			{
@@ -146,12 +146,12 @@ package player
 			{
 				for each (var idx : int in m_blinkIndexL)
 				{
-					m_frameList[idx].init(m_eyeMatrix , m_eyeLPlane , m_eyeLScale , m_eyeLLocateX , m_eyeLLocateY);
+					m_frameList[idx].init(a_bitmapData , m_eyeMatrix , m_eyeLPlane , m_eyeLScale , m_eyeLLocateX , m_eyeLLocateY);
 				}
 				
 				for each (idx in m_blinkIndexR)
 				{
-					m_frameList[idx].init(m_eyeMatrix , m_eyeRPlane , m_eyeRScale , m_eyeRLocateX , m_eyeRLocateY );
+					m_frameList[idx].init(a_bitmapData , m_eyeMatrix , m_eyeRPlane , m_eyeRScale , m_eyeRLocateX , m_eyeRLocateY );
 				}
 			}
 			
@@ -390,7 +390,7 @@ package player
 			}
 			if (_leftEyeData.eyeLip)
 			{
-				drawEyeArray(shpLip.graphics , v,_leftEyeData.eyeLip.genUV() , bitmapData , start  , 8);
+				drawEyeArray(shpLip.graphics , v,_leftEyeData.eyeLip.genUV(bitmapData) , bitmapData , start  , 8);
 				start += 8;
 			}
 			
@@ -411,7 +411,7 @@ package player
 			}
 			if (_rightEyeData.eyeLip)
 			{
-				drawEyeArray(shpLip.graphics , v, _rightEyeData.eyeLip.genUV() , bitmapData , start  , 8);
+				drawEyeArray(shpLip.graphics , v, _rightEyeData.eyeLip.genUV(bitmapData) , bitmapData , start  , 8);
 				start += 8;
 			}
 			

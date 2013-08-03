@@ -49,7 +49,7 @@
 			var mYOff : Number = (mouseY - m_player.y);
 			
 			var _xR : Number = - mXOff / 300 * 0.1;
-			var _yR : Number =  mYOff / 300 * 0.1;
+			var _yR : Number = -0.1 +  mYOff / 300 * 0.1;
 			m_Rz += 0.03;
 			var _zR : Number =  Math.sin(m_Rz) * Math.PI / 180 * 2;
 			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_xR, _yR, _zR);
