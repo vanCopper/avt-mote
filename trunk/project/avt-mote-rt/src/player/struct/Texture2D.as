@@ -1,5 +1,6 @@
 package player.struct 
 {
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 	/**
 	 * ...
@@ -33,7 +34,7 @@ package player.struct
 			uvtData = null;
 		}
 		
-		public function genUV(): Vector.<Number> {
+		public function genUV(a_bitmapData:BitmapData): Vector.<Number> {
 			
 			if (!uvtData /*&& bitmapData*/)
 			{
@@ -42,16 +43,16 @@ package player.struct
 				
 				if (rectW < 0)
 				{
-					startX = (rectX + rectW) / 512; //TODO
-					endX = (rectX) / 512;
+					startX = (rectX + rectW) / a_bitmapData.width; //TODO
+					endX = (rectX) / a_bitmapData.width;
 				} else 
 				{
-					startX = (rectX) / 512;
-					endX = (rectX + rectW) / 512;
+					startX = (rectX) / a_bitmapData.width;
+					endX = (rectX + rectW) / a_bitmapData.width;
 				}
 				
-				var startY : Number =  (rectY) / 1024;
-				var endY : Number =  (rectY + rectH) / 1024;
+				var startY : Number =  (rectY) / a_bitmapData.height;
+				var endY : Number =  (rectY + rectH) / a_bitmapData.height;
 				
 				uvtData =  Vector.<Number>([startX, startY,
 											endX, startY, 

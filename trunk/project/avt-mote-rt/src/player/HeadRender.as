@@ -140,7 +140,7 @@ package player
 			return md;
 		}
 		
-		public function decode(ba : ByteArray , endPos : uint) : void
+		public function decode(ba : ByteArray , endPos : uint  , m_bitmapData : BitmapData) : void
 		{
 			while (ba.position < endPos)
 			{
@@ -200,8 +200,8 @@ package player
 					
 					for each (_ev in _vertexData)
 					{
-						m_uvData.push ((_ev.x + _halfW + m_texture.rectX) / 512);
-						m_uvData.push ((_ev.y + _halfH + m_texture.rectY) / 1024); //temp TODO
+						m_uvData.push ((_ev.x + _halfW + m_texture.rectX) / m_bitmapData.width);
+						m_uvData.push ((_ev.y + _halfH + m_texture.rectY) / m_bitmapData.height);
 					}
 					
 					MeshUtil.genIndicesData(m_indices , m_pointPerLine , m_totalLine );

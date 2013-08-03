@@ -47,19 +47,19 @@ package player
 					var pos : int = ba.position;
 					if (flag == 0x21)
 					{
-						m_head.decode(ba , pos + length);
+						m_head.decode(ba , pos + length , m_bitmapData);
 					}
 					else if (flag == 0x22)
 					{
-						m_eye.decode(ba , pos + length);
+						m_eye.decode(ba , pos + length , m_bitmapData);
 					}
 					else if (flag == 0x23)
 					{
-						m_hair.decode(ba , pos + length);
+						m_hair.decode(ba , pos + length , m_bitmapData);
 					}
 					else if (flag == 0x24)
 					{
-						m_body.decode(ba , pos + length);
+						m_body.decode(ba , pos + length , m_bitmapData);
 					}
 					
 					if (ba.position != pos + length)

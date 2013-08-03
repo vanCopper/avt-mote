@@ -1,5 +1,6 @@
 package player.struct 
 {
+	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
 	import player.util.ByteArrayUtil;
 	/**
@@ -97,7 +98,7 @@ package player.struct
 			}
 		}
 		
-		public function init(m:Matrix4x4 , p:Plane3D  , _scale : Number  , _xOff : Number  , _yOff : Number ):void
+		public function init(a_bitmapData:BitmapData ,m:Matrix4x4 , p:Plane3D  , _scale : Number  , _xOff : Number  , _yOff : Number ):void
 		{
 			if (!eyeVertex3D)
 			{
@@ -131,7 +132,7 @@ package player.struct
 					var uv : Vector.<Number>;
 					if (eyeWhite) 
 					{	
-						uv =  eyeWhite.genUV();
+						uv =  eyeWhite.genUV(a_bitmapData);
 						for each (var n : Number in uv)
 							eyeVertex3DUV.push(n);
 						eyeBall.disposeUV();
@@ -139,7 +140,7 @@ package player.struct
 					
 					if (eyeBall) 
 					{	
-						uv =  eyeBall.genUV();
+						uv =  eyeBall.genUV(a_bitmapData);
 						for each (n in uv)
 							eyeVertex3DUV.push(n);
 						eyeBall.disposeUV();
@@ -148,7 +149,7 @@ package player.struct
 					if (eyeLip) 
 					{	
 						//uv =  
-						eyeLip.genUV();
+						eyeLip.genUV(a_bitmapData);
 						//for each (n in uv)
 						//	eyeVertex3DUV.push(n);
 					}
