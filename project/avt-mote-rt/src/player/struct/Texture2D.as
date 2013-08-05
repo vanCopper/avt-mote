@@ -43,7 +43,7 @@ package player.struct
 				
 				if (rectW < 0)
 				{
-					startX = (rectX + rectW) / a_bitmapData.width; //TODO
+					startX = (rectX + rectW) / a_bitmapData.width;
 					endX = (rectX) / a_bitmapData.width;
 				} else 
 				{

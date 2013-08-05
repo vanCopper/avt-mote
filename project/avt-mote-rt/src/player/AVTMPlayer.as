@@ -5,6 +5,7 @@ package player
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	import player.struct.Matrix4x4;
 	import player.struct.Vertex3D;
 	import player.util.ByteArrayUtil;
@@ -38,6 +39,8 @@ package player
 			m_body = new BodyRender();
 			
 			var ba : ByteArray = new TestDataBA();
+			ba.endian = Endian.LITTLE_ENDIAN;
+			
 			//var filehead : String = ;
 			if (ba.readMultiByte(4 , "UTF-8") == "AMXB")
 			{

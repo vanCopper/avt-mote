@@ -26,6 +26,7 @@ package editor.module.head
 	import flash.geom.Point;
 	import flash.net.FileFilter;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	import UISuit.UIComponent.BSSButton;
 	
 	/**
@@ -830,7 +831,7 @@ package editor.module.head
 		public override function onExport(__rootBA : ByteArray):void
 		{
 			var baData : ByteArray = new ByteArray();
-			
+			baData.endian = Endian.LITTLE_ENDIAN;
 			
 			
 			

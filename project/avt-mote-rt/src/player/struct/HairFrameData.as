@@ -229,7 +229,7 @@ package player.struct
 			for each (var _ev : Vertex3D in vertexData)
 			{
 				uvData.push ((_ev.x /*+ (s_texture.rectW >> 1)*/ + texture.rectX) / a_bitmapData.width);
-				uvData.push ((_ev.y /*+ (s_texture.rectH >> 1)*/ + texture.rectY) /  a_bitmapData.height);//TODO
+				uvData.push ((_ev.y /*+ (s_texture.rectH >> 1)*/ + texture.rectY) /  a_bitmapData.height);
 			}
 			
 		}
