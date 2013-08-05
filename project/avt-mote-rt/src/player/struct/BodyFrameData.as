@@ -13,7 +13,7 @@ package player.struct
 	 */
 	public class BodyFrameData
 	{
-		public var name : String;
+		//public var name : String;
 		public var texture : Texture2D;
 		public var vertexData : Vector.<Point>;
 		public var breathChangeIndex : Vector.<int>;
