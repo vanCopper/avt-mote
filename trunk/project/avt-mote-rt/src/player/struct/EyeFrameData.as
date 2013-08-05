@@ -171,7 +171,7 @@ package player.struct
 			vtx.x += _xOff;
 			vtx.y += _yOff;
 			
-			vtx.z = plane.confitZ(vtx.x , vtx.y)
+			vtx.z = plane.confitZ(vtx.x , vtx.y);
 			
 			md.effectPoint3D(vtx.x, vtx.y , vtx.z , vtx);
 		}
@@ -219,15 +219,15 @@ package player.struct
 			return Vector.<Vertex3D>([
 				 new Vertex3D(eyeBallX -t.rectW , eyeBallY + 0, 0)
 				,new Vertex3D(eyeBallX  , eyeBallY + 0, 0)
-				,new Vertex3D(eyeBallX -t.rectW , 0 + eyeBallY + t.rectH, 0)
-				,new Vertex3D(eyeBallX , eyeBallY + 0 + t.rectH, 0)
+				,new Vertex3D(eyeBallX -t.rectW ,  eyeBallY + t.rectH, 0)
+				,new Vertex3D(eyeBallX , eyeBallY  + t.rectH, 0)
 			]);
 			else
 			return Vector.<Vertex3D>([
 				 new Vertex3D(eyeBallX  , eyeBallY + 0, 0)
 				,new Vertex3D(eyeBallX + t.rectW , eyeBallY + 0, 0)
-				,new Vertex3D(eyeBallX , 0 + eyeBallY + t.rectH, 0)
-				,new Vertex3D(eyeBallX + t.rectW , eyeBallY + 0 + t.rectH, 0)
+				,new Vertex3D(eyeBallX , eyeBallY + t.rectH, 0)
+				,new Vertex3D(eyeBallX + t.rectW , eyeBallY + t.rectH, 0)
 			]);
 		}
 		private function genEyeLipVertex3D():Vector.<Vertex3D>
@@ -238,17 +238,17 @@ package player.struct
 			var t : Texture2D = eyeLip;
 			if (t.rectW < 0)
 			return Vector.<Vertex3D>([
-				new Vertex3D(eyeLipX -t.rectW , eyeLipY + 0, 0)
-				,new Vertex3D(eyeLipX , eyeLipY + 0, 0)
-				,new Vertex3D(eyeLipX -t.rectW , 0 + eyeLipY + t.rectH, 0)
-				,new Vertex3D(eyeLipX , eyeLipY + 0+ t.rectH, 0)
+				new Vertex3D(eyeLipX - t.rectW , eyeLipY + 0, 0)
+				,new Vertex3D(eyeLipX , eyeLipY , 0)
+				,new Vertex3D(eyeLipX - t.rectW , eyeLipY + t.rectH, 0)
+				,new Vertex3D(eyeLipX , eyeLipY + t.rectH, 0)
 			]);
 			else
 			return Vector.<Vertex3D>([
 				new Vertex3D(eyeLipX + 0 , eyeLipY + 0, 0)
 				,new Vertex3D(eyeLipX + 0 + t.rectW , eyeLipY + 0, 0)
-				,new Vertex3D(eyeLipX + 0 , 0 + eyeLipY + t.rectH, 0)
-				,new Vertex3D(eyeLipX + 0 + t.rectW , eyeLipY + 0+ t.rectH, 0)
+				,new Vertex3D(eyeLipX + 0 , eyeLipY + t.rectH, 0)
+				,new Vertex3D(eyeLipX + 0 + t.rectW , eyeLipY + t.rectH, 0)
 			]);
 		}
 		
