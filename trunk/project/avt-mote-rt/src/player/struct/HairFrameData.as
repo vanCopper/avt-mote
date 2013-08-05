@@ -12,7 +12,7 @@ package player.struct
 	 */
 	public class HairFrameData
 	{
-		public var name : String;
+		//public var name : String;
 		public var texture : Texture2D;
 		public var vertexData : Vector.<Vertex3D>;
 		public var vertexPerLine : int;
