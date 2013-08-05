@@ -241,14 +241,21 @@ package editor.module.hair
 			
 			//sinWind += 0.05;
 			
+			
+			
 			if (m_massVector)
 			{
+				const windStep : Number = 1 / (m_massVector[0].length - 1);
 				for each (var _hairSpring : Vector.<ModuleHairMassPoint> in m_massVector)
 				{
+					var _li : int = 0;
+					
 					for each (var _hmp : ModuleHairMassPoint in _hairSpring)
 					{
 						if (!_hmp.preMassPoint)
 							continue;
+						
+						
 						weight_d = m_data.weightReciprocal ; //* pow(decline , i - 1)
 						var _newOffX : Number = _hmp.pos.x - _hmp.preMassPoint.pos.x;
 						var _newOffY : Number = _hmp.pos.y - _hmp.preMassPoint.pos.y;
@@ -288,8 +295,9 @@ package editor.module.hair
 						}
 						
 						
-						var _newX : Number = _hmp.pos.x + damp * (_hmp.pos.x - _hmp.lastPos.x ) +  fRadian.x +  fSpring.x + wind * weight_d ; //deltaT^2
+						var _newX : Number = _hmp.pos.x + damp * (_hmp.pos.x - _hmp.lastPos.x ) +  fRadian.x +  fSpring.x + wind * (windStep * _li ) * weight_d ; //deltaT^2
 						var _newY : Number = _hmp.pos.y + damp * (_hmp.pos.y - _hmp.lastPos.y ) +  fRadian.y +  fSpring.y; //deltaT^2
+						_li++;
 						
 						/*
 						if (true)//prevent too long
