@@ -14,6 +14,10 @@
 	{
 		private var m_player : AVTMPlayer;
 		private var m_Rz : Number = 0;
+		
+		private var m_lastRX : Number = 0;
+		private var m_lastRY : Number = 0;
+	
 		public function Main():void 
 		{
 			if (stage) init();
@@ -52,9 +56,53 @@
 			var _yR : Number = -0.1 +  mYOff / 300 * 0.1;
 			m_Rz += 0.03;
 			var _zR : Number =  Math.sin(m_Rz) * Math.PI / 180 * 2;
-			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_xR, _yR, _zR);
+			
+			
+			var  _dx : Number;
+			var  _dy : Number;
+			
+			var _dRx : Number;
+			var _dRy : Number;
+	
+			_dx = (_xR - m_lastRX);
+			_dy = (_yR - m_lastRY);
+			
+			var _lengthSQ2 : Number = _dx * _dx + _dy * _dy ;
+			var _length  : Number = Math.sqrt(_lengthSQ2) ;
+
+			if (_length < 0.005)
+			{
+				_dRx = _xR;
+				_dRy = _yR; 
+			}
+			else
+			{
+				if (_length > 0.25)
+				{
+					_dx /= _length;
+					_dy /= _length;
+
+					_dx *= 0.1;
+					_dy *= 0.1;
+				}
+				else
+				{
+					_dx *= 0.4;
+					_dy *= 0.4;
+				}
+				
+
+				_dRx = m_lastRX + _dx;
+				_dRy = m_lastRY + _dy;
+			}
+			
+
+			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_dRx, _dRy, _zR);
 			//_currentMatrix.identity();
-			m_player.render(_currentMatrix , _xR , _yR , _zR);
+			m_player.render(_currentMatrix , _dRx , _dRy , _zR);
+			
+			m_lastRX = _dRx;
+			m_lastRY = _dRy;
 		}
 		
 		/*
