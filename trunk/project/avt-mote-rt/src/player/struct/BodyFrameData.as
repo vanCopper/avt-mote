@@ -46,6 +46,8 @@ package player.struct
 		{
 			texture = Texture2D.decodeTexture2D(ba);
 			
+			offsetX =  ba.readFloat();
+			offsetY = ba.readFloat();
 			
 			vertexPerLine = ba.readByte();
 			totalLine = ba.readByte();
@@ -73,12 +75,11 @@ package player.struct
 			{
 				_x = ba.readFloat();
 				_y = ba.readFloat();
-				vertexBreathData[i] = new Point(_x , _y);
+				vertexBreathData[i] = new Point(_x + offsetX , _y + offsetY);
 			}
 			
 			
-			offsetX =  ba.readFloat();
-			offsetY = ba.readFloat();
+			
 			headLine = ba.readUnsignedByte();
 			
 			genUVData(a_bitmapData);
@@ -93,11 +94,12 @@ package player.struct
 				_pt.x += offsetX;
 				_pt.y += offsetY;
 			}
-			for each (_pt in vertexBreathData)
-			{
-				_pt.x += offsetX;
-				_pt.y += offsetY;
-			}
+			
+			//for each (_pt in vertexBreathData)
+			//{
+			//	_pt.x += offsetX;
+			//	_pt.y += offsetY;
+			//}
 			
 			for each (var _pt : Point in vertexData)
 			{
@@ -198,7 +200,7 @@ package player.struct
 			for each (var _ev : Point in vertexData)
 			{
 				uvData.push ((_ev.x /*+ (s_texture.rectW >> 1)*/ + texture.rectX) / a_bitmapData.width);
-				uvData.push ((_ev.y /*+ (s_texture.rectH >> 1)*/ + texture.rectY) / a_bitmapData.height);//TODO
+				uvData.push ((_ev.y /*+ (s_texture.rectH >> 1)*/ + texture.rectY) / a_bitmapData.height);			
 			}
 			
 		}

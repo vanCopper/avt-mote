@@ -24,6 +24,7 @@ package editor.module.body
 	import flash.net.FileFilter;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
+	import flash.utils.Endian;
 	import UISuit.UIComponent.BSSButton;
 	import UISuit.UIComponent.BSSCheckBox;
 	import UISuit.UIComponent.BSSDropDownMenu;
@@ -403,7 +404,7 @@ package editor.module.body
 		public override function onExport(__rootBA : ByteArray):void
 		{
 			var baData : ByteArray = new ByteArray();
-			
+			baData.endian = Endian.LITTLE_ENDIAN;
 			
 			
 			

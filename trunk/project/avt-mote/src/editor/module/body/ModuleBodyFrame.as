@@ -158,6 +158,9 @@ package editor.module.body
 			else
 				new Texture2D(null,null,null,null,0,0,0,0 ).encode(ba);
 			
+			ba.writeFloat(offsetX);
+			ba.writeFloat(offsetY);
+			
 			ba.writeByte(vertexPerLine);
 			ba.writeByte(vertexData.length / vertexPerLine);
 			
@@ -200,8 +203,7 @@ package editor.module.body
 			}
 			
 			
-			ba.writeFloat(offsetX);
-			ba.writeFloat(offsetY);
+			
 			ba.writeByte(headLine);
 		}
 		

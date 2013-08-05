@@ -4,6 +4,7 @@ package
 	import editor.config.CALLBACK;
 	import editor.config.Config;
 	import editor.Library;
+	import flash.utils.Endian;
 	
 	import editor.ModuleBar;
 	import editor.Toolbar;
@@ -173,6 +174,8 @@ package
 		private function onExport(btn:BSSButton):void 
 		{
 			var _data : ByteArray = new ByteArray();
+			_data.endian = Endian.LITTLE_ENDIAN;
+			
 			_data.writeByte('A'.charCodeAt(0));
 			_data.writeByte('M'.charCodeAt(0));
 			_data.writeByte('X'.charCodeAt(0));
