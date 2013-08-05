@@ -103,7 +103,7 @@ package player
 			}
 			
 			sinWind += 0.02;
-			HairRender.WIND =  -0.01 * Math.abs(Math.sin(sinWind)) + 0.0002;
+			HairRender.WIND =  -0.02 * Math.abs(Math.sin(sinWind)) + 0.004;
 			
 			m_hair.render(m_hairUnderShape.graphics  , m_bitmapData , _m , true );
 			m_body.render(m_bodyShape.graphics  , m_bitmapData , xValue , zValue );

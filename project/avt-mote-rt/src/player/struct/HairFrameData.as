@@ -87,18 +87,22 @@ package player.struct
 			var weight_d : Number = weightReciprocal;
 			
 			const wind : Number = HairRender.WIND;
-			var i : int = 1;
+			//var i : int = 1;
 			
 			//sinWind += 0.05;
 			
 			if (m_massVector)
 			{
+				const windStep : Number = 1 / (m_massVector[0].length - 1);
 				for each (var _hairSpring : Vector.<MassPoint> in m_massVector)
 				{
+					var _li : int = 0;
+					
 					for each (var _hmp : MassPoint in _hairSpring)
 					{
 						if (!_hmp.preMassPoint)
 							continue;
+						
 						//weight_d = m_data.weightReciprocal ; //* pow(decline , i - 1)
 						
 						var _newOffX : Number = _hmp.pos.x - _hmp.preMassPoint.pos.x;
@@ -139,9 +143,9 @@ package player.struct
 						}
 						
 						
-						var _newX : Number = _hmp.pos.x + damp * (_hmp.pos.x - _hmp.lastPos.x ) +  fRadian.x +  fSpring.x + wind * weight_d ; //deltaT^2
+						var _newX : Number = _hmp.pos.x + damp * (_hmp.pos.x - _hmp.lastPos.x ) +  fRadian.x +  fSpring.x + wind * (windStep * _li ) * weight_d ; //deltaT^2
 						var _newY : Number = _hmp.pos.y + damp * (_hmp.pos.y - _hmp.lastPos.y ) +  fRadian.y +  fSpring.y; //deltaT^2
-						
+						_li ++ ;
 						
 						_hmp.lastPos.x = _hmp.pos.x ;
 						_hmp.lastPos.y = _hmp.pos.y ;
