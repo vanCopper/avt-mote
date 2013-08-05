@@ -205,19 +205,21 @@ package player.struct
 					_hmp.pos.x = _hmp.lastPos.x = _ev3d.x  + offsetX;
 					_hmp.pos.y = _hmp.lastPos.y = _ev3d.y  + offsetY;	
 			
-					m_avgZ += _ev3d.z;
+					
 					
 					if (j > 0)
 					{	
 						_hmp.preMassPoint = _hairSpring[j - 1];
 						_hmp.init();
 					}	
+					else
+						m_avgZ += _ev3d.z;
 				}
 				
 				
 			}
 			
-			m_avgZ /= totalLine * vertexPerLine;
+			m_avgZ /= vertexPerLine;
 		}
 		
 		
