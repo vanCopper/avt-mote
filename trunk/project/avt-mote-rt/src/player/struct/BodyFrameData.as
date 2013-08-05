@@ -139,15 +139,15 @@ package player.struct
 			verticesDraw = vertices.slice();
 			
 			var j : int = 0;
-			var j2 : int = vertexPerLine;
 			
 			var _xOffCur : Number;
 			var _yOffCur : Number;
-			var _offNew : Number;
+			//var _offNew : Number;
+			
 			if (headLine && (yOff || zOff))
 			{
 				var oi : int;
-				var end : int;
+				
 				var _centerX : Number;
 				const _line : int = headLine;
 				var _stepX : Number = 0.25 / _line;
