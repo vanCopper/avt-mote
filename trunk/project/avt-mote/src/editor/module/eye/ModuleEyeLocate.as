@@ -172,10 +172,30 @@ package editor.module.eye
 			var wl : Number;
 			var hl : Number;
 			
+			var _rectW : Number;
+			var _rectH : Number;
 			
-			
-			wl = Math.abs(m_leftEye.data.eyeWhite.rectW) * m_leftEye.scaleX;
-			hl = Math.abs(m_leftEye.data.eyeWhite.rectH) * m_leftEye.scaleY;
+			if (m_leftEye.data.eyeWhite)
+			{
+				_rectW = Math.abs(m_leftEye.data.eyeWhite.rectW);
+				_rectH = Math.abs(m_leftEye.data.eyeWhite.rectH);
+			}
+			else if (m_leftEye.data.eyeLip)
+			{
+				_rectW = Math.abs(m_leftEye.data.eyeLip.rectW);
+				_rectH = Math.abs(m_leftEye.data.eyeLip.rectH);
+			}
+			else if (m_leftEye.data.eyeBall)
+			{
+				_rectW = Math.abs(m_leftEye.data.eyeBall.rectW);
+				_rectH = Math.abs(m_leftEye.data.eyeBall.rectH);
+			}
+			else
+			{
+				return;
+			}
+			wl = _rectW * m_leftEye.scaleX;
+			hl = _rectH * m_leftEye.scaleY;
 			
 			var v0L : Vertex3D = new Vertex3D(m_leftEye.x, m_leftEye.y, 0);
 			var v1L : Vertex3D = new Vertex3D(m_leftEye.x + wl , m_leftEye.y, 0);
@@ -190,9 +210,28 @@ package editor.module.eye
 			//md.effectPoint3D(v1L.x  , v1L.y , v1L.z , v1L);
 			//md.effectPoint3D(v2L.x  , v2L.y , v2L.z , v2L);
 			
+			if (m_rightEye.data.eyeWhite)
+			{
+				_rectW = Math.abs(m_rightEye.data.eyeWhite.rectW);
+				_rectH = Math.abs(m_rightEye.data.eyeWhite.rectH);
+			}
+			else if (m_rightEye.data.eyeLip)
+			{
+				_rectW = Math.abs(m_rightEye.data.eyeLip.rectW);
+				_rectH = Math.abs(m_rightEye.data.eyeLip.rectH);
+			}
+			else if (m_rightEye.data.eyeBall)
+			{
+				_rectW = Math.abs(m_rightEye.data.eyeBall.rectW);
+				_rectH = Math.abs(m_rightEye.data.eyeBall.rectH);
+			}
+			else
+			{
+				return;
+			}
 			
-			wl = Math.abs(m_rightEye.data.eyeWhite.rectW) * m_rightEye.scaleX;
-			hl = Math.abs(m_rightEye.data.eyeWhite.rectH) * m_rightEye.scaleY;
+			wl = _rectW * m_rightEye.scaleX;
+			hl = _rectH * m_rightEye.scaleY;
 			
 			var v0R : Vertex3D = new Vertex3D(m_rightEye.x, m_rightEye.y, 0);
 			var v1R : Vertex3D = new Vertex3D(m_rightEye.x + wl , m_rightEye.y, 0);
