@@ -22,13 +22,13 @@ package editor.module.eye
 		
 		
 		public var eyeBall : Texture2D;
-		public var eyeBallX : Number;
-		public var eyeBallY : Number;
+		public var eyeBallX : Number = 0;
+		public var eyeBallY : Number = 0;
 		
 		
 		public var eyeLip : Texture2D;
-		public var eyeLipX : Number;
-		public var eyeLipY : Number;
+		public var eyeLipX : Number = 0;
+		public var eyeLipY : Number = 0;
 		
 		
 		public var eyeMaskData : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
@@ -223,14 +223,20 @@ package editor.module.eye
 			str += "</eyeWhite>";
 			
 			str += "<eyeBall>";
-				if (eyeBall) str += eyeBall.toXMLString();
-				str += "<position>" + eyeBallX +":" + eyeBallY + "</position>";
+				if (eyeBall) 
+				{	
+					str += eyeBall.toXMLString();
+					str += "<position>" + eyeBallX +":" + eyeBallY + "</position>";
+				}
 			str += "</eyeBall>";
 			
 			
 			str += "<eyeLip>";
-				if (eyeLip) str += eyeLip.toXMLString();
-				str += "<position>" + eyeLipX +":" + eyeLipY + "</position>";
+				if (eyeLip) 
+				{	
+					str += eyeLip.toXMLString();
+					str += "<position>" + eyeLipX +":" + eyeLipY + "</position>";
+				}
 			str += "</eyeLip>";
 			
 			str += "<eyeMaskData>";
@@ -287,9 +293,13 @@ package editor.module.eye
 					}
 				}
 				var _p :Array;
-				_p = String(s.eyeBall.position.text()).split(":");
-				eyeBallX = Number(_p[0]);
-				eyeBallY = Number(_p[1]);
+				if (s.eyeBall.position)
+				{
+					_p = String(s.eyeBall.position.text()).split(":");
+					eyeBallX = Number(_p[0]);
+					eyeBallY = Number(_p[1]);
+				}
+				
 				
 				_tname = s.eyeLip.Texture2D.name.text();
 				if (_tname)
@@ -302,9 +312,13 @@ package editor.module.eye
 						new TextureLoader(s.eyeLip.Texture2D[0] , onTextureLoadedEL , true);
 					}
 				}
-				_p = String(s.eyeLip.position.text()).split(":");
-				eyeLipX = Number(_p[0]);
-				eyeLipY = Number(_p[1]);
+				
+				if (s.eyeLip.position )
+				{
+					_p = String(s.eyeLip.position.text()).split(":");
+					eyeLipX = Number(_p[0]);
+					eyeLipY = Number(_p[1]);
+				}
 				
 				var __dataString : String = String(s.eyeMaskData.text());
 				if (__dataString)
