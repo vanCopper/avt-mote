@@ -150,7 +150,7 @@ package editor.module.eye
 			var _p : Plane3D = new Plane3D();
 			 _p.gen3Point(arr[0].vtx , arr[1].vtx , arr[2].vtx );
 			
-			* trace(
+			/* trace(
 				"nearest3 pt" + arr[0].vtx
 				+ arr[1].vtx
 				+ arr[2].vtx
