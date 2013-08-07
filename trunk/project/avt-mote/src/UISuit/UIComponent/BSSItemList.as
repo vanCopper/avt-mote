@@ -1,4 +1,5 @@
 package   UISuit.UIComponent   {  
+	import flash.geom.Rectangle;
 	import UISuit.UIUtils.GraphicsUtil;
 	import  flash.events.* ; 	
 	import  flash.text.* ; 	
@@ -167,8 +168,9 @@ package   UISuit.UIComponent   {
 				= m_itemContainer.getChildAt(m_itemContainer.numChildren - 1);
 				
 				item.x += m_offsetX;
-				item.y = (itemLast.getRect(itemLast.parent ).bottom + m_spaceY);
-				
+				//var rect : Rectangle = itemLast.getBounds(itemLast.parent );
+				//item.y = (rect.bottom + m_spaceY);
+				item.y = itemLast.y + itemLast.height + m_spaceY;
 				//trace("item.y " + item.y);
 			}
 			else

@@ -167,7 +167,7 @@ package editor.module.hair
 		public function onNew():void
 		{
 			m_frameList.length = 0;
-			if (item) item.clearAllItem();
+			if (item) item.clearAllItem(true);
 			deactivateLibButton();
 		}
 
