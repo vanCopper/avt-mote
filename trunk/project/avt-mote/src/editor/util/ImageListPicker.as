@@ -1,5 +1,6 @@
 package editor.util 
 {
+	import editor.config.Config;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -29,7 +30,16 @@ package editor.util
 			var ldr : Loader = new Loader();
 			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE , onComplete );
 			ldr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR , onComplete );
-			var url : String = TextureLoader.s_imgPath +  m_filename;
+			var url : String;
+			if (Config.isAirVersion)
+			{	
+				if (m_filename.indexOf(":/") == -1 && m_filename.indexOf(":\\") == -1)
+					m_filename = FilePicker.s_lastOpen +  m_filename;
+				url = m_filename;
+			}
+			else
+				url = TextureLoader.s_imgPath +  m_filename;
+				
 			ldr.load(new URLRequest(url));
 			
 			//trace(url , TextureLoader.s_imgPath +  m_filename);

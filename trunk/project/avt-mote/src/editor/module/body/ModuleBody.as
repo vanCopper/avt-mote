@@ -14,6 +14,7 @@ package editor.module.body
 	import editor.ui.SpriteWH;
 	import editor.ui.SripteWithRect;
 	import editor.util.ByteArrayUtil;
+	import editor.util.FilePicker;
 	import editor.util.ImageListPicker;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -310,7 +311,7 @@ package editor.module.body
 		
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
 		{
-			var _texture : Texture2D = new Texture2D(bitmapData , _filename , _filename , "BODY");
+			var _texture : Texture2D = new Texture2D(bitmapData , FilePicker.getShortName(_filename) , _filename , "BODY");
 			Library.getS().addTexture(_texture);
 			
 			m_efl.visible = true;

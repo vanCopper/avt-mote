@@ -12,6 +12,7 @@ package editor.module.eye
 	import editor.ui.SpriteWH;
 	import editor.ui.SripteWithRect;
 	import editor.util.ByteArrayUtil;
+	import editor.util.FilePicker;
 	import editor.util.ImageListPicker;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -715,9 +716,11 @@ package editor.module.eye
 		}
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void
 		{
-			var _texture : Texture2D = new Texture2D(bitmapData , _filename , _filename , "EYE");
+			
+			var _textureName : String = FilePicker.getShortName(_filename);
+			var _texture : Texture2D = new Texture2D(bitmapData ,  _textureName , _filename , "EYE");
 			Library.getS().addTexture(_texture);
-			Library.getS().addTexture(new Texture2D(bitmapData , _filename+"#FLIP" , _filename  , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
+			Library.getS().addTexture(new Texture2D(bitmapData , _textureName+"#FLIP" , _filename  , "EYE" , _texture.rectX + _texture.rectW , _texture.rectY , -_texture.rectW , _texture.rectH));
 			//m_tb.deactivateAll([m_tb.btnAR]);
 			
 			

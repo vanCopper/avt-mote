@@ -37,7 +37,7 @@
     <option linkReport="" />
     <option loadExterns="" />
     <option staticLinkRSL="True" />
-    <option additional="" />
+    <option additional="+configname=air" />
     <option compilerConstants="CONFIG::DEBUG,true&#xA;CONFIG::ASSERT,true" />
     <option customSDK="" />
   </build>
@@ -74,12 +74,13 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand />
+  <preBuildCommand>taskkill /f /fi "IMAGENAME eq adl.exe"</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="Default" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="$(FlexSDK)\bin\adl.exe;application.xml bin" />
   </options>
 </project>

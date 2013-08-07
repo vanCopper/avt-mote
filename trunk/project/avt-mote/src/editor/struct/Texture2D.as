@@ -1,5 +1,7 @@
 package editor.struct 
 {
+	import editor.config.Config;
+	import editor.util.TextureLoader;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.utils.ByteArray;
@@ -106,6 +108,14 @@ package editor.struct
 		
 		public function toXMLString():String
 		{
+			if (Config.isAirVersion)
+			{
+				if (filename.indexOf(TextureLoader.s_imgPath) == 0)
+					filename = filename.substr(TextureLoader.s_imgPath.length);
+			}
+			
+			
+			
 			return "<Texture2D>"
 				+ "<name>" + name + "</name>"
 				+ "<filename>" + filename + "</filename>"

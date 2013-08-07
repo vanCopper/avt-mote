@@ -36,6 +36,9 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
+			stage.align = "LT";
+			stage.scaleMode = "noScale";
+			
 			//import editor.ui.EdtRotationAxis;
 			///var _dtRotationAxis : EdtRotationAxis = new EdtRotationAxis();
 			//addChild(_dtRotationAxis);
@@ -97,12 +100,12 @@ package
 		{
 			
 		}
-		
+		protected static const inputFilterArray : Array = [new FileFilter("avt-mote xml ascii file)" , "*.amxmla") /* , new FileFilter("avt-mote xml binary file" , "*.amxmlb")*/ ]
 		private function onOpen(btn:BSSButton):void 
 		{
-			new FilePicker( onOpenBA , [new FileFilter("avt-mote xml ascii file)" , "*.amxmla") , new FileFilter("avt-mote xml binary file" , "*.amxmlb") ]);			
+			new FilePicker( onOpenBA , inputFilterArray );			
 		}
-		private function onOpenBA(_filename : String , ba : ByteArray):void
+		protected function onOpenBA(_filename : String , ba : ByteArray):void
 		{
 			Config.lastFileName = _filename.replace(".amxmlb" , ".amxmla");
 			
@@ -157,10 +160,17 @@ package
 			var fb : FileReference = FileReference(e.currentTarget);
 			Config.lastFileName = fb.name;
 		}
-		private function onSaveAs(btn:BSSButton):void 
+		protected function getXMLData() : XML
 		{
 			var _data : XML = <avt-mote/>;
 			m_mb.onSave(_data);
+			return _data;
+		}
+		
+		private function onSaveAs(btn:BSSButton):void 
+		{
+			var _data : XML = getXMLData();
+			
 			var fr : FileReference = new FileReference;
 			
 			fr.addEventListener(Event.SELECT, onFileSaveSelect);
