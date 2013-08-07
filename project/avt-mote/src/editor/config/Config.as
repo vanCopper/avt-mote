@@ -8,6 +8,7 @@ package editor.config
 	{
 		public static var isAirVersion : Boolean = false;
 		public static var lastFileName : String = "avt-mote.amxmla";
+		public static var lastFileNameFull : String;
 	}
 
 }

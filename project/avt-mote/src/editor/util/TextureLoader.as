@@ -54,7 +54,12 @@ package editor.util
 				var ldr : Loader = new Loader();
 				ldr.contentLoaderInfo.addEventListener(Event.COMPLETE , onComplete );
 				ldr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR , onComplete );
-				ldr.load(new URLRequest(s_imgPath + m_filename));
+				
+				var _url : String = m_filename;
+				if (_url.indexOf(":/") == -1 && _url.indexOf(":\\") == -1)
+					_url = s_imgPath +  m_filename;
+					
+				ldr.load(new URLRequest(_url));
 			}
 			else
 			{
