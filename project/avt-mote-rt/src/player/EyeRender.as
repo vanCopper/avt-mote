@@ -161,6 +161,9 @@ package player
 		public function render(sp:Sprite , bitmapData : BitmapData, md : Matrix4x4):void
 		{
 			
+			if (!m_frameList || !m_frameList.length)
+				return;
+			
 			if (!m_changed && md)
 			{
 				m_changed = !md.isEqual(m_matrix);
