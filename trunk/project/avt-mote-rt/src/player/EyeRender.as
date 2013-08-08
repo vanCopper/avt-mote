@@ -76,9 +76,17 @@ package player
 				{
 					var _frameListLength : int = ByteArrayUtil.readUnsignedByteOrShort(baData);
 					m_frameList = new Vector.<EyeFrameData>(_frameListLength , true);
-					for (var i : int = 0 ; i < _frameListLength; i++ )
+					
+					if (_frameListLength)
 					{
-						m_frameList[i] = EyeFrameData.decodeEyeFrameData(baData);
+						for (var i : int = 0 ; i < _frameListLength; i++ )
+						{
+							m_frameList[i] = EyeFrameData.decodeEyeFrameData(baData);
+						}
+					}
+					else {
+						baData.position = endPos;
+						return;
 					}
 				}
 				else if (_flag == 2)

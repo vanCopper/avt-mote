@@ -33,6 +33,9 @@ package player
 
 		public function render(g:Graphics  , bitmapData : BitmapData , _matrix : Matrix4x4) : void
 		{
+			if (!m_frameList || !m_frameList.length)
+				return;
+				
 			var _frameListLength : int = m_frameList.length;
 			if (changeFrame)
 			{
@@ -72,9 +75,17 @@ package player
 				{
 					var _frameListLength : int = ByteArrayUtil.readUnsignedByteOrShort(ba);
 					m_frameList = new Vector.<MouthFrameData>(_frameListLength , true);
-					for (var i : int = 0 ; i < _frameListLength; i++ )
-					{
-						m_frameList[i] = MouthFrameData.decodeMouthFrameData(ba,a_bitmapData);
+					
+					if (_frameListLength)
+					{	
+						for (var i : int = 0 ; i < _frameListLength; i++ )
+						{
+							m_frameList[i] = MouthFrameData.decodeMouthFrameData(ba,a_bitmapData);
+						}
+					}
+					else {
+						ba.position = endPos;
+						return;
 					}
 				}
 				else if (_flag == 2)
