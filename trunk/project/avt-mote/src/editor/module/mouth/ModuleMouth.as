@@ -543,7 +543,7 @@ package editor.module.mouth
 			}
 			
 			
-			__rootBA.writeByte(0x23);
+			__rootBA.writeByte(0x25);
 			ByteArrayUtil.writeUnsignedShortOrInt(__rootBA , baData.length);
 			__rootBA.writeBytes(baData);
 			
