@@ -131,38 +131,6 @@ package editor.module.mouth
 			
 			if (texture) str += texture.toXMLString();
 			
-			/*
-			str += "<vertexPerLine>";
-			str += "" + vertexPerLine;
-			str += "</vertexPerLine>";
-			
-			str += "<vertexData>";
-				var first : Boolean = true;
-				for each (var _v : Vertex3D in vertexData)	
-				{
-					if (first)
-					{
-						str += _v.to2DXMLString();
-						first = false;
-					}
-					else
-						str += "," + _v.to2DXMLString();
-				}
-			str += "</vertexData>";
-			str += "<vertexDataZ>";
-				first = true;
-				for (var vi : int = 0 ; vi < vertexPerLine ; vi++ )	
-				{
-					if (first)
-					{
-						str += vertexData[vi].z;
-						first = false;
-					}
-					else
-						str += "," + vertexData[vi].z;
-				}
-			str += "</vertexDataZ>";
-			*/
 			str += "<offsetX>" + offsetX + "</offsetX>";
 			str += "<offsetY>" + offsetY + "</offsetY>";
 		
