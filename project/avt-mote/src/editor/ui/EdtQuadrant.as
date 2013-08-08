@@ -323,6 +323,9 @@ package editor.ui {
 			for each (var v : EdtVertex3D in _vertexArray)
 			{
 				ev = new EdtVertexInfo(v);
+				ev.dot.scaleX = 
+				ev.dot.scaleY = v.scale;
+				
 				_edtVertexArray.push(ev);
 				
 				_dotShape.addChild(ev.dot);
