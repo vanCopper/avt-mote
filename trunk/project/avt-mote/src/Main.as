@@ -67,6 +67,8 @@ package
 			m_mb.addModule(new ModuleHair(_mContainer));
 			import editor.module.body.ModuleBody;
 			m_mb.addModule(new ModuleBody(_mContainer));
+			import editor.module.mouth.ModuleMouth;
+			m_mb.addModule(new ModuleMouth(_mContainer));
 			
 			
 			addChild(_mContainer).y = m_mb.y + m_mb.height + 5;
@@ -82,7 +84,7 @@ package
 			 CallbackCenter.init(stage , obj);
 			
 			
-			tb.btnNew.releaseFunction = onNew;
+			tb.btnNew.releaseFunction = onNewBtn;
 			tb.btnOpen.releaseFunction = onOpen;
 			tb.btnSaveAs.releaseFunction = onSaveAs;
 			tb.btnExport.releaseFunction = onExport;
@@ -123,7 +125,7 @@ package
 				
 				if (_xml.name() == "avt-mote")
 				{
-					onNew(null);
+					newDoc();
 					m_mb.onOpenXML(_xml);
 				} else {
 					CONFIG::ASSERT {
@@ -135,11 +137,18 @@ package
 		}
 		
 		
-		
-		private function onNew(btn:BSSButton):void 
+		private function newDoc():void 
 		{
 			Library.getS().onNew();
 			m_mb.onNew();
+			
+		}
+		
+		private function onNewBtn(btn:BSSButton):void 
+		{
+			Config.lastFileName = "avt-mote.amxmla";
+			Config.lastFileNameFull = null;
+			newDoc();
 			
 		}
 		

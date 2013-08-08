@@ -58,17 +58,17 @@ package editor.module.hair
 		
 		public function onSetNewZ():void
 		{
-			if (m_lasttVertexArray && data)
+			if (m_lastVertexArray && data)
 			{
 				var startIndex : int = ModuleHeadData.s_vertexRelativeData.length;
 				for (var i : int =  0 ; i < data.vertexPerLine; i++ )
 				{
-					data.vertexData[i].z = m_lasttVertexArray[i + startIndex].z;
+					data.vertexData[i].z = m_lastVertexArray[i + startIndex].z;
 				}
 			}
 		}
 		
-		private var m_lasttVertexArray : Vector.<EdtVertex3D>;
+		private var m_lastVertexArray : Vector.<EdtVertex3D>;
 		public function getVertex(): Vector.<EdtVertex3D>
 		{
 			var ret : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
@@ -81,6 +81,7 @@ package editor.module.hair
 				newV.x  = rv.x;
 				newV.y  = rv.y;
 				newV.z  = rv.z;
+				newV.scale = 0.5;
 				
 				ret.push(newV);
 			}
@@ -116,7 +117,7 @@ package editor.module.hair
 					
 				}
 			}
-			m_lasttVertexArray = ret;
+			m_lastVertexArray = ret;
 			return ret;
 			
 		}

@@ -65,6 +65,13 @@ package editor.config
 		public static var MODULE_BODY_BREATH:String = "breath";
 		public static var MODULE_BODY_VIEW:String = "view";
 		
+		public static var MODULE_MOUTH:String = "mouth";
+		public static var MODULE_MOUTH_IMPORT_IMAGE:String = "import images";
+		public static var MODULE_MOUTH_ADD_FRAME:String = "edit center";
+		public static var MODULE_MOUTH_LOCATE:String = "locate";
+		public static var MODULE_MOUTH_Z_ADJUST:String = "z adjust";
+		public static var MODULE_MOUTH_VIEW:String = "view";
+		
 		
 		
 	}

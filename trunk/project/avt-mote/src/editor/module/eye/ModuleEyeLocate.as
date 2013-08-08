@@ -8,6 +8,7 @@ package editor.module.eye
 	import editor.struct.Plane3D;
 	import editor.struct.Texture2DBitmap;
 	import editor.struct.Vertex3D;
+	import editor.util.ZFitter;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Graphics;
@@ -134,62 +135,7 @@ package editor.module.eye
 				ModuleEyeFunc.drawEye(m_eyeView , md ,  m_leftEye.data ,  m_rightEye.data);
 			}
 		}
-		private function fitZ3Point(v : Vertex3D , _v : Vector.<Vertex3D>):void
-		{
-			var arr : Array = [];
-			for each (var headV : Vertex3D in _v)
-			{
-				var _x : Number = headV.x - v.x;
-				var _y : Number = headV.y - v.y;
-				
-				arr.push( { len2:(_x * _x + _y * _y) , vtx : headV } );
-			}
-			
-			arr.sort(sortOnVLength);  
-			
-			var _p : Plane3D = new Plane3D();
-			 _p.gen3Point(arr[0].vtx , arr[1].vtx , arr[2].vtx );
-			
-			/* trace(
-				"nearest3 pt" + arr[0].vtx
-				+ arr[1].vtx
-				+ arr[2].vtx
-			 );*/
-			 
-			v.z = _p.confitZ(v.x, v.y);
-			
-			if (Math.abs(v.z - arr[0].vtx.z) / Math.abs(arr[0].vtx.z - arr[1].vtx.z) > 3)
-			{
-				 trace("regenZ");
-				 _p.gen3Point(arr[0].vtx , arr[1].vtx , arr[3].vtx );
-				 v.z = _p.confitZ(v.x, v.y);
-			}
-			
-			if (Math.abs(v.z - arr[0].vtx.z) / Math.abs(arr[0].vtx.z - arr[1].vtx.z) > 3)
-			{
-				trace("regenZ2");
-				
-				var dt0 : Number = Math.sqrt((v.x - arr[0].vtx.x) * (v.x - arr[0].vtx.x) + (v.y - arr[0].vtx.y) * (v.y - arr[0].vtx.y));
-				var dt1 : Number = Math.sqrt((v.x - arr[1].vtx.x) * (v.x - arr[1].vtx.x) + (v.y - arr[1].vtx.y) * (v.y - arr[1].vtx.y));
-				var dt2 : Number = Math.sqrt((v.x - arr[2].vtx.x) * (v.x - arr[2].vtx.x) + (v.y - arr[2].vtx.y) * (v.y - arr[2].vtx.y));
-			
-				var _total : Number = dt0 + dt1 + dt2;
-				
-				v.z = (arr[0].vtx.z *  (_total - dt0) +  arr[1].vtx.z *  (_total - dt1) +  arr[2].vtx.z *  (_total - dt2)) / (_total * 2);
-			}
-			
-			//trace("confitZ" + v);
-		}
 		
-	
-		private function sortOnVLength(a:Object, b:Object):Number {  
-			if (a.len2 > b.len2)
-				return 1;
-			else if (a.len2 < b.len2)
-				return -1;
-			else
-				return 0;
-		}
 		
 		private function setLocate(btn:BSSButton):void 
 		{
@@ -229,9 +175,9 @@ package editor.module.eye
 			var v1L : Vertex3D = new Vertex3D(m_leftEye.x + wl , m_leftEye.y, 0);
 			var v2L : Vertex3D = new Vertex3D(m_leftEye.x + wl / 2 , m_leftEye.y + hl, 0);
 			
-			fitZ3Point(v0L , _v);
-			fitZ3Point(v1L , _v);
-			fitZ3Point(v2L , _v);
+			ZFitter.fitZ3Point(v0L , _v);
+			ZFitter.fitZ3Point(v1L , _v);
+			ZFitter.fitZ3Point(v2L , _v);
 			
 			
 			//md.effectPoint3D(v0L.x  , v0L.y , v0L.z , v0L);
@@ -265,9 +211,9 @@ package editor.module.eye
 			var v1R : Vertex3D = new Vertex3D(m_rightEye.x + wl , m_rightEye.y, 0);
 			var v2R : Vertex3D = new Vertex3D(m_rightEye.x + wl/2, m_rightEye.y + hl, 0);
 			
-			fitZ3Point(v0R , _v);
-			fitZ3Point(v1R , _v);
-			fitZ3Point(v2R , _v);
+			ZFitter.fitZ3Point(v0R , _v);
+			ZFitter.fitZ3Point(v1R , _v);
+			ZFitter.fitZ3Point(v2R , _v);
 			
 			
 			//md.effectPoint3D(v0R.x  , v0R.y , v0R.z , v0R);

@@ -78,7 +78,8 @@ package editor.ui
 			addChildAt(_e0 , 0);
 			_e0.fullScreen = true;
 			
-			m_vtxEditor.remainQuadrant(_e0);
+			if (m_vtxEditor)
+				m_vtxEditor.remainQuadrant(_e0);
 		
 			
 			
