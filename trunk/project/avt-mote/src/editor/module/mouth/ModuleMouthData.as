@@ -16,9 +16,9 @@ package editor.module.mouth
 		
 		public static var mouthPlane : Plane3D = new Plane3D();
 
-		public static var mouseV0 : EdtVertex3D;
-		public static var mouseV1 : EdtVertex3D;
-		public static var mouseV2 : EdtVertex3D;
+		public static var mouthV0 : EdtVertex3D;
+		public static var mouthV1 : EdtVertex3D;
+		public static var mouthV2 : EdtVertex3D;
 	}
 
 }

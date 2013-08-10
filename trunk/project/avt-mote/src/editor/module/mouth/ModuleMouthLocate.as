@@ -142,23 +142,23 @@ package editor.module.mouth
 				wl = _rectW / 2 ;
 				hl = _rectH / 2 ;
 				
-				ModuleMouthData.mouseV0 = new EdtVertex3D(ModuleMouthData.centerX, ModuleMouthData.centerY + hl, 0);
-				ModuleMouthData.mouseV1 = new EdtVertex3D(ModuleMouthData.centerX - wl , ModuleMouthData.centerY - hl, 0);
-				ModuleMouthData.mouseV2 = new EdtVertex3D(ModuleMouthData.centerX + wl , ModuleMouthData.centerY - hl, 0);
+				ModuleMouthData.mouthV0 = new EdtVertex3D(ModuleMouthData.centerX, ModuleMouthData.centerY + hl, 0);
+				ModuleMouthData.mouthV1 = new EdtVertex3D(ModuleMouthData.centerX - wl , ModuleMouthData.centerY - hl, 0);
+				ModuleMouthData.mouthV2 = new EdtVertex3D(ModuleMouthData.centerX + wl , ModuleMouthData.centerY - hl, 0);
 				
-				ModuleMouthData.mouseV0.priority = 1;
-				ModuleMouthData.mouseV1.priority = 2;
-				ModuleMouthData.mouseV2.priority = 3;
+				ModuleMouthData.mouthV0.priority = 1;
+				ModuleMouthData.mouthV1.priority = 2;
+				ModuleMouthData.mouthV2.priority = 3;
 				
-				EdtVertex3D.connect2PT(ModuleMouthData.mouseV0 , ModuleMouthData.mouseV1);
-				EdtVertex3D.connect2PT(ModuleMouthData.mouseV1 , ModuleMouthData.mouseV2);
-				EdtVertex3D.connect2PT(ModuleMouthData.mouseV0 , ModuleMouthData.mouseV2);
+				EdtVertex3D.connect2PT(ModuleMouthData.mouthV0 , ModuleMouthData.mouthV1);
+				EdtVertex3D.connect2PT(ModuleMouthData.mouthV1 , ModuleMouthData.mouthV2);
+				EdtVertex3D.connect2PT(ModuleMouthData.mouthV0 , ModuleMouthData.mouthV2);
 				
-				ZFitter.fitZ3Point(ModuleMouthData.mouseV0 , _v);
-				ZFitter.fitZ3Point(ModuleMouthData.mouseV1 , _v);
-				ZFitter.fitZ3Point(ModuleMouthData.mouseV2 , _v);
+				ZFitter.fitZ3Point(ModuleMouthData.mouthV0 , _v);
+				ZFitter.fitZ3Point(ModuleMouthData.mouthV1 , _v);
+				ZFitter.fitZ3Point(ModuleMouthData.mouthV2 , _v);
 				
-				ModuleMouthData.mouthPlane.gen3Point(ModuleMouthData.mouseV0, ModuleMouthData.mouseV1, ModuleMouthData.mouseV2);
+				ModuleMouthData.mouthPlane.gen3Point(ModuleMouthData.mouthV0, ModuleMouthData.mouthV1, ModuleMouthData.mouthV2);
 				/*
 				
 				ModuleEyeData.s_eyeLPlane.gen3Point(v0L, v1L, v2L);

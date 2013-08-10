@@ -294,21 +294,29 @@ package editor.module.mouth
 			}
 		}
 		
+		private function setZVertexConnect():void
+		{
+			if (ModuleMouthData.mouthV0)
+			{
+				ModuleMouthData.mouthV0.priority = 1;
+				ModuleMouthData.mouthV1.priority = 2;
+				ModuleMouthData.mouthV2.priority = 3;
+				
+				EdtVertex3D.connect2PT(ModuleMouthData.mouthV0 , ModuleMouthData.mouthV1);
+				EdtVertex3D.connect2PT(ModuleMouthData.mouthV1 , ModuleMouthData.mouthV2);
+				EdtVertex3D.connect2PT(ModuleMouthData.mouthV0 , ModuleMouthData.mouthV2);
+			}
+		}
+		
 		private function setZVertex():void
 		{
-			if (!ModuleMouthData.mouseV0)
+			if (!ModuleMouthData.mouthV0)
 			{
-				ModuleMouthData.mouseV0 = new EdtVertex3D(ModuleMouthData.centerX, ModuleMouthData.centerY + 10, 0);
-				ModuleMouthData.mouseV1 = new EdtVertex3D(ModuleMouthData.centerX - 15 , ModuleMouthData.centerY - 10, 0);
-				ModuleMouthData.mouseV2 = new EdtVertex3D(ModuleMouthData.centerX + 15 , ModuleMouthData.centerY - 10, 0);
+				ModuleMouthData.mouthV0 = new EdtVertex3D(ModuleMouthData.centerX, ModuleMouthData.centerY + 10, 0);
+				ModuleMouthData.mouthV1 = new EdtVertex3D(ModuleMouthData.centerX - 15 , ModuleMouthData.centerY - 10, 0);
+				ModuleMouthData.mouthV2 = new EdtVertex3D(ModuleMouthData.centerX + 15 , ModuleMouthData.centerY - 10, 0);
 				
-				ModuleMouthData.mouseV0.priority = 1;
-				ModuleMouthData.mouseV1.priority = 2;
-				ModuleMouthData.mouseV2.priority = 3;
-				
-				EdtVertex3D.connect2PT(ModuleMouthData.mouseV0 , ModuleMouthData.mouseV1);
-				EdtVertex3D.connect2PT(ModuleMouthData.mouseV1 , ModuleMouthData.mouseV2);
-				EdtVertex3D.connect2PT(ModuleMouthData.mouseV0 , ModuleMouthData.mouseV2);
+				setZVertexConnect();
 			}
 			
 			var ret : Vector.<EdtVertex3D> = new Vector.<EdtVertex3D>();
@@ -328,15 +336,15 @@ package editor.module.mouth
 			if (ret.length)
 				ModuleHeadData.genConnect(ModuleHeadData.s_pointPerLine , ModuleHeadData.s_totalLine , ret);
 			
-			ret.push(ModuleMouthData.mouseV0);
-			ret.push(ModuleMouthData.mouseV1);
-			ret.push(ModuleMouthData.mouseV2);
+			ret.push(ModuleMouthData.mouthV0);
+			ret.push(ModuleMouthData.mouthV1);
+			ret.push(ModuleMouthData.mouthV2);
 			
 			
 			
-			ModuleMouthData.mouseV0.scale = 
-			ModuleMouthData.mouseV1.scale = 
-			ModuleMouthData.mouseV2.scale = 1.5;
+			ModuleMouthData.mouthV0.scale = 
+			ModuleMouthData.mouthV1.scale = 
+			ModuleMouthData.mouthV2.scale = 1.5;
 			
 			m_lastVertexArray = ret;
 			
@@ -377,14 +385,15 @@ package editor.module.mouth
 		{
 			if (m_lastVertexArray)
 			{
-				ModuleMouthData.mouseV0 = m_lastVertexArray[m_lastVertexArray.length - 3].cloneEdtVertex3D();
-				ModuleMouthData.mouseV1 = m_lastVertexArray[m_lastVertexArray.length - 2].cloneEdtVertex3D();
-				ModuleMouthData.mouseV2 = m_lastVertexArray[m_lastVertexArray.length - 1].cloneEdtVertex3D();
+				ModuleMouthData.mouthV0 = m_lastVertexArray[m_lastVertexArray.length - 3].cloneEdtVertex3D();
+				ModuleMouthData.mouthV1 = m_lastVertexArray[m_lastVertexArray.length - 2].cloneEdtVertex3D();
+				ModuleMouthData.mouthV2 = m_lastVertexArray[m_lastVertexArray.length - 1].cloneEdtVertex3D();
 				
-				//trace(ModuleMouthData.mouseV0);
-				ModuleMouthData.mouthPlane.gen3Point(ModuleMouthData.mouseV0, ModuleMouthData.mouseV1, ModuleMouthData.mouseV2);
+				//trace(ModuleMouthData.mouthV0);
+				ModuleMouthData.mouthPlane.gen3Point(ModuleMouthData.mouthV0, ModuleMouthData.mouthV1, ModuleMouthData.mouthV2);
 				
 				setZVertex();
+				setZVertexConnect();
 			}
 			
 		
@@ -489,28 +498,28 @@ package editor.module.mouth
 					ModuleMouthData.centerX = Number(item.centerX.text());
 					ModuleMouthData.centerY = Number(item.centerY.text());
 					ModuleMouthData.mouthPlane.fromXMLString(item.mouthPlane.text());
-					if (item.mouseV0 != undefined && item.mouseV0.text())
-					{	ModuleMouthData.mouseV0 = new EdtVertex3D();  ModuleMouthData.mouseV0.fromXMLString(item.mouseV0.text());}
-					if (item.mouseV1 != undefined && item.mouseV1.text())
-					{	ModuleMouthData.mouseV1 = new EdtVertex3D();  ModuleMouthData.mouseV1.fromXMLString(item.mouseV1.text());}
-					if (item.mouseV2 != undefined && item.mouseV2.text())
-					{	ModuleMouthData.mouseV2 = new EdtVertex3D();  ModuleMouthData.mouseV2.fromXMLString(item.mouseV2.text()); }
+					if (item.mouthV0 != undefined && item.mouthV0.text())
+					{	ModuleMouthData.mouthV0 = new EdtVertex3D();  ModuleMouthData.mouthV0.fromXMLString(item.mouthV0.text());}
+					if (item.mouthV1 != undefined && item.mouthV1.text())
+					{	ModuleMouthData.mouthV1 = new EdtVertex3D();  ModuleMouthData.mouthV1.fromXMLString(item.mouthV1.text());}
+					if (item.mouthV2 != undefined && item.mouthV2.text())
+					{	ModuleMouthData.mouthV2 = new EdtVertex3D();  ModuleMouthData.mouthV2.fromXMLString(item.mouthV2.text()); }
 					
-					if (ModuleMouthData.mouseV0 && ModuleMouthData.mouseV1 && ModuleMouthData.mouseV2)
+					if (ModuleMouthData.mouthV0 && ModuleMouthData.mouthV1 && ModuleMouthData.mouthV2)
 					{
-						ModuleMouthData.mouseV0.priority = 1;
-						ModuleMouthData.mouseV1.priority = 2;
-						ModuleMouthData.mouseV2.priority = 3;
+						ModuleMouthData.mouthV0.priority = 1;
+						ModuleMouthData.mouthV1.priority = 2;
+						ModuleMouthData.mouthV2.priority = 3;
 						
-						EdtVertex3D.connect2PT(ModuleMouthData.mouseV0 , ModuleMouthData.mouseV1);
-						EdtVertex3D.connect2PT(ModuleMouthData.mouseV1 , ModuleMouthData.mouseV2);
-						EdtVertex3D.connect2PT(ModuleMouthData.mouseV0 , ModuleMouthData.mouseV2);
+						EdtVertex3D.connect2PT(ModuleMouthData.mouthV0 , ModuleMouthData.mouthV1);
+						EdtVertex3D.connect2PT(ModuleMouthData.mouthV1 , ModuleMouthData.mouthV2);
+						EdtVertex3D.connect2PT(ModuleMouthData.mouthV0 , ModuleMouthData.mouthV2);
 					}
 					else
 					{
-						ModuleMouthData.mouseV0 =
-						ModuleMouthData.mouseV1 = 
-						ModuleMouthData.mouseV2 = null;
+						ModuleMouthData.mouthV0 =
+						ModuleMouthData.mouthV1 = 
+						ModuleMouthData.mouthV2 = null;
 				
 					}
 				}
@@ -566,9 +575,9 @@ package editor.module.mouth
 					str += "<ModuleMouthLocate>";
 						str += "<centerX>" + ModuleMouthData.centerX + "</centerX>";
 						str += "<centerY>" + ModuleMouthData.centerY + "</centerY>";
-						if (ModuleMouthData.mouseV0) str += "<mouseV0>" + ModuleMouthData.mouseV0.toXMLString() + "</mouseV0>";
-						if (ModuleMouthData.mouseV1) str += "<mouseV1>" + ModuleMouthData.mouseV1.toXMLString() + "</mouseV1>";
-						if (ModuleMouthData.mouseV2) str += "<mouseV2>" + ModuleMouthData.mouseV2.toXMLString() + "</mouseV2>";
+						if (ModuleMouthData.mouthV0) str += "<mouthV0>" + ModuleMouthData.mouthV0.toXMLString() + "</mouthV0>";
+						if (ModuleMouthData.mouthV1) str += "<mouthV1>" + ModuleMouthData.mouthV1.toXMLString() + "</mouthV1>";
+						if (ModuleMouthData.mouthV2) str += "<mouthV2>" + ModuleMouthData.mouthV2.toXMLString() + "</mouthV2>";
 						
 						str += "<mouthPlane>" + ModuleMouthData.mouthPlane.toXMLString() + "</mouthPlane>";
 					str += "</ModuleMouthLocate>";
