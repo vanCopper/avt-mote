@@ -1,4 +1,4 @@
-package editor.module.mouth 
+package editor.module.brow 
 {
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -17,15 +17,22 @@ package editor.module.mouth
 	 * ...
 	 * @author Blueshell
 	 */
-	public class ModuleMouthFrameLib  extends Sprite
+	public class ModuleBrowFrameLib  extends Sprite
 	{
 		
 		public var item : BSSItemListScrollBar;
 		public var clickFuntion : Function;
 		
-		public function ModuleMouthFrameLib() 
+		public static var s_singleton : ModuleBrowFrameLib;
+		public static function getSingleton():ModuleBrowFrameLib
 		{
-			
+			return s_singleton;
+		}
+		
+		
+		public function ModuleBrowFrameLib() 
+		{
+			s_singleton = this;
 			const W : int = 220;
 			const H : int = 400;
 			const S : int = 5;
@@ -82,23 +89,23 @@ package editor.module.mouth
 			}
 		}
 		
-		/*
-		public function getModuleEyeFrameData(_v : String) : ModuleMouthFrame
+		
+		public function getModuleBrowFrameData(_v : String) : ModuleBrowFrame
 		{
-			for each (var mef : ModuleMouthFrame in m_frameList)
+			for each (var mef : ModuleBrowFrame in m_frameList)
 			{
 				if (mef.name == _v)
 					return mef;
 			}
 			
 			return null;
-		}*/
+		}
 		
 	
-		private var m_frameList : Vector.<ModuleMouthFrame> = ModuleMouthData.s_frameList;
-		public function addTexture(_t : ModuleMouthFrame , a_name : String , clickAtAdd : Boolean = false ) : void
+		private var m_frameList : Vector.<ModuleBrowFrame> = ModuleBrowData.s_frameList;
+		public function addTexture(_t : ModuleBrowFrame , a_name : String , clickAtAdd : Boolean = false ) : void
 		{
-			for each (var _oldData : ModuleMouthFrame in m_frameList)
+			for each (var _oldData : ModuleBrowFrame in m_frameList)
 			{
 				if (_oldData.texture == _t.texture)
 				{
@@ -110,7 +117,7 @@ package editor.module.mouth
 			
 			
 			
-			var __frame : ModuleMouthFrameSprite = _t.createSprite();
+			var __frame : ModuleBrowFrameSprite = _t.createSprite();
 			__frame.refresh();
 			__frame.fitPos(84 , 84 , 8 , 8);
 			
@@ -133,6 +140,9 @@ package editor.module.mouth
 			item.addItem(__item);
 			
 			_t.name = indi.text;
+			
+			//if (a_name.indexOf("#FLIP") != -1)
+				
 			
 			if (clickAtAdd)
 				onClick(__item);
@@ -188,7 +198,7 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.text.TextField;
-import editor.module.mouth.*;
+import editor.module.brow.*;
 
 class ItemContainer extends Sprite {
 	
@@ -196,10 +206,10 @@ class ItemContainer extends Sprite {
 	public var changeFuntion : Function;
 	
 	public var indi : TextField;
-	public var mef : ModuleMouthFrameSprite;
+	public var mef : ModuleBrowFrameSprite;
 	
 	
-	public function ItemContainer(a_mef : ModuleMouthFrameSprite , a_indi : TextField)
+	public function ItemContainer(a_mef : ModuleBrowFrameSprite , a_indi : TextField)
 	{
 		addEventListener(MouseEvent.CLICK , onClick);
 		mef = a_mef;

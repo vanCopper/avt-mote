@@ -72,7 +72,12 @@ package editor.config
 		public static var MODULE_MOUTH_Z_ADJUST:String = "z adjust";
 		public static var MODULE_MOUTH_VIEW:String = "view";
 		
-		
+		public static var MODULE_BROW:String = "brow";
+		public static var MODULE_BROW_IMPORT_IMAGE:String = "import images";
+		public static var MODULE_BROW_ADD_FRAME:String = "edit center";
+		public static var MODULE_BROW_LOCATE:String = "locate";
+		public static var MODULE_BROW_Z_ADJUST:String = "z adjust";
+		public static var MODULE_BROW_VIEW:String = "view";
 		
 	}
 
