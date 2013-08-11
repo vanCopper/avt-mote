@@ -42,7 +42,7 @@ package editor.module.mouth
 				visible = false;	
 			}
 			
-			_p.titleText = "Hair Frame Library";
+			_p.titleText = "Mouth Frame Library";
 			
 			
 			

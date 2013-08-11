@@ -42,7 +42,7 @@ package editor.module.body
 				visible = false;	
 			}
 			
-			_p.titleText = "Hair Frame Library";
+			_p.titleText = "Body Frame Library";
 			
 			
 			

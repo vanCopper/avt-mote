@@ -12,11 +12,13 @@ package player.struct
 	 * ...
 	 * @author blueshell
 	 */
-	public class MouthFrameData
+	public class BrowFrameData
 	{
 		//public var name : String;
 		public var texture : Texture2D;
-		public var vertexData : Vector.<Vector3D>;
+		
+		public var vertexDataL : Vector.<Vector3D>;
+		public var vertexDataR : Vector.<Vector3D>;
 	
 		
 		public var offsetX : Number = 0;
@@ -30,9 +32,9 @@ package player.struct
 		
 		//public var verticesOff : Vector.<Number>;
 		
-		public static function decodeMouthFrameData(ba:ByteArray,a_bitmapData:BitmapData):MouthFrameData
+		public static function decodeBrowFrameData(ba:ByteArray,a_bitmapData:BitmapData):BrowFrameData
 		{
-			var ret : MouthFrameData = new MouthFrameData();
+			var ret : BrowFrameData = new BrowFrameData();
 			ret.decode(ba,a_bitmapData);
 			return ret;
 		}
@@ -41,33 +43,55 @@ package player.struct
 		{
 			texture = Texture2D.decodeTexture2D(ba);
 			
-			offsetX =  ba.readFloat();
+			offsetX = ba.readFloat();
 			offsetY = ba.readFloat();
 		}
 		
-		public function confitZ(mouthPlane : Plane3D , centerX : Number , centerY : Number ) : void
+		public function confitZ(browPlaneL : Plane3D , centerLX : Number , centerLY : Number , browPlaneR : Plane3D , centerRX : Number , centerRY : Number ) : void
 		{
-			vertexData = new Vector.<Vector3D>();
-			vertexData.length = 0;
+			var _absRectW : Number = Math.abs(texture.rectW);
+			var _absRectH : Number = Math.abs(texture.rectH);
 			
-			vertexData.push(new Vector3D(0, 0));
-			vertexData.push(new Vector3D(Math.abs(texture.rectW), 0));
-			vertexData.push(new Vector3D(0, Math.abs(texture.rectH)));
-			vertexData.push(new Vector3D(Math.abs(texture.rectW), Math.abs(texture.rectH)));
 			
-			for each( var ev : Vector3D in vertexData)
+			vertexDataL = new Vector.<Vector3D>();
+			
+			vertexDataL.push(new Vector3D(0, 0));
+			vertexDataL.push(new Vector3D(_absRectW, 0));
+			vertexDataL.push(new Vector3D(0, _absRectH));
+			vertexDataL.push(new Vector3D(_absRectW, _absRectH));
+			
+			for each( var ev : Vector3D in vertexDataL)
 			{
-				ev.x += offsetX + centerX;
-				ev.y += offsetY + centerY;
+				ev.x += offsetX + centerLX;
+				ev.y += offsetY + centerLY;
 				
-				ev.z = mouthPlane.confitZ(ev.x , ev.y);
+				ev.z = browPlaneL.confitZ(ev.x , ev.y);
 			}
+			
+			vertexDataR = new Vector.<Vector3D>();
+			
+			vertexDataR.push(new Vector3D(_absRectW, 0));
+			vertexDataR.push(new Vector3D(0, 0));
+			vertexDataR.push(new Vector3D(_absRectW, _absRectH));
+			vertexDataR.push(new Vector3D(0, _absRectH));
+			
+			
+			for each( ev in vertexDataR)
+			{
+				ev.x += -(_absRectW + offsetX) + centerRX;
+				ev.y += offsetY + centerRY;
+				
+				ev.z = browPlaneR.confitZ(ev.x , ev.y);
+			}
+			
 		}
 		
-		private function getVerticesMatrixed(md : Matrix4x4):Vector.<Number>
+		private function getVerticesMatrixed(md : Matrix4x4 , _left : Boolean):Vector.<Number>
 		{
 			var __v : Vector.<Number> = new Vector.<Number>();
 				
+			var vertexData : Vector.<Vector3D> =  _left ? vertexDataL : vertexDataR;
+			
 			for each( var ev : Vector3D in vertexData)
 			{
 				__v.push( md.Xx * ev.x + md.Xy * ev.y + md.Xz * ev.z) ;
@@ -77,10 +101,10 @@ package player.struct
 			return __v;
 		}
 		
-		public function render(g:Graphics,a_bitmapData:BitmapData, md : Matrix4x4):void
+		public function render(g:Graphics,a_bitmapData:BitmapData, md : Matrix4x4  , _left : Boolean):void
 		{
 			g.beginBitmapFill(a_bitmapData,null,false,true);
-			g.drawTriangles(getVerticesMatrixed(md), indices, uvData);
+			g.drawTriangles(getVerticesMatrixed(md , _left), indices, uvData);
 			g.endFill();
 		}
 				

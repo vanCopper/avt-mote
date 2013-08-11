@@ -155,7 +155,7 @@ package editor.module.brow
 			
 			for each( ev in vertexDataR)
 			{
-				ev.x += offsetX + ModuleBrowData.centerRX;
+				ev.x += -(Math.abs(texture.rectW) + offsetX) + ModuleBrowData.centerRX;
 				ev.y += offsetY + ModuleBrowData.centerRY;
 				
 				ev.z = ModuleBrowData.browPlaneR.confitZ(ev.x , ev.y);
