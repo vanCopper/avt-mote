@@ -496,7 +496,7 @@ package editor.module.brow
 			var mbf : ModuleBrowFrame = ModuleBrowFrameLib.getSingleton().getModuleBrowFrameData(_rawName);
 
 			
-			var _textureFilp : Texture2D = new Texture2D(mbf.texture.bitmapData , FilePicker.getShortName(mbf.texture.filename) + "#FLIP" , mbf.texture.filename  , "BROW" , mbf.texture.rectX + mbf.texture.rectW , mbf.texture.rectY , -mbf.texture.rectW , mbf.texture.rectH);
+			var _textureFilp : Texture2D = new Texture2D(mbf.texture.bitmapData , _rawName + "#FLIP" , mbf.texture.filename  , "BROW" , mbf.texture.rectX + mbf.texture.rectW , mbf.texture.rectY , -mbf.texture.rectW , mbf.texture.rectH);
 			Library.getS().addTexture(_textureFilp);
 			m_efl.addTexture(new ModuleBrowFrame(_textureFilp) ,  _textureFilp.name);
 			
@@ -612,7 +612,7 @@ package editor.module.brow
 			{	
 				
 				baData.writeByte(1);
-				ByteArrayUtil.writeUnsignedByteOrShort(baData , ModuleBrowData.s_frameList.length);
+				ByteArrayUtil.writeUnsignedByteOrShort(baData , ModuleBrowData.s_frameList.length / 2);
 				for each (var _mhf : ModuleBrowFrame in ModuleBrowData.s_frameList)
 				{
 					if (_mhf.name.indexOf("#FLIP") == -1)
@@ -632,7 +632,7 @@ package editor.module.brow
 			}
 			
 			
-			__rootBA.writeByte(0x25);
+			__rootBA.writeByte(0x26);
 			ByteArrayUtil.writeUnsignedShortOrInt(__rootBA , baData.length);
 			__rootBA.writeBytes(baData);
 			

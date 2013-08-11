@@ -22,12 +22,13 @@ package player
 		private var m_hair : HairRender;
 		private var m_body : BodyRender;
 		private var m_mouth : MouthRender;
+		private var m_brow : BrowRender;
 		
 		private var m_hairUnderShape : Shape;
 		private var m_bodyShape : Shape;
 		private var m_headShape : Shape;
 		private var m_eyeSprite : Sprite;
-		private var m_mouthShape : Shape;
+		private var m_heentShape : Shape;
 		private var m_hairTopShape : Shape;
 		
 		
@@ -40,6 +41,8 @@ package player
 			m_hair = new HairRender();
 			m_body = new BodyRender();
 			m_mouth = new MouthRender();
+			m_brow = new BrowRender();
+			
 			
 			var ba : ByteArray = new TestDataBA();
 			ba.endian = Endian.LITTLE_ENDIAN;
@@ -71,6 +74,10 @@ package player
 					{
 						m_mouth.decode(ba , pos + length , m_bitmapData);
 					}
+					else if (flag == 0x26)
+					{
+						m_brow.decode(ba , pos + length , m_bitmapData);
+					}
 					
 					if (ba.position != pos + length)
 					{
@@ -93,8 +100,8 @@ package player
 			m_eyeSprite = new Sprite();
 			addChild(m_eyeSprite);
 			
-			m_mouthShape = new Shape();
-			addChild(m_mouthShape);
+			m_heentShape = new Shape();
+			addChild(m_heentShape);
 
 			m_hairTopShape = new Shape();
 			addChild(m_hairTopShape);
@@ -124,7 +131,9 @@ package player
 			m_hair.render(m_hairUnderShape.graphics  , m_bitmapData , _m , true );
 			m_body.render(m_bodyShape.graphics  , m_bitmapData , xValue , zValue );
 			m_head.render(m_headShape.graphics  , m_bitmapData , _m );
-			m_mouth.render(m_mouthShape.graphics, m_bitmapData , _m );
+			m_heentShape.graphics.clear();
+			m_mouth.render(m_heentShape.graphics, m_bitmapData , _m );
+			m_brow.render(m_heentShape.graphics, m_bitmapData , _m );
 			m_eye.render(m_eyeSprite , m_bitmapData , _m );
 			m_hair.render(m_hairTopShape.graphics  , m_bitmapData , _m , false);
 		}

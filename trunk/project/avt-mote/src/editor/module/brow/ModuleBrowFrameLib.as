@@ -49,7 +49,7 @@ package editor.module.brow
 				visible = false;	
 			}
 			
-			_p.titleText = "Hair Frame Library";
+			_p.titleText = "Brow Frame Library";
 			
 			
 			
