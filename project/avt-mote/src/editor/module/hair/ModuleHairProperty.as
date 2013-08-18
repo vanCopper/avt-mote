@@ -73,7 +73,7 @@ package editor.module.hair
 			
 			if (showChotol)
 			{
-				m_weightReciprocal = new EdtSliderNumber(1 , 80 , "weight reciprocal");
+				m_weightReciprocal = new EdtSliderNumber(1 , 100 , "weight reciprocal");
 				m_ductility = new EdtSliderNumber(0 , 1 , "ductility");
 				m_hardness = new EdtSliderNumber(0 , 4 , "hardness");
 				//m_decline = new EdtSliderNumber(0.5 , 2.5 , "weight decline");

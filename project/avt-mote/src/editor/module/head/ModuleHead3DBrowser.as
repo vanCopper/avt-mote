@@ -43,6 +43,7 @@ package editor.module.head
 		
 		private var m_textCnt : Sprite = new Sprite();
 		private var m_xyzShape : Shape = new Shape();
+		private var m_xyzFakeShape : Shape = new Shape();
 		private var btn : BSSButton;
 		public var renderCallBack : Function;
 		
@@ -58,12 +59,14 @@ package editor.module.head
 				btn.releaseFunction = onAdjust;
 				btn.text = StringPool.MODULE_HEAD_BROWSE_ADJUST;
 				m_xyzShape.visible = false;
+				m_xyzFakeShape.visible = true;
 			}
 			else
 			{
 				btn.releaseFunction = onReset;
 				btn.text = StringPool.MODULE_HEAD_BROWSE_RESET;
 				m_xyzShape.visible = true;
+				m_xyzFakeShape.visible = false;
 			}
 		}
 		
@@ -171,11 +174,16 @@ package editor.module.head
 			m_xyzShape.x = 700;
 			m_xyzShape.y = 410;
 			
+			addChild(m_xyzFakeShape);
+			m_xyzFakeShape.x = 700;
+			m_xyzFakeShape.y = 410;
+			m_xyzFakeShape.alpha = 0.5;
 			
 		}
 		private function onReset(btn:BSSButton):void
 		{
 			m_xyzShape.visible = false;
+			m_xyzFakeShape.visible = true;
 			ModuleHeadData.s_approximationMode = true;
 			btn.text = StringPool.MODULE_HEAD_BROWSE_ADJUST;
 			m_tfMode.text = StringPool.MODULE_HEAD_BROWSE_APPRO;
@@ -196,9 +204,76 @@ package editor.module.head
 			render(m_roX, m_roY, m_roZ);
 			
 		}
+		
+		
+		public var m_xRotorFake : Vertex3D = new Vertex3D();
+		public var m_yRotorFake : Vertex3D = new Vertex3D();
+		public var m_zRotorFake : Vertex3D = new Vertex3D();
+		
+		public var m_absRXFake : Number;
+		public var m_absRYFake : Number;
+		public var m_absRZFake : Number;
+		
+		private function onAdjustFake(xValue : Number, yValue : Number, zValue: Number):void 
+		{
+			m_yRotorFake.x = 0;
+			m_yRotorFake.y = 1;
+			m_yRotorFake.z = 0;
+			
+			
+			m_xRotorFake.x = 1;
+			m_xRotorFake.y = 0;
+			m_xRotorFake.z = 0;
+			
+			m_zRotorFake.x = 0;
+			m_zRotorFake.y = 0;
+			m_zRotorFake.z = -1;
+			
+			m_absRXFake = -xValue;
+			m_absRYFake = -yValue;
+			m_absRZFake = -zValue;
+			
+			var vY1 : Vertex3D = m_yRotorFake.clone();
+			var vX1 : Vertex3D = m_xRotorFake.clone();
+			var vZ1 : Vertex3D = m_zRotorFake.clone();
+			
+			var mZXY : Matrix4x4 = new Matrix4x4();
+			var mZX : Matrix4x4 = new Matrix4x4();
+			var mZ : Matrix4x4 = new Matrix4x4();
+			
+			
+			
+			Matrix4x4.rotateArbitraryAxis(mZ ,  vZ1 , -zValue);
+			mZ.effectPoint3D(vX1.x , vX1.y , vX1.z , vX1);
+			mZ.effectPoint3D(vY1.x , vY1.y , vY1.z , vY1);
+			mZ.effectPoint3D(vZ1.x , vZ1.y , vZ1.z , vZ1);
+			
+			Matrix4x4.rotateArbitraryAxis(mZX ,  vX1 , -yValue);
+			
+			mZX.effectPoint3D(vX1.x , vX1.y , vX1.z , vX1);
+			mZX.effectPoint3D(vY1.x , vY1.y , vY1.z , vY1);
+			mZX.effectPoint3D(vZ1.x , vZ1.y , vZ1.z , vZ1);
+			
+			
+			Matrix4x4.rotateArbitraryAxis(mZXY ,  vY1 , -xValue);
+			
+			mZXY.effectPoint3D(vX1.x , vX1.y , vX1.z , vX1);
+			mZXY.effectPoint3D(vY1.x , vY1.y , vY1.z , vY1);
+			mZXY.effectPoint3D(vZ1.x , vZ1.y , vZ1.z , vZ1);
+			
+			
+			
+			
+			m_yRotorFake = vY1;
+			m_xRotorFake = vX1;
+			m_zRotorFake = vZ1;
+			
+		}
+		
 		private function onAdjust(btn:BSSButton):void 
 		{
 			m_xyzShape.visible = true;
+			m_xyzFakeShape.visible = false;
 			ModuleHeadData.s_approximationMode = false;
 			btn.text = StringPool.MODULE_HEAD_BROWSE_RESET;
 			m_tfMode.text = StringPool.MODULE_HEAD_BROWSE_EXACT;
@@ -223,7 +298,7 @@ package editor.module.head
 			m_tfZRR.text = "0";
 			
 			
-			ModuleHeadData.s_absRX = -m_roZ;
+			ModuleHeadData.s_absRX = -m_roX;
 			ModuleHeadData.s_absRY = -m_roY;
 			ModuleHeadData.s_absRZ = -m_roZ;
 
@@ -321,10 +396,41 @@ package editor.module.head
 			
 			var md : Matrix4x4 = getMatrix(xValue , yValue , zValue);
 		
+			var _yRotor : Vertex3D;
+			var _xRotor : Vertex3D;
+			var _zRotor : Vertex3D;
 				
 			if (ModuleHeadData.s_approximationMode)
 			{
-			
+				onAdjustFake(xValue , yValue, zValue);
+				_yRotor  = m_yRotorFake.clone();
+				_xRotor  = m_xRotorFake.clone();
+				_zRotor  = m_zRotorFake.clone();
+				
+				__v = new Vector.<Number>();
+				for each( ev  in ModuleHeadData.s_vertexRelativeData)
+				{
+					__v.push(ev.x * 0.75 );
+					__v.push(ev.y * 0.75  );
+				}
+
+				{
+					ModuleHeadData.drawTriangles(m_xyzFakeShape.graphics , __v);
+				}
+				
+				
+				//m_xyzFakeShape.graphics.clear();
+				m_xyzFakeShape.graphics.lineStyle(1, 0x00FF00);
+				m_xyzFakeShape.graphics.moveTo(0, 0);
+				m_xyzFakeShape.graphics.lineTo(_yRotor.x * 50, _yRotor.y * 50);
+				
+				m_xyzFakeShape.graphics.lineStyle(1, 0xFF0000);
+				m_xyzFakeShape.graphics.moveTo(0, 0);
+				m_xyzFakeShape.graphics.lineTo(_xRotor.x * 50, _xRotor.y * 50);
+				
+				m_xyzFakeShape.graphics.lineStyle(1, 0x0000FF);
+				m_xyzFakeShape.graphics.moveTo(0, 0);
+				m_xyzFakeShape.graphics.lineTo(_zRotor.x * 50, _zRotor.y * 50);
 			}
 			else {
 				
@@ -332,9 +438,9 @@ package editor.module.head
 				m_tfYRO.text = getDataText(yValue + ModuleHeadData.s_absRY);
 				m_tfZRO.text = getDataText(zValue + ModuleHeadData.s_absRZ);
 			
-				var _yRotor : Vertex3D = ModuleHeadData.s_yRotor.clone();
-				var _xRotor : Vertex3D = ModuleHeadData.s_xRotor.clone();
-				var _zRotor : Vertex3D = ModuleHeadData.s_zRotor.clone();
+				_yRotor  = ModuleHeadData.s_yRotor.clone();
+				_xRotor  = ModuleHeadData.s_xRotor.clone();
+				_zRotor  = ModuleHeadData.s_zRotor.clone();
 				
 				md.effectPoint3D(_yRotor.x,_yRotor.y,_yRotor.z , _yRotor);
 				md.effectPoint3D(_xRotor.x,_xRotor.y,_xRotor.z , _xRotor);
@@ -506,7 +612,8 @@ package editor.module.head
 			GraphicsUtil.removeAllChildren(this);
 			
 			m_xyzShape = null;
-			
+			m_xyzFakeShape = null;
+
 			m_tfMode =
 			m_tfModeR =
 			m_tfModeO =
@@ -525,6 +632,11 @@ package editor.module.head
 			m_tfZRR = null;
 					
 			m_textCnt = null;
+			
+			
+			m_xRotorFake =
+			m_yRotorFake =
+			m_zRotorFake = null;
 			
 			renderCallBack = null;
 		}
