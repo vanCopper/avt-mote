@@ -14,6 +14,7 @@
 	{
 		private var m_player : AVTMPlayer;
 		private var m_Rz : Number = 0;
+		private var m_Oz : Number = 0;
 		
 		private var m_lastRX : Number = 0;
 		private var m_lastRY : Number = 0;
@@ -33,10 +34,11 @@
 			addChild(m_player);
 			
 			m_player.x = 300;
-			m_player.y = 300;
+			m_player.y = 220;
 			
 			//stage.addEventListener(MouseEvent.MOUSE_MOVE , onMouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN , onMouseDown);
+			stage.addEventListener(MouseEvent.MOUSE_WHEEL , onMouseWheel);
 			
 			m_player.render(null , 0 , 0 ,0);
 			
@@ -47,14 +49,22 @@
 			this.addEventListener(Event.ENTER_FRAME , onUpdate);
 		}
 		
+		private function onMouseWheel(e:MouseEvent):void 
+		{
+			if (e.delta > 0)
+				m_Oz += 0.01;
+			else
+				m_Oz -= 0.01;
+		}
+		
 		private function onUpdate(e:Event):void 
 		{
 			var mXOff : Number = (mouseX - m_player.x);
 			var mYOff : Number = (mouseY - m_player.y);
 			
-			var _xR : Number = - mXOff / 300 * 0.1;
-			var _yR : Number = -0.1 +  mYOff / 300 * 0.1;
-			m_Rz += 0.03;
+			var _xR : Number = - mXOff / 600 * 0.1;
+			var _yR : Number = mYOff / 600 * 0.1;
+			m_Rz += 0.02;
 			var _zR : Number =  Math.sin(m_Rz) * Math.PI / 180 * 2;
 			
 			
@@ -97,9 +107,9 @@
 			}
 			
 
-			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_dRx, _dRy, _zR);
+			var _currentMatrix  : Matrix4x4 = m_player.getMatrix(_dRx, _dRy, m_Oz + _zR);
 			//_currentMatrix.identity();
-			m_player.render(_currentMatrix , _dRx , _dRy , _zR);
+			m_player.render(_currentMatrix , _dRx , _dRy , m_Oz + _zR);
 			
 			m_lastRX = _dRx;
 			m_lastRY = _dRy;
@@ -123,6 +133,7 @@
 		private function onMouseDown(e:MouseEvent):void 
 		{
 			m_player.blinkEye();
+			m_player.mouthSpeak();
 		}
 		
 		
