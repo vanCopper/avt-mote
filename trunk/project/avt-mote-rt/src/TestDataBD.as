@@ -6,7 +6,7 @@ package
 	 * ...
 	 * @author blueshell
 	 */
-	[Embed(source="../../demo/mergeImage_0.png")]
+	[Embed(source="../res/mergeImage_0.png")]
 	public class TestDataBD extends BitmapData
 	{
 		

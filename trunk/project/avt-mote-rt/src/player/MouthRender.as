@@ -37,6 +37,9 @@ package player
 				return;
 				
 			var _frameListLength : int = m_frameList.length;
+			
+			
+			/*
 			if (changeFrame)
 			{
 				changeFrame--;
@@ -56,7 +59,7 @@ package player
 					}
 					
 				}
-			}
+			}*/
 						
 			
 			if (m_curFrame < _frameListLength)
