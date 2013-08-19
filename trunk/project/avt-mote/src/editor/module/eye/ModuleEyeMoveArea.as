@@ -50,10 +50,11 @@ package editor.module.eye
 			m_mefsRoll = new ModuleEyeFrameSprite(null);
 			addChild(m_mefs);
 			addChild(m_mefsRoll);
-			m_mefs.x = 150;
-			m_mefs.y = 200;
-			m_mefsRoll.y = 200;
-			m_mefsRoll.x = 350;
+			m_mefs.x = 170;
+			m_mefs.y = 150;
+			
+			m_mefsRoll.x = 400;
+			m_mefsRoll.y = m_mefs.y;
 			
 			m_circleShape = new Shape();
 			
@@ -69,6 +70,8 @@ package editor.module.eye
 			m_eyeBallTopSp = new Sprite;
 			
 			var _sp : Sprite = new Sprite();
+			m_mefs.scaleX = m_mefs.scaleY =  _sp.scaleX = _sp.scaleY = 2;
+			
 			_sp.addChild(m_eyeBallLeftSp);
 			_sp.addChild(m_eyeBallRightSp);
 			_sp.addChild(m_eyeBallTopSp);
