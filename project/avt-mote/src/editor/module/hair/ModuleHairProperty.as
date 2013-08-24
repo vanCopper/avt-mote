@@ -245,7 +245,7 @@ package editor.module.hair
 			
 			if (m_massVector)
 			{
-				const windStep : Number = 1 / (m_massVector[0].length - 1);
+				const windStep : Number = 1 / 4;// (m_massVector[0].length - 1);
 				for each (var _hairSpring : Vector.<ModuleHairMassPoint> in m_massVector)
 				{
 					var _li : int = 0;
