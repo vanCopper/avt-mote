@@ -94,7 +94,7 @@ package editor.module.hair
 				
 			}
 			
-			onRenderChange(null , __v , md );
+			onRenderChange(null , __v , md , m_xR , m_yR , 0);
 			
 		}
 		
@@ -119,14 +119,14 @@ package editor.module.hair
 			}
 		}
 		
-		private function onRenderChange(_browser : ModuleHead3DBrowser , __v : Vector.<Number> , md : Matrix4x4):void
+		private function onRenderChange(_browser : ModuleHead3DBrowser , __v : Vector.<Number> , md : Matrix4x4 , xValue : Number, yValue : Number, zValue: Number):void
 		{
 			ModuleHeadData.drawTriangles(m_headView.graphics , __v);
 			
 			if (m_hairVector)
 			{
 				for each(var mhp : ModuleHairProperty in m_hairVector )
-					mhp.onRenderChange(_browser , __v , md);
+					mhp.onRenderChange(_browser , __v , md , xValue , yValue , zValue);
 			} 
 			
 		}
