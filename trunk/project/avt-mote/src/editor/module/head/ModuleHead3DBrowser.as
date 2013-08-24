@@ -487,7 +487,14 @@ package editor.module.head
 			}
 			
 			if (renderCallBack != null)
-				renderCallBack(this , __v , md);
+			{
+				if (renderCallBack.length == 3)
+					renderCallBack(this , __v , md);
+				else if (renderCallBack.length == 6)
+					renderCallBack(this , __v , md , xValue , yValue , zValue );
+				
+			}
+				
 		}
 		
 		public static function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4

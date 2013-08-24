@@ -28,7 +28,7 @@ package player
 			
 		}
 
-		public function render(g:Graphics  , bitmapData : BitmapData , md : Matrix4x4 , underHead : Boolean):void
+		public function render(g:Graphics  , bitmapData : BitmapData , md : Matrix4x4 , _rz : Number , underHead : Boolean):void
 		{
 			if (!m_changed && md)
 			{
@@ -51,7 +51,7 @@ package player
 				g.beginBitmapFill(bitmapData,null,false,true);
 				for (i = 0 ; i < m_underHairlength; i++ )
 				{
-					m_frameList[i].updateAndRender(g);
+					m_frameList[i].updateAndRender(g , _rz);
 					
 				}
 				g.endFill();
@@ -62,7 +62,7 @@ package player
 				var _frameListLength : int = m_frameList.length;
 				for (i = m_underHairlength ; i < _frameListLength; i++ )
 				{
-					m_frameList[i].updateAndRender(g);
+					m_frameList[i].updateAndRender(g , _rz);
 				}
 				g.endFill();
 			}

@@ -78,7 +78,7 @@ package player.struct
 				
 		}
 		
-		private function updatePos():void 
+		private function updatePos(_rz : Number):void 
 		{
 			
 			const damp : Number = HairRender.DAMP;
@@ -121,12 +121,14 @@ package player.struct
 						fSpring.x = Math.cos(_newRadian) * _fStringRate;
 						fSpring.y = Math.sin(_newRadian) * _fStringRate;
 						
-						
+						//trace(hardness);
 						
 						var fRadian : Point = new Point();
-						
-						
-						var _rOff : Number = _hmp.radian - _newRadian;
+						var _rOff : Number;
+						//if (_li == 0)
+							_rOff = _rz * 0 + _hmp.radian - _newRadian;
+						//else
+						//	_rOff = _hmp.radian - _newRadian;
 						if (_rOff > Math.PI *2)
 							_rOff -= Math.PI * 2;
 						else if (_rOff < 0)
@@ -161,9 +163,9 @@ package player.struct
 			
 		}
 		
-		public function updateAndRender(g:Graphics):void
+		public function updateAndRender(g:Graphics , _rz : Number):void
 		{
-			updatePos();
+			updatePos(_rz);
 			var __v : Vector.<Number> = new Vector.<Number>();
 				
 			for (var i : int = 0 ; i < totalLine ; i++ )

@@ -128,14 +128,14 @@ package player
 			sinWind += 0.02;
 			HairRender.WIND =  -0.02 * Math.abs(Math.sin(sinWind)) + 0.004;
 			
-			m_hair.render(m_hairUnderShape.graphics  , m_bitmapData , _m , true );
+			m_hair.render(m_hairUnderShape.graphics  , m_bitmapData , _m , zValue , true );
 			m_body.render(m_bodyShape.graphics  , m_bitmapData , xValue , zValue );
 			m_head.render(m_headShape.graphics  , m_bitmapData , _m );
 			m_heentShape.graphics.clear();
 			m_mouth.render(m_heentShape.graphics, m_bitmapData , _m );
 			m_brow.render(m_heentShape.graphics, m_bitmapData , _m );
 			m_eye.render(m_eyeSprite , m_bitmapData , _m );
-			m_hair.render(m_hairTopShape.graphics  , m_bitmapData , _m , false);
+			m_hair.render(m_hairTopShape.graphics  , m_bitmapData , _m , zValue , false);
 		}
 		
 		public function getMatrix(xValue : Number, yValue : Number, zValue: Number) : Matrix4x4

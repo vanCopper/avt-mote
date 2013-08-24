@@ -182,7 +182,7 @@ package editor.module.hair
 				parent.removeChild(this);
 		}
 		
-		internal function onRenderChange(_browser : ModuleHead3DBrowser , __v : Vector.<Number> , md : Matrix4x4):void
+		internal function onRenderChange(_browser : ModuleHead3DBrowser , __v : Vector.<Number> , md : Matrix4x4 , xValue : Number, yValue : Number, zValue: Number):void
 		{
 			if (m_data && m_data.vertexPerLine && m_data.vertexData)
 			{
@@ -195,6 +195,8 @@ package editor.module.hair
 					i++;
 				}
 			}
+			
+			m_roZ = zValue;
 			
 		}
 		
@@ -214,14 +216,15 @@ package editor.module.hair
 			if (m_browser) m_browser.deactivate();
 		}
 		
+		private var m_roZ : Number = 0;
 		private function onUpdate(e:Event):void 
 		{
-			next();
+			next(m_roZ);
 		}
 		
 		
 		
-		private function next():void 
+		private function next(_rz : Number):void 
 		{
 			
 			const damp : Number = ModuleHairData.s_damp;
@@ -278,7 +281,7 @@ package editor.module.hair
 						var fRadian : Point = new Point();
 						
 						
-						var _rOff : Number = _hmp.radian - _newRadian;
+						var _rOff : Number = _rz * 0 + _hmp.radian - _newRadian;
 						if (_rOff > Math.PI *2)
 							_rOff -= Math.PI * 2;
 						else if (_rOff < 0)
@@ -348,7 +351,7 @@ package editor.module.hair
 		public function refresh():void
 		{
 			if (m_lineShape)
-			m_lineShape.graphics.clear();
+				m_lineShape.graphics.clear();
 			m_hairShape.graphics.clear();
 			
 			if (m_massVector)
@@ -483,7 +486,7 @@ package editor.module.hair
 				
 				if(m_browser) addChild(m_lineShape);
 				if(m_browser)
-					onRenderChange(m_browser , null , m_browser.getCurMatrix());
+					onRenderChange(m_browser , null , m_browser.getCurMatrix() , 0 , 0 , m_roZ);
 				
 			} else {
 				m_massVector = null;
