@@ -107,7 +107,7 @@ package
 		protected static const inputFilterArray : Array = [new FileFilter("avt-mote xml ascii file)" , "*.amxmla") /* , new FileFilter("avt-mote xml binary file" , "*.amxmlb")*/ ]
 		private function onOpen(btn:BSSButton):void 
 		{
-			new FilePicker( onOpenBA , inputFilterArray );			
+			new FilePicker( onOpenBA , inputFilterArray , false);			
 		}
 		protected function onOpenBA(_filename : String , ba : ByteArray):void
 		{

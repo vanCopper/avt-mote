@@ -653,7 +653,7 @@ package editor.module.head
 		}
 		
 		private function onOpen(btn : BSSButton) : void {
-			new ImagePicker( onLoadImage , [new FileFilter("image (*.png)" , "*.png")]);
+			new ImagePicker( onLoadImage , [new FileFilter("image (*.png)" , "*.png")] , false);
 		}
 		
 		private function onLoadImage(_filename : String ,bitmapData : BitmapData) : void

@@ -403,7 +403,7 @@ package editor.module.mouth
 		
 		
 		private function onOpen(btn : BSSButton) : void {
-			new ImageListPicker( onLoadImage , [new FileFilter("image list(*.imglist)" , "*.imglist") , new FileFilter("image (*.png)" , "*.png")]);
+			new ImageListPicker( onLoadImage , [new FileFilter("image list(*.imglist)" , "*.imglist") , new FileFilter("image (*.png)" , "*.png")] , true);
 		}
 
 		
