@@ -17,10 +17,10 @@ package editor.util
 		protected var m_callback : Function;
 		public var m_filename : String;
 		
-		public function ImagePicker(callback : Function ,filefArray : Array) 
+		public function ImagePicker(callback : Function ,filefArray : Array  , multiFile : Boolean) 
 		{
 			m_callback = callback;
-			new FilePicker(onBA , filefArray);
+			new FilePicker(onBA , filefArray , multiFile);
 		}
 		private function onBA(_filename : String , ba : ByteArray):void
 		{

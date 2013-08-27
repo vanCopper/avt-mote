@@ -305,7 +305,7 @@ package editor.module.body
 		
 		
 		private function onOpen(btn : BSSButton) : void {
-			new ImageListPicker( onLoadImage , [ new FileFilter("image (*.png)" , "*.png") , new FileFilter("image list(*.imglist)" , "*.imglist")]);
+			new ImageListPicker( onLoadImage , [ new FileFilter("image (*.png)" , "*.png") , new FileFilter("image list(*.imglist)" , "*.imglist")] , true);
 		}
 
 		

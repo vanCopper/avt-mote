@@ -3,6 +3,7 @@ package editor.util
 	import editor.config.Config;
 	import flash.events.Event;
 	import flash.net.FileReference;
+	import flash.net.FileReferenceList;
 	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
 	/**
@@ -13,10 +14,13 @@ package editor.util
 	{
 		protected var m_callback : Function;
 		public var m_filename : String;
+		private var m_fileList : Array;
 		
 		private var m_filePickerAir : Object;
 		
-		private static var s_fbOpen : FileReference;
+		private static var s_fbOpen : FileReferenceList;
+		private static var s_fr  : FileReference;
+		
 		public static var s_lastOpen : String = "";
 		
 		public static function getShortName(s:String):String
@@ -33,15 +37,21 @@ package editor.util
 		}
 		
 		
-		private function airOpenCallBack(_filename : String , ba : ByteArray ):void
+		private function airOpenCallBack(_filename : String , ba : ByteArray , len : int):void
 		{
 			m_filename = _filename;
 			if (m_callback != null)
-				m_callback(m_filename , ba);
-			m_callback = null;
+			{	
+				if (m_callback.length == 2)
+					m_callback(m_filename , ba);
+				else if (m_callback.length == 3)
+					m_callback(m_filename , ba , len);
+			}
+			if (len == 0)
+				m_callback = null;
 		}
 		
-		public function FilePicker(callback : Function , filefArray : Array)
+		public function FilePicker(callback : Function , filefArray : Array , multiFile : Boolean)
 		{
 			m_callback = callback;
 			
@@ -52,15 +62,32 @@ package editor.util
 					m_filePickerAir = new _filePickerAir();
 					
 				if (m_filePickerAir)
-					m_filePickerAir.openFile(airOpenCallBack , filefArray);
+					m_filePickerAir.openFile(airOpenCallBack , filefArray , multiFile);
 			}
 			else {
-				if (!s_fbOpen)
-					s_fbOpen = new FileReference();
 				
-				s_fbOpen.addEventListener(Event.SELECT, onSelect);
-				s_fbOpen.addEventListener(Event.CANCEL, onCancel);
-				s_fbOpen.browse(filefArray);
+				if (multiFile)
+				{
+					if (!s_fbOpen)
+					{	
+						s_fbOpen = new FileReferenceList();
+						
+					}
+					s_fbOpen.addEventListener(Event.SELECT, onSelect);
+					s_fbOpen.addEventListener(Event.CANCEL, onCancel);
+					s_fbOpen.browse(filefArray);
+				}
+				else
+				{
+					if (!s_fr)
+					{	
+						s_fr = new FileReference();
+					}
+					s_fr.addEventListener(Event.SELECT, onSelect);
+					s_fr.addEventListener(Event.CANCEL, onCancel);
+					s_fr.browse(filefArray);
+				}
+				
 			}
 			
 			
@@ -68,24 +95,52 @@ package editor.util
 		
 		private function onCancel(e:Event):void 
 		{
-			s_fbOpen.removeEventListener(Event.SELECT, onSelect);
-			s_fbOpen.removeEventListener(Event.CANCEL, onCancel);
+			e.currentTarget.removeEventListener(Event.SELECT, onSelect);
+			e.currentTarget.removeEventListener(Event.CANCEL, onCancel);
 		}
 		
-		
+		private function loadAFile():void
+		{
+			
+			if (m_fileList && m_fileList.length)
+			{
+				s_fr = m_fileList.shift() as FileReference;
+				if (m_fileList.length == 0)
+					m_fileList = null;
+					
+				m_filename = s_fr.name;
+				s_fr.addEventListener(Event.COMPLETE , onSelectLoad);
+				s_fr.load();
+			
+				
+			}
+			
+		}
 	
 		private function onSelect(event : Event)
 		: void 
 		{
-			var fb : FileReference = FileReference(event.currentTarget);
-			s_fbOpen.removeEventListener(Event.SELECT, onSelect);
-			s_fbOpen.removeEventListener(Event.CANCEL, onCancel);
 			
 			
-			m_filename = fb.name;
+			event.currentTarget.removeEventListener(Event.SELECT, onSelect);
+			event.currentTarget.removeEventListener(Event.CANCEL, onCancel);
 			
-			fb.addEventListener(Event.COMPLETE , onSelectLoad);
-			fb.load();
+			
+			var fb : FileReferenceList = (event.currentTarget) as FileReferenceList;
+			if (fb)
+			{	
+				m_fileList = fb.fileList;
+				loadAFile();
+			}
+			else
+			{
+				var fr : FileReference = (event.currentTarget) as FileReference;
+				m_fileList = null;
+				
+				m_filename = s_fr.name;
+				s_fr.addEventListener(Event.COMPLETE , onSelectLoad);
+				s_fr.load();
+			}
 		}
 	
 		
@@ -100,8 +155,18 @@ package editor.util
 			var ba : ByteArray = fb.data;
 			
 			if (m_callback != null)
-				m_callback(m_filename , ba);
-			m_callback = null;
+			{	
+				if (m_callback.length == 2)
+					m_callback(m_filename , ba);
+				else if (m_callback.length == 3)
+					m_callback(m_filename , ba , m_fileList ? m_fileList.length : 0);
+			}
+			if (!m_fileList)
+				m_callback = null;
+				
+			loadAFile();
+			
+			
 		
 		}
 		
