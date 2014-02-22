@@ -82,7 +82,7 @@
 					
 					m_player.brow.browL = browLES.value;
 					m_player.brow.browR = browRES.value;
-
+					m_player.body.breathOff = 1 / breathES.value;
 				}
 				
 				var _rx : Number = rxES.value;
@@ -185,6 +185,7 @@
 		private var eyeIndexRES : EdtSliderNumber;
 		private var browLES : EdtSliderNumber;
 		private var browRES : EdtSliderNumber;
+		private var breathES : EdtSliderNumber;
 		
 		private function initSilder():void
 		{
@@ -199,7 +200,7 @@
 			,	-1, m_player.eye.totalFrames - 1, -1, "eyeIndexR", true
 			,	0, m_player.brow.totalFrames - 1, 0, "browL", true
 			,	0, m_player.brow.totalFrames - 1, 0, "browR", true
-
+			,	10, 70, 50, "breath", true
 			
 			];
 			

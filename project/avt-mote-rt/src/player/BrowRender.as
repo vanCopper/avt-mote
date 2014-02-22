@@ -31,6 +31,23 @@ package player
 		private var m_curFrameR : int;
 		public var changeFrame : int;
 		
+		CONFIG::AVT_CONFIGER {
+		public function get totalFrames():uint
+		{
+			return m_frameList.length;
+		}
+		
+		public function set browL(v:int):void
+		{
+			m_curFrameL = v;
+		}
+		public function set browR(v:int):void
+		{
+			m_curFrameR = v;
+		}
+		
+		
+		}
 		public function BrowRender() 
 		{
 			
