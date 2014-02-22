@@ -26,6 +26,17 @@ package player
 		private var m_curFrame : int;
 		public var changeFrame : int;
 		
+		CONFIG::AVT_CONFIGER {
+		public function get totalFrames():uint
+		{
+			return m_frameList.length;
+		}
+		public function set currentFrame(v:uint):void
+		{
+			m_curFrame = v;
+		}
+		}
+
 		public function MouthRender() 
 		{
 			

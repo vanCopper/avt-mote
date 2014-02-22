@@ -4,12 +4,12 @@
   <output>
     <movie disabled="False" />
     <movie input="" />
-    <movie path="bin\avtmotert.swf" />
+    <movie path="bin\avtmoteconf.swf" />
     <movie fps="30" />
-    <movie width="600" />
+    <movie width="800" />
     <movie height="600" />
     <movie version="10" />
-    <movie background="#FFFFFF" />
+    <movie background="#666666" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -37,8 +37,8 @@
     <option linkReport="" />
     <option loadExterns="" />
     <option staticLinkRSL="True" />
-    <option additional="" />
-    <option compilerConstants="CONFIG::AVT_CONFIGER,false&#xA;CONFIG::AVT_RUNTIME,true" />
+    <option additional="+configname=air" />
+    <option compilerConstants="CONFIG::ASSERT,false&#xA;CONFIG::DEBUG,false&#xA;CONFIG::AVT_CONFIGER,true&#xA;CONFIG::AVT_RUNTIME,false" />
     <option customSDK="" />
   </build>
   <!-- SWC Include Libraries -->
@@ -67,19 +67,20 @@
   </library>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>
-    <compile path="src\AVTRuntime.as" />
+    <compile path="src\AVTConfiger.as" />
   </compileTargets>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand />
+  <preBuildCommand>taskkill /f /fi "IMAGENAME eq adl.exe"</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="Default" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="$(FlexSDK)\bin\adl.exe;application.xml bin" />
   </options>
 </project>

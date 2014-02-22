@@ -66,8 +66,42 @@ package player
 		private var m_curFrame : int;
 		public var curLag : int = m_maxLag;
 		
+		CONFIG::AVT_CONFIGER {
+		public var m_forceIndexL : int = -1;
+		public var m_forceIndexR : int = -1;
+		
+		private var m_bitmapData : BitmapData;
+		
+		
+		public function set forceIndexL (v : int):void
+		{
+			m_changed = true;//m_forceIndexL != v;
+			if (m_changed) {
+				m_forceIndexL = v;
+			}
+		}
+
+		public function set forceIndexR (v : int):void
+		{
+			m_changed = true;// m_forceIndexR != v;
+			if (m_changed) {
+				m_forceIndexR = v;
+			}
+		}
+		
+		
+		public function get totalFrames():uint
+		{
+			return m_frameList.length;
+		}
+		}
+
+		
 		public function decode(baData : ByteArray , endPos : uint ,a_bitmapData:BitmapData) : void
 		{
+			CONFIG::AVT_CONFIGER {
+			m_bitmapData = a_bitmapData;
+			}
 			while (baData.position < endPos)
 			{
 				var _flag : int = baData.readByte();
@@ -165,13 +199,23 @@ package player
 			
 			
 		}
+		private var m_lastAimX : Number;
+		private var m_lastAimY : Number;
 		
-		public function render(sp:Sprite , bitmapData : BitmapData, md : Matrix4x4):void
+		public function render(sp:Sprite , bitmapData : BitmapData, md : Matrix4x4 , aimX : Number, aimY: Number) : void
 		{
 			
 			if (!m_frameList || !m_frameList.length)
 				return;
 			
+			if (m_lastAimX != aimX || m_lastAimY != aimY )
+			{
+				m_lastAimX = aimX;
+				m_lastAimY = aimY;
+				m_changed = true;
+			}
+				
+				
 			if (!m_changed && md)
 			{
 				m_changed = !md.isEqual(m_matrix);
@@ -201,34 +245,110 @@ package player
 				m_matrix = md;
 				m_changed = false;
 				
-				if (m_frameList && m_blinkIndexL)
-				{	
+				if (!m_frameList)
+					return;
+					
+				CONFIG::AVT_CONFIGER {
+				if (m_forceIndexL != -1 || m_forceIndexR != -1)
+				{
+					var _forceIndexL : int = m_forceIndexL;
+					var _forceIndexR : int = m_forceIndexR;
+
+					if (_forceIndexL == -1)
+					{
+						_forceIndexL = (m_blinkIndexL && m_blinkIndexL.length) ? m_blinkIndexL[0] : 0;
+					}
+
+					if (_forceIndexR == -1)
+					{
+						_forceIndexR = (m_blinkIndexR && m_blinkIndexR.length) ? m_blinkIndexR[0] : 0;
+					}	
+
+					if (_forceIndexL >= m_frameList.length)
+					{
+						_forceIndexL = 0;
+					}
+
+					if (_forceIndexR >= m_frameList.length)
+					{
+						_forceIndexR = 0;
+					}
+
+					_lEyeFrameData = m_frameList[_forceIndexL];
+					_rEyeFrameData = m_frameList[_forceIndexR];
+
+					if (!_lEyeFrameData.eyeVertex3D)
+						_lEyeFrameData.init(bitmapData , m_eyeMatrix , m_eyeLPlane , m_eyeLScale , m_eyeLLocateX , m_eyeLLocateY);
+						
+					if (!_rEyeFrameData.eyeVertex3D)
+						_rEyeFrameData.init(bitmapData , m_eyeMatrix , m_eyeRPlane , m_eyeRScale , m_eyeRLocateX , m_eyeRLocateY );
+
+				}
+				else if (m_blinkIndexL && m_blinkIndexL.length)
+				{
 					var _lEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexL[m_curFrame]];
 					var _rEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexR[m_curFrame]];
+					
+				}
+				
+						
+				}
+				CONFIG::AVT_RUNTIME {
+					if (m_blinkIndexL && m_blinkIndexL.length)
+					{
+						var _lEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexL[m_curFrame]];
+						var _rEyeFrameData : EyeFrameData = m_frameList[m_blinkIndexR[m_curFrame]];
+						
+					}
+				}
+				if (_lEyeFrameData && _rEyeFrameData)
+				{	
 					
 					
 					var _vx : Number;
 					var _vy : Number;
 					
-					var mXOff : Number = (sp.mouseX);
-					var mYOff : Number = (sp.mouseY);
+					if (!m_eyeLCenter || !m_eyeRCenter)
+						return;
+					
+	
+					var _vlx : Number = (md.Xx * m_eyeLCenter.x + md.Xy * m_eyeLCenter.y + md.Xz * m_eyeLCenter.z) ;
+					var _vly : Number  = (md.Yx * m_eyeLCenter.x + md.Yy * m_eyeLCenter.y + md.Yz * m_eyeLCenter.z) ;	
+					var _vrx : Number = (md.Xx * m_eyeRCenter.x + md.Xy * m_eyeRCenter.y + md.Xz * m_eyeRCenter.z) ;
+					var _vry : Number = (md.Yx * m_eyeRCenter.x + md.Yy * m_eyeRCenter.y + md.Yz * m_eyeRCenter.z) ;
+												
+					var mXOff : Number = (_vlx + _vrx) / 2 + (aimX);
+					var mYOff : Number = (_vly + _vry) / 2 + (aimY);
 						
-					if (m_eyeLCenter)
+					CONFIG::AVT_CONFIGER {
+
+						{		
+							_lEyeFrameData = _lEyeFrameData.cloneLinked();
+							_lEyeFrameData.reinit(m_bitmapData , m_eyeMatrix , m_eyeLPlane , m_eyeLScale , m_eyeLLocateX , m_eyeLLocateY);
+							_rEyeFrameData = _rEyeFrameData.cloneLinked();
+							_rEyeFrameData.init(m_bitmapData , m_eyeMatrix , m_eyeRPlane , m_eyeRScale , m_eyeRLocateX , m_eyeRLocateY);
+							
+						}
+					}
+							
 					{
-						_vx = (md.Xx * m_eyeLCenter.x + md.Xy * m_eyeLCenter.y + md.Xz * m_eyeLCenter.z) ;
-						_vy = (md.Yx * m_eyeLCenter.x + md.Yy * m_eyeLCenter.y + md.Yz * m_eyeLCenter.z) ;
-						
+						_vx = _vlx;
+						_vy = _vly;
 						
 						
 						var _lRadian : Number = Math.atan2(mYOff - _vy , mXOff - _vx );
 						var _lRate : Number = Math.sqrt((mYOff - _vy)*(mYOff - _vy) + (mXOff - _vx )*(mXOff - _vx ));
 							_lRate /= AIM_LENGTH;
+						
+						_lRate += 0.8;
+						_lRate = Math.sqrt(_lRate);
+						_lRate -= 0.89;
+						
 						if (_lRate > 1) 
 							_lRate = 1;
-				
+							
 						if (!isNaN(m_eaL))
 						{
-							
 							var pt : Point = getXYOfArea(_lRadian,true,_lRate);
 						
 							if (_lEyeFrameData.eyeBall)
@@ -240,20 +360,27 @@ package player
 							
 						}
 					}
-					if (m_eyeRCenter)
+
 					{
-						_vx = (md.Xx * m_eyeRCenter.x + md.Xy * m_eyeRCenter.y + md.Xz * m_eyeRCenter.z) ;
-						_vy = (md.Yx * m_eyeRCenter.x + md.Yy * m_eyeRCenter.y + md.Yz * m_eyeRCenter.z) ;
 						
+							
+						_vx = _vrx;
+						_vy = _vry;
+							
 						var _rRadian : Number = Math.atan2(mYOff - _vy , mXOff - _vx );
 						var _rRate : Number = Math.sqrt((mYOff - _vy)*(mYOff - _vy) + (mXOff - _vx )*(mXOff - _vx ));
 							_rRate /= AIM_LENGTH;
+					
+						_rRate += 0.8;
+						_rRate = Math.sqrt(_rRate);
+						_rRate -= 0.89;
+						
 						if (_rRate > 1) 
 							_rRate = 1;
-				
-						if (!isNaN(m_eaL))
-						{
 							
+						if (!isNaN(m_eaR))
+						{
+								
 							pt = getXYOfArea(_rRadian,true,_rRate);
 						
 							if (_rEyeFrameData.eyeBall)
@@ -262,11 +389,30 @@ package player
 								_rEyeFrameData.eyeBallY = pt.y + m_eCenterRY - _rEyeFrameData.eyeBall.rectH / 2; 
 								_rEyeFrameData.updateEyeBallVertex3D(m_eyeMatrix , m_eyeRPlane, m_eyeRScale , m_eyeRLocateX , m_eyeRLocateY);
 							}
-							
-							
-							
-						}
+						}	
+				
+				
 					}
+					/*
+					var _off : Number = _lRate - _rRate;
+					trace(_off);
+					if (_off < 0.2 )
+					{
+						if (_lRate > _rRate)
+						{
+							_lRate -= _off*_off;
+						}
+						else
+						{
+							_lRate -= _off*_off;
+						}
+						
+					}*/
+					
+					
+				
+					
+					
 					
 					drawEye(sp , bitmapData , md , _lEyeFrameData , _rEyeFrameData);
 				}
@@ -274,7 +420,7 @@ package player
 			//else
 			//	trace("skip a eye render")
 			
-			
+			_lEyeFrameData = _rEyeFrameData = null;
 		}
 		
 		///////
@@ -354,13 +500,17 @@ package player
 			//else if (vleng == 24)
 			//	indices = indices24;
 			
-			g.beginBitmapFill(bitmapData,null,false,true);
-			g.drawTriangles(
-				vertices.slice(start,start + vleng),//flash bug
-				indices,
-				uvtData
-			);
-			g.endFill();
+			try {
+				g.beginBitmapFill(bitmapData,null,false,true);
+				g.drawTriangles(
+					vertices.slice(start,start + vleng),//flash bug
+					indices,
+					uvtData
+				);
+				g.endFill();
+			} catch (e:Error) {
+				trace(e);
+			}
 		}
 		
 		
@@ -405,6 +555,7 @@ package player
 				start += 8;
 			}
 			
+			if (start < v.length)
 			drawEyeMaskArray(shpMask.graphics , v , start);
 			
 			
@@ -417,7 +568,7 @@ package player
 			start = 0;
 			if (_rightEyeData.vertexLength)
 			{
-				drawEyeArray(shp.graphics, v , _leftEyeData.eyeVertex3DUV, bitmapData , start , _rightEyeData.vertexLength);
+				drawEyeArray(shp.graphics, v , _rightEyeData.eyeVertex3DUV, bitmapData , start , _rightEyeData.vertexLength);
 				start +=  _rightEyeData.vertexLength;
 			}
 			if (_rightEyeData.eyeLip)
@@ -425,7 +576,7 @@ package player
 				drawEyeArray(shpLip.graphics , v, _rightEyeData.eyeLip.genUV(bitmapData) , bitmapData , start  , 8);
 				start += 8;
 			}
-			
+			if (start < v.length)
 			drawEyeMaskArray(shpMask.graphics , v , start);
 			
 		}

@@ -31,10 +31,21 @@ package player
 		private var m_heentShape : Shape;
 		private var m_hairTopShape : Shape;
 		
+		public var eyeAimX : Number = 0;
+		public var eyeAimY : Number = 0;
 		
-		public function AVTMPlayer() 
+		CONFIG::AVT_CONFIGER {
+		public function get head() : HeadRender { return m_head; };
+		public function get eye() : EyeRender { return m_eye; };
+		public function get hair() : HairRender { return m_hair; };
+		public function get body() : BodyRender { return m_body; };
+		public function get mouth() : MouthRender { return m_mouth; };
+		public function get brow() : BrowRender { return m_brow; };
+		}
+		
+		public function AVTMPlayer(ba:ByteArray , bd:BitmapData) 
 		{
-			m_bitmapData = new TestDataBD();
+			m_bitmapData = bd;
 			///addChild(new Bitmap(m_bitmapData));
 			m_head = new HeadRender();
 			m_eye = new EyeRender();
@@ -44,7 +55,7 @@ package player
 			m_brow = new BrowRender();
 			
 			
-			var ba : ByteArray = new TestDataBA();
+			var ba : ByteArray = ba;
 			ba.endian = Endian.LITTLE_ENDIAN;
 			
 			//var filehead : String = ;
@@ -134,7 +145,7 @@ package player
 			m_heentShape.graphics.clear();
 			m_mouth.render(m_heentShape.graphics, m_bitmapData , _m );
 			m_brow.render(m_heentShape.graphics, m_bitmapData , _m );
-			m_eye.render(m_eyeSprite , m_bitmapData , _m );
+			m_eye.render(m_eyeSprite , m_bitmapData , _m  , eyeAimX , eyeAimY  );
 			m_hair.render(m_hairTopShape.graphics  , m_bitmapData , _m , zValue , false);
 		}
 		
@@ -144,6 +155,22 @@ package player
 				return m_head.getMatrix(xValue, yValue, zValue);
 			
 			return null;
+		}
+		
+		public function dispose():void
+		{
+			if (m_bitmapData) m_bitmapData.dispose();
+			m_bitmapData = null;
+			///addChild(new Bitmap(m_bitmapData));
+			m_head = null;
+			m_eye = null;
+			m_hair = null;
+			m_body = null;
+			m_mouth = null;
+			m_brow = null;
+			
+			if (parent)
+				parent.removeChild(this);
 		}
 		
 	}
