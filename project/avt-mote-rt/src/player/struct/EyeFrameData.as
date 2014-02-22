@@ -33,6 +33,21 @@ package player.struct
 		{
 			
 		}
+		CONFIG::AVT_CONFIGER
+		public function cloneLinked() : EyeFrameData
+		{
+			var efd : EyeFrameData = new EyeFrameData();
+			efd.eyeBall = eyeBall;
+			efd.eyeLip = eyeLip;
+			efd.eyeWhite = eyeWhite;
+			efd.eyeMaskData = eyeMaskData;
+			efd.eyeVertex3DUV = eyeVertex3DUV;
+			efd.vertexLength = vertexLength;
+			efd.eyeLipX = eyeLipX;
+			efd.eyeLipY = eyeLipY;
+
+			return efd;
+		}
 		
 		public function dispose():void
 		{
@@ -98,6 +113,41 @@ package player.struct
 			}
 		}
 		
+		CONFIG::AVT_CONFIGER
+		public function reinit(a_bitmapData:BitmapData ,m:Matrix4x4 , p:Plane3D  , _scale : Number  , _xOff : Number  , _yOff : Number ):void
+		{
+			eyeVertex3D = new Vector.<Vertex3D>();
+			
+			var v : Vector.<Vertex3D>;
+			v = genEyeWhiteVertex3D();
+			var v3d : Vertex3D;
+			if (v) 
+			{	
+				for each ( v3d in v)	
+					eyeVertex3D.push(v3d);
+			}
+			v = genEyeBallVertex3D();
+			if (v) 
+			{	
+				eyeBallStart = eyeVertex3D.length;
+				for each ( v3d in v)	
+					eyeVertex3D.push(v3d);
+			}
+			
+			v = genEyeLipVertex3D();
+			if (v) 
+			{	
+				for each ( v3d in v)	
+					eyeVertex3D.push(v3d);
+			}
+			
+			v = eyeMaskData;
+			if (v)  
+				for each ( v3d in v) eyeVertex3D.push(v3d.clone());
+
+			dealVertex3DArray(eyeVertex3D , _scale , p , m , _xOff , _yOff);	
+		}
+
 		public function init(a_bitmapData:BitmapData ,m:Matrix4x4 , p:Plane3D  , _scale : Number  , _xOff : Number  , _yOff : Number ):void
 		{
 			if (!eyeVertex3D)
@@ -148,19 +198,25 @@ package player.struct
 					
 					if (eyeLip) 
 					{	
-						//uv =  
 						eyeLip.genUV(a_bitmapData);
-						//for each (n in uv)
-						//	eyeVertex3DUV.push(n);
 					}
 				}
 				
 				
 				v = eyeMaskData;
+				CONFIG::AVT_CONFIGER {
+				if (v)  
+					for each ( v3d in v) eyeVertex3D.push(v3d.clone());//clone is only for reinit
+				}
+				CONFIG::AVT_RUNTIME {
 				if (v)  
 					for each ( v3d in v) eyeVertex3D.push(v3d);
+				}
+			
 					
 				dealVertex3DArray(eyeVertex3D , _scale , p , m , _xOff , _yOff);
+				
+
 			}
 		}
 		
