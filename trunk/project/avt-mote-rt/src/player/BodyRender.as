@@ -17,12 +17,18 @@ package player
 	public class BodyRender
 	{
 		private var m_frameList : Vector.<BodyFrameData>;
-		public static var breath : Number = 0;
-		public static var breathOff : Number = 0.02;
+		public var breath : Number = 0;
+		public var breathOff : Number = 0.02;
 		
 		public function BodyRender() 
 		{
 			
+		}
+		
+		CONFIG::AVT_CONFIGER
+		public function get totalFrames():uint
+		{
+			return m_frameList.length;
 		}
 
 		public function render(g:Graphics  , bitmapData : BitmapData , yOff : Number , zOff : Number ) : void
