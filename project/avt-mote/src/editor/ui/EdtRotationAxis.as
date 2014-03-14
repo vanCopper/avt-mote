@@ -63,8 +63,6 @@ package editor.ui
 		private var m_active : Boolean;
 		
 		import CallbackUtil.CallbackCenter;
-		import editor.config.CALLBACK;
-
 		private function callbackFunc(evtId : int, args : Object , senderInfo : Object , registerObj:Object): int
 		{
 			if (m_active)

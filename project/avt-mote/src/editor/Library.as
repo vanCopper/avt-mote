@@ -1,7 +1,6 @@
 package editor 
 {
 	import CallbackUtil.CallbackCenter;
-	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
 	import editor.struct.Texture2D;
 	import editor.struct.Texture2DBitmap;

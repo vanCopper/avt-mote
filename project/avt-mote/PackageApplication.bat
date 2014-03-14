@@ -5,7 +5,7 @@
 :: http://livedocs.adobe.com/flex/3/html/help.html?content=CommandLineTools_5.html#1035959
 
 :: Path to Flex SDK binaries
-set PATH=%PATH%;$(FlexSDK)\bin
+set PATH=%PATH%;D:\shared\programme\Flex_sdk\bin
 
 :: Signature (see 'CreateCertificate.bat')
 set CERTIFICATE="avtmoteAir.pfx"
