@@ -6,7 +6,7 @@
 :: http://livedocs.adobe.com/flex/3/html/distributing_apps_4.html#1037515
 
 :: Path to Flex SDK binaries
-set PATH=%PATH%;$(FlexSDK)\bin
+set PATH=%PATH%;D:\shared\programme\Flex_sdk\bin
 
 :: Certificate information
 set NAME="avt-moteAir"

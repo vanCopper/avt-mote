@@ -1,7 +1,6 @@
 package editor.ui 
 {
 	import CallbackUtil.CallbackCenter;
-	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
 	import editor.ui.EdtQuadrantOpt.EdtQuadrantFocusSwitch;
 	import editor.ui.EdtQuadrantOpt.EdtQuadrantSelector;
@@ -46,7 +45,7 @@ package editor.ui
 		public function setVertex(_vertexArray : Vector.<EdtVertex3D>) : void
 		{
 			for each( var _e : EdtQuadrant in m_edtQuadrantVector )
-				 _e.setVertex(_vertexArray);
+				if (_e) _e.setVertex(_vertexArray);
 		}
 		public function remainQuadrant(_e0 : EdtQuadrant):void
 		{

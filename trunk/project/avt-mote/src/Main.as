@@ -1,10 +1,10 @@
 package 
 {
 	import CallbackUtil.CallbackCenter;
-	import editor.config.CALLBACK;
 	import editor.config.Config;
 	import editor.Library;
 	import flash.utils.Endian;
+	import UISuit.UIController.BSSPanel;
 	
 	import editor.ModuleBar;
 	import editor.Toolbar;
@@ -24,7 +24,7 @@ package
 	 */
 	public class Main extends Sprite 
 	{
-		private var m_mb : ModuleBar;
+		protected var m_mb : ModuleBar;
 		protected var m_tb : Toolbar;
 		public function Main():void 
 		{
@@ -139,7 +139,7 @@ package
 		}
 		
 		
-		private function newDoc():void 
+		protected function newDoc():void 
 		{
 			Library.getS().onNew();
 			m_mb.onNew();
@@ -178,6 +178,9 @@ package
 			return _data;
 		}
 		
+		
+		
+		
 		private function onSaveAs(btn:BSSButton):void 
 		{
 			var _data : XML = getXMLData();
@@ -192,7 +195,14 @@ package
 			
 		}
 		
-		private function onExport(btn:BSSButton):void 
+		protected function saveAmxmlb():void
+		{
+			
+			var fr : FileReference = new FileReference;
+			fr.save(getAmxmlbByteArray(), Config.lastFileName.replace(".amxmla" , ".amxmlb"));
+		}
+		
+		protected function getAmxmlbByteArray():ByteArray 
 		{
 			var _data : ByteArray = new ByteArray();
 			_data.endian = Endian.LITTLE_ENDIAN;
@@ -203,13 +213,14 @@ package
 			_data.writeByte('B'.charCodeAt(0));
 			
 			m_mb.onExport(_data);
-			var fr : FileReference = new FileReference;
 			
-			//fr.addEventListener(Event.SELECT, onFileSaveSelect);
-			//fr.addEventListener(Event.CANCEL , onFileSaveCancel);
+			return _data;
+		}
+		
+		public function onExport(btn:BSSButton):void 
+		{
 			
-			
-			fr.save(_data, Config.lastFileName.replace(".amxmla" , ".amxmlb"));
+			saveAmxmlb();
 			
 		}
 	}

@@ -171,7 +171,6 @@ package   UISuit.UIComponent   {
 					//fBSSScrollBar_DragFocusBSSScrollBar.addEventListener(MouseEvent.MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
                     
 					import CallbackUtil.CallbackCenter;
-					import editor.config.CALLBACK;
 					CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMoveCB);
                     CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUpCB);
                 }
@@ -190,7 +189,6 @@ package   UISuit.UIComponent   {
 					//s_BSSScrollBar_DragFocusBSSScrollBar.removeEventListener(MouseEvent.MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMove);
                     
 					import CallbackUtil.CallbackCenter;
-					import editor.config.CALLBACK;
 					CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSScrollBar_onDragFocusBSSScrollBarMouseMoveCB);
                     CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSScrollBar_onDragFocusBSSScrollBarMouseUpCB);
                     
@@ -229,8 +227,6 @@ package   UISuit.UIComponent   {
             public static function BSSScrollBar_setWheelFocusBSSScrollBar(fBSSScrollBar_WheelFocusBSSScrollBar : BSSScrollBar)
             : void {
 				import CallbackUtil.CallbackCenter;
-				import editor.config.CALLBACK;
-
                 if (fBSSScrollBar_WheelFocusBSSScrollBar)
                 {
                     if (!s_BSSScrollBar_WheelFocusBSSScrollBar) //不为空 以前添加过 还没删除

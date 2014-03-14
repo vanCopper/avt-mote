@@ -1,7 +1,6 @@
 package editor.module.head 
 {
 	import CallbackUtil.CallbackCenter;
-	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
 	import editor.config.StringPool;
 	import editor.Library;

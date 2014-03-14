@@ -274,7 +274,6 @@ package   UISuit.UIComponent   {
 				//fBSSSlider_FocusBSSSlider.addEventListener(MouseEvent.MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
 				
 				import CallbackUtil.CallbackCenter;
-				import editor.config.CALLBACK;
 				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove_CB);
 				CallbackCenter.registerCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp_CB);
 			}
@@ -323,7 +322,6 @@ package   UISuit.UIComponent   {
 				//s_BSSSlider_FocusBSSSlider.removeEventListener(MouseEvent.MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp);
 				
 				import CallbackUtil.CallbackCenter;
-				import editor.config.CALLBACK;
 				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_MOVE , BSSSlider_onFocusBSSSliderThumbMouseMove_CB);
 				CallbackCenter.unregisterCallBack(CALLBACK.AS3_ON_STAGE_MOUSE_UP , BSSSlider_onFocusBSSSliderThumbMouseUp_CB);
 			  

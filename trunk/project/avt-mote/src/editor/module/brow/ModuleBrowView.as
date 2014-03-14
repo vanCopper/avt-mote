@@ -1,7 +1,6 @@
 package editor.module.brow
 {
 	import CallbackUtil.CallbackCenter;
-	import editor.config.CALLBACK;
 	import editor.config.EdtDEF;
 	import editor.module.head.ModuleHead3DBrowser;
 	import editor.module.head.ModuleHead3DView;

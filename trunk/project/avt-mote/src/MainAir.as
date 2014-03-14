@@ -1,7 +1,6 @@
 package 
 {
 	import CallbackUtil.CallbackCenter;
-	import editor.config.CALLBACK;
 	import editor.config.Config;
 	import editor.Library;
 	import editor.module.head.ModuleHead;
@@ -18,6 +17,7 @@ package
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
 	import UISuit.UIComponent.BSSButton;
+	import UISuit.UIController.BSSPanel;
 	
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -46,6 +46,90 @@ package
 			file.addEventListener(Event.SELECT, onSaveAir);
 			file.browseForSave("save");
 			m_loadFile = file;
+		}
+		
+		private var m_textureAtlasPanel : BSSPanel;
+		private var m_textureAtlas : TextureAtlas;
+		private var m_dataBack : XML;
+		
+		public function getMergedBA(_xml : XML , _navtivePath : String) : ByteArray
+		{
+			var lastFileNameFull_bak : String = Config.lastFileNameFull;
+			var _dataBack : XML = getXMLData();
+			
+			if (_navtivePath.lastIndexOf('\\') != -1)
+			{
+				_navtivePath = _navtivePath.substring(0 , _navtivePath.lastIndexOf('\\')) + "\\";
+			} 
+			else if (_navtivePath.lastIndexOf('/') != -1)
+			{
+				_navtivePath = _navtivePath.substring(0 , _navtivePath.lastIndexOf('/')) + "/";
+			}
+			TextureLoader.s_imgPath = _navtivePath;
+			
+			TextureLoader.s_fakeLoaderMode = true;
+			newDoc();
+			m_mb.onOpenXML(_xml);
+			
+			var ba : ByteArray = getAmxmlbByteArray();
+			
+			TextureLoader.s_fakeLoaderMode = false;
+			_navtivePath = Config.lastFileNameFull;
+			if (_navtivePath.lastIndexOf('\\') != -1)
+			{
+				_navtivePath = _navtivePath.substring(0 , _navtivePath.lastIndexOf('\\')) + "\\";
+			} 
+			else if (_navtivePath.lastIndexOf('/') != -1)
+			{
+				_navtivePath = _navtivePath.substring(0 , _navtivePath.lastIndexOf('/')) + "/";
+			}
+			TextureLoader.s_imgPath = _navtivePath;
+			
+			newDoc();
+			m_mb.onOpenXML(_dataBack);
+			
+			return ba;
+			
+		}
+		
+		override public function onExport(btn:BSSButton):void 
+		{
+			var _dataBack : XML = getXMLData();
+			
+			if (!m_textureAtlasPanel) {
+				m_textureAtlasPanel =
+				BSSPanel.createSimpleBSSPanel(720 , 570 , 
+				  BSSPanel.ENABLE_TITLE|BSSPanel.ENABLE_MOVE|BSSPanel.ENABLE_CLOSE
+				);
+				
+				m_textureAtlasPanel.titleText = "texture atlas";
+				
+				m_textureAtlasPanel.closeFunction = function( caller : BSSPanel )
+				: void {
+					if (m_textureAtlasPanel.parent)
+					{	
+						m_textureAtlasPanel.parent.removeChild(m_textureAtlasPanel);
+						m_textureAtlas.onNew();
+					}
+				}
+				
+				m_textureAtlas = new TextureAtlas();
+				m_textureAtlasPanel.addChild(m_textureAtlas).y = 20;
+				m_textureAtlasPanel.x = 10;
+				m_textureAtlasPanel.y = 10;
+			}
+			
+			addChild(m_textureAtlasPanel);
+			
+			m_textureAtlas.onNew();
+			var _ba : ByteArray = new ByteArray();
+			_ba.writeUTFBytes(_dataBack.toXMLString());
+			_ba.position = 0;
+			TextureAtlas.s_loadFile_name = Config.lastFileName;
+			TextureAtlas.s_loadFile_nativePath = Config.lastFileNameFull;
+			TextureAtlas.onDeal(_ba);
+			//saveAmxmlb();
+			
 		}
 		
 		private function saveToFile(_file:File):void
@@ -167,9 +251,10 @@ package
 				onSaveAsAir(btn);
 			}
 		}
-		
+		public static var ins : MainAir;
 		public function MainAir()
 		{
+			ins = this;
 			Config.isAirVersion = true;
 			super();			
 		}
