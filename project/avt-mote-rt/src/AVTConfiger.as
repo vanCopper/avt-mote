@@ -3,8 +3,10 @@
 	import CallbackUtil.CallbackCenter;
 	import configer.CALLBACK;
 	import configer.EdtSliderNumber;
+	import configer.PNGEncoder;
 	import configer.Toolbar;
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
@@ -15,7 +17,10 @@
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
 	import flash.net.FileFilter;
+	import flash.net.FileReference;
 	import flash.utils.ByteArray;
 	import player.AVTMPlayer;
 	import player.struct.Matrix4x4;
@@ -51,6 +56,7 @@
 			var _tb : Toolbar = new Toolbar();
 			addChild(_tb);
 			_tb.btnOpen.releaseFunction = onOpenAir;
+			_tb.btnSnap.releaseFunction = onSnap;
 			
 			var obj : Object = { };
 			obj[MouseEvent.MOUSE_WHEEL] = CALLBACK.AS3_ON_STAGE_MOUSE_WHEEL;
@@ -96,10 +102,28 @@
 			}
 			
 		}		
+		private var m_snapIndex : int = 0; 
 		
-		
-		
-		
+		private function onSnap(btn:BSSButton):void 
+		{
+			if (m_player) {
+				var _rect : Rectangle = m_player.getBounds(m_player);
+				var _bd : BitmapData = new BitmapData(_rect.width + 4 , _rect.height - 1 ,true,0);
+				var mt:Matrix = new Matrix();
+				mt.translate(-(_rect.left - 2) , -_rect.top);
+				
+				_bd.draw(m_player , mt, null, null, null, true);
+				new FileReference().save(PNGEncoder.encode(_bd), s_lastFileName.replace(".amxmlb" , "") + "_" +  (m_snapIndex++) + ".png") ;
+
+								
+				//stage.addChild(new Bitmap(_bd));
+				
+				
+				
+			}
+			
+			
+		}
 		
 		
 		
@@ -111,10 +135,11 @@
 			file.addEventListener(Event.SELECT, onLoaded);
 			file.browseForOpen("open", [new FileFilter("avt-mote xml binary file" , "*.amxmlb")]);
 			m_loadFile = file;
+			m_snapIndex = 0;
 		}
 		private static var s_imgPath : String;
 		private static var  s_lastFileNameFull : String;
-		
+		private static var  s_lastFileName : String;
 		private var loadedBA : ByteArray;
 		
 		private function onLoaded(e:Event):void {
@@ -134,6 +159,8 @@
 				
 				var nativePath : String = m_loadFile.nativePath;
 				s_lastFileNameFull = nativePath;
+				s_lastFileName = m_loadFile.name;
+				
 				if (nativePath.lastIndexOf('\\') != -1)
 				{
 					nativePath = nativePath.substring(0 , nativePath.lastIndexOf('\\')) + "\\";
@@ -189,6 +216,9 @@
 		
 		private function initSilder():void
 		{
+			if (rxES)
+				return;
+			
 			const arr : Array = [
 				-0.1,+0.1,0,"rx",false
 			,	-0.15,+0.15,0,"ry",false
