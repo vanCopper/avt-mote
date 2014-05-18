@@ -16,6 +16,8 @@ package configer
 		public static var SAVE : String = "save";
 		public static var COPY : String = "copy";
 		public static var EXPORT : String = "export";
+		public static var SNAP : String = "snap";
+		
 		public static var DEL : String = "del";
 		public static var IMPORT : String = "import";
 		

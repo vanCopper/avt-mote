@@ -15,6 +15,7 @@ package configer
 		public var btnSaveAs : BSSButton;
 		public var btnCopy : BSSButton;
 		public var btnExport : BSSButton;
+		public var btnSnap : BSSButton;
 		
 		public function Toolbar() 
 		{
@@ -51,6 +52,15 @@ package configer
 			btnExport.x = _lastBtn.x + _lastBtn.width + 5;
 			btnExport.y = 5 ;
 			addChild(btnExport) ;
+			_lastBtn = btnExport;
+			
+			
+			btnSnap =  BSSButton.createSimpleBSSButton(20, 20, StringPool.SNAP , true);
+			btnSnap.x = _lastBtn.x + _lastBtn.width + 5;
+			btnSnap.y = 5 ;
+			addChild(btnSnap) ;
+			_lastBtn = btnSnap;
+			
 			
 		//	btnCopy =  BSSButton.createSimpleBSSButton(20, 20, StringPool.COPY , true);
 		///	btnCopy.x = btnExport.x + btnExport.width + 5;
